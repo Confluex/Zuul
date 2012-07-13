@@ -1,0 +1,13 @@
+<decorators defaultdir="/WEB-INF/jsp/decorators">
+
+    <!--if some pages to be excluded from decoration-->
+    <excludes>
+        <!--<pattern>/dialog/</pattern>-->
+    </excludes>
+
+    <decorator name="master" page="master.jsp">
+          <pattern>/*</pattern>
+    </decorator>
+
+
+</decorators>
