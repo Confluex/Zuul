@@ -1,0 +1,1 @@
+insert into application (id, key, name) values (1, 'FOO','Test Application')
