@@ -1,4 +1,4 @@
-# Zuul
+# Zuul the Gatekeeper of Goze
 
 Web application for securely managing and accessing properties files for java based applications.
 
