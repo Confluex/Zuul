@@ -10,8 +10,10 @@ Project Goals:
  - Java Properties File for use with something like Spring's URLResource and PropertyPlaceholderConfigurer
  - JSON and XML
  - Maybe .NET web.configs
+* Separation of configuration by environment (dev/qa/prod)
 * OpenID authentication with popular providers
 * Provision API keys and authorization for applications
+* Client APIs with caching for offline development or Zuul down status :-)
 
 
 # License
