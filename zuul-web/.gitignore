@@ -1,9 +1,0 @@
-plugins/core/
-web-app/WEB-INF/
-.idea/
-target/
-*.iml
-*.ipr
-*.iws
-security.properties
-*.log

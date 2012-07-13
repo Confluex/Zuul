@@ -43,8 +43,8 @@
         <!-- Data -->
         <dependency>
             <groupId>org.devnull</groupId>
-            <artifactId>devnull-orm</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>zuul-data</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Test -->
