@@ -10,7 +10,7 @@
  ">
 
 
-    <context:component-scan base-package="org.devnull"/>
+    <context:component-scan base-package="org.devnull.zuul.web"/>
     <mvc:annotation-driven/>
     <mvc:resources mapping="/assets/**" location="/assets/" />
 
