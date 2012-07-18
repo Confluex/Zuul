@@ -7,13 +7,37 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Zuul: Parent POM</name>
+    <properties>
+        <devnull.version>1.0-SNAPSHOT</devnull.version>
+    </properties>
     <parent>
         <groupId>org.devnull</groupId>
         <artifactId>devnull-parent</artifactId>
+        <!-- Grrr... can't use ${devnull.version} expression here -->
         <version>1.0-SNAPSHOT</version>
-    </parent>	
+    </parent>
     <modules>
         <module>zuul-data</module>
         <module>zuul-web</module>
     </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.devnull</groupId>
+                <artifactId>devnull-orm</artifactId>
+                <version>${devnull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devnull</groupId>
+                <artifactId>devnull-security</artifactId>
+                <version>${devnull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devnull</groupId>
+                <artifactId>devnull-test</artifactId>
+                <version>${devnull.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

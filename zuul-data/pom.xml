@@ -11,6 +11,16 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <dependencies>
+        <!-- DevNull -->
+        <dependency>
+            <groupId>org.devnull</groupId>
+            <artifactId>devnull-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.devnull</groupId>
+            <artifactId>devnull-security</artifactId>
+        </dependency>
+
         <!-- Spring Framework -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -36,6 +46,10 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
 
 
         <!-- Database  -->
@@ -53,11 +67,6 @@
         </dependency>
 
 
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
