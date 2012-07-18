@@ -84,7 +84,7 @@
                     <div class="controls">
                         <div class="input-append">
                             <input id="customOpenIdUrl" name="openid_identifier" class="span3" type="text">
-                            <button class="btn" type="button">Login</button>
+                            <button class="btn btn-primary" type="button">Login</button>
                         </div>
                     </div>
                 </div>

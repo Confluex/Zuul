@@ -9,11 +9,24 @@
 </head>
 <body>
 <div class="row">
-    <div class="span12">
+    <div class="span4">
         <div class="page-header">
-            <h1>New User Registration</h1>
+            <h1>Hello!</h1>
         </div>
-        I see that you are a new user. Please complete the rest of your profile to continue
+        <p>
+        I see that you are a new user. We need to collect just a bit more information in order
+        to complete your account. Please complete the <em>Registration Form</em> and we'll finish
+        up the rest.
+        </p>
+        <p>
+            Once you are done, you will have basic access to the site. An administrator can grant you
+            more privileges.
+        </p>
+    </div>
+    <div class="span8">
+        <div class="page-header">
+            <h1>Registration Form</h1>
+        </div>
         <form action="${pageContext.request.contextPath}/register" method="POST" class="form-horizontal">
             <fieldset>
                 <div class="control-group">
@@ -43,5 +56,8 @@
             </fieldset>
         </form>
     </div>
+
+</div>
+
 </body>
 </html>
