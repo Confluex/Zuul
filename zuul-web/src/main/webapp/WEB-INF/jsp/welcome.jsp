@@ -9,7 +9,12 @@
 </head>
 <body>
 <div class="row">
-    <h1>Welcome <sec:authentication property="principal.username"/></h1>
+    <div class="span12">
+        <div class="page-header">
+            <h1>${user.firstName} ${user.lastName}'s Profile</h1>
+        </div>
+        TODO: verbiage for greeting/instructions/next steps..
+    </div>
 </div>
 </body>
 </html>

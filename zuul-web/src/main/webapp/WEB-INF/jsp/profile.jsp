@@ -9,8 +9,12 @@
 </head>
 <body>
 <div class="row">
-    <h1><sec:authentication property="principal.username" /> </h1>
-    <p>Yada yada yada</p>
+    <div class="span12">
+        <div class="page-header">
+            <h1>${user.firstName} ${user.lastName}'s Profile</h1>
+        </div>
+        TODO: profile form
+    </div>
 </div>
 </body>
 </html>
