@@ -29,7 +29,13 @@
         </openid-login>
     </http>
 
-    <authentication-manager alias="authenticationManager"/>
+    <b:bean id="openIdAuthenticationProvider" class="org.springframework.security.openid.OpenIDAuthenticationProvider">
+        <b:property name="userDetailsService" ref="openIdUserDetailsService"/>
+    </b:bean>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="openIdAuthenticationProvider"/>
+    </authentication-manager>
 
 
 </b:beans>

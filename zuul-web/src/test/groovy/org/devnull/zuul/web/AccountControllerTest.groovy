@@ -30,7 +30,7 @@ public class AccountControllerTest {
     void registerShouldAddSessionTempUserToModel() {
         def mockRequest = new MockHttpServletRequest()
         def mockUser = mock(User)
-        mockRequest.session.setAttribute(OpenIdRegistrationHandler.SESSION_OPENID_TEMP_USER, mockUser)
+        mockRequest.session.setAttribute(OpenIdRegistrationHandler.SESSION_OPENID_TOKEN, mockUser)
         def mv = controller.register(mockRequest)
         assert mv.viewName == "/register"
         assert mv.model.user == mockUser
