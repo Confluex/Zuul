@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><decorator:title/> | New Project</title>
+    <title><decorator:title/> | Zuul</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,15 +30,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="#">New Project</a>
+                <a class="brand" href="#">Zuul</a>
                 <div class="nav-collapse">
                     <ul class="nav">
                         <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#tab1">Tab 1</a></li>
-                        <li><a href="#tab2">Tab 2</a></li>
+                        <li><a href="#tab1">Applications</a></li>
+                        <li><a href="#tab2">Security</a></li>
                     </ul>
                     <p class="navbar-text pull-right">
-                        <a href="#login"class="btn btn-primary">Login</a>
+                        <a href="${pageContext.request.contextPath}/login" class="btn btn-primary">Login</a>
                     </p>
                 </div>
             </div>
