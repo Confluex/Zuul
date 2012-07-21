@@ -14,10 +14,13 @@
     <context:component-scan base-package="org.devnull.security"/>
 
     <http use-expressions="true">
-        <intercept-url pattern="/profile**" access="hasRole('ROLE_USER')"/>
+        <!-- TODO figure out what's wrong here... -->
+        <!--<intercept-url pattern="/register/**" access="hasRole('ROLE_GUEST')"/>-->
+        <intercept-url pattern="/welcome/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/profile/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/**" access="isAnonymous() or isAuthenticated()"/>
 
-        <logout/>
+        <logout logout-url="/logout" logout-success-url="/"/>
         <openid-login login-page="/login"
                       authentication-failure-url="/login?login_error=true"
                       user-service-ref="openIdUserDetailsService"

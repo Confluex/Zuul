@@ -5,7 +5,7 @@ import org.junit.Before
 import static org.mockito.Mockito.*
 import org.junit.Test
 import org.springframework.mock.web.MockHttpServletRequest
-import org.devnull.security.service.OpenIdRegistrationHandler
+import org.devnull.security.spring.OpenIdRegistrationHandler
 import org.devnull.security.model.User
 
 public class AccountControllerTest {
