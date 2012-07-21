@@ -26,8 +26,9 @@
                       user-service-ref="openIdUserDetailsService"
                       authentication-failure-handler-ref="openIdRegistrationHandler">
             <attribute-exchange>
-                <openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true" count="2"/>
-                <openid-attribute name="name" type="http://schema.openid.net/namePerson/friendly"/>
+                <openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
+                <openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last" required="true"/>
+                <openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first" required="true"/>
             </attribute-exchange>
         </openid-login>
     </http>
