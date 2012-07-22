@@ -32,9 +32,15 @@ class AccountController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     String registerSubmit(@ModelAttribute User user) {
-        securityService.updateCurrentUser(user)
-        securityService.addRoles([WebConstants.ROLE_USER])
-        securityService.removeRoles([WebConstants.ROLE_GUEST])
+        def currentUser = securityService.currentUser
+
+        currentUser.firstName = user.firstName
+        currentUser.lastName = user.lastName
+        currentUser.email = user.email
+        currentUser.addToRoles(securityService.findRoleByName(WebConstants.ROLE_USER))
+        currentUser.roles.removeAll {it.name == WebConstants.ROLE_GUEST }
+
+        securityService.updateCurrentUser(true)
         return "redirect:/welcome"
     }
 
