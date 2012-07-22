@@ -15,7 +15,7 @@
 
     <http use-expressions="true">
         <!-- TODO figure out what's wrong here... -->
-        <!--<intercept-url pattern="/register/**" access="hasRole('ROLE_GUEST')"/>-->
+        <intercept-url pattern="/register/**" access="hasRole('ROLE_GUEST')"/>
         <intercept-url pattern="/welcome/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/profile/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/**" access="isAnonymous() or isAuthenticated()"/>
