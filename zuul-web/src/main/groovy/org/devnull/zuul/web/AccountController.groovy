@@ -38,7 +38,9 @@ class AccountController {
         currentUser.lastName = user.lastName
         currentUser.email = user.email
         currentUser.addToRoles(securityService.findRoleByName(WebConstants.ROLE_USER))
-        currentUser.roles.removeAll {it.name == WebConstants.ROLE_GUEST }
+        currentUser.roles.removeAll {
+            it.name == WebConstants.ROLE_GUEST
+        }
 
         securityService.updateCurrentUser(true)
         return "redirect:/welcome"
@@ -46,6 +48,6 @@ class AccountController {
 
     @RequestMapping("/welcome")
     String welcome() {
-        return "welcome"
+        return "/welcome"
     }
 }
