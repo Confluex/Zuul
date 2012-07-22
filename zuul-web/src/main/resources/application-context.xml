@@ -15,6 +15,4 @@
     <context:component-scan base-package="org.devnull.zuul.web"/>
     <context:property-placeholder location="classpath:application.properties"/>
 
-    <!--<mvc:resources mapping="/assets/**" location="/assets/" />-->
-
 </beans>
