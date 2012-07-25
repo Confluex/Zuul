@@ -8,6 +8,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
 import org.devnull.zuul.data.config.ZuulDataConstants
+import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -25,6 +26,19 @@ class SettingsGroup implements Serializable {
 
     String name
     String environment
-   
 
+
+    def asType(Class type) {
+        switch (type) {
+            case Properties:
+                def properties = new Properties()
+                entries.each {
+                    properties.put(it.key, it.value)
+                }
+                return properties
+            break
+            default:
+                throw new GroovyCastException("Hmm... ${this.class} cannot be converted to ${type}")
+        }
+    }
 }
