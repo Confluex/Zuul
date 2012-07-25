@@ -15,6 +15,7 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
     <jpa:repositories base-package="org.devnull.zuul.data.dao"/>
     <context:annotation-config/>
     <context:component-scan base-package="org.devnull.zuul.data"/>
+    <context:component-scan base-package="org.devnull.zuul.service"/>
     <context:property-placeholder location="classpath:zuul-data-config.properties"/>
 
 
