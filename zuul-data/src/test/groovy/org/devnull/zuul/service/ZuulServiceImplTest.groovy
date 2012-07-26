@@ -5,6 +5,7 @@ import org.junit.Before
 import static org.mockito.Mockito.*
 import org.junit.Test
 import org.devnull.zuul.data.model.SettingsGroup
+import org.devnull.zuul.data.model.Environment
 
 public class ZuulServiceImplTest {
 
@@ -18,9 +19,10 @@ public class ZuulServiceImplTest {
     @Test
     void findSettingsGroupByNameAndEnvironmentShouldReturnResultsFromDao() {
         def expected = new SettingsGroup()
-        when(service.settingsGroupDao.findByNameAndEnvironment("some-config", "prod")).thenReturn(expected)
+        def env = new Environment(name:"prod")
+        when(service.settingsGroupDao.findByNameAndEnvironment("some-config", env)).thenReturn(expected)
         def result = service.findSettingsGroupByNameAndEnvironment("some-config", "prod")
-        verify(service.settingsGroupDao).findByNameAndEnvironment("some-config", "prod")
+        verify(service.settingsGroupDao).findByNameAndEnvironment("some-config", env)
         assert result.is(expected)
     }
 }

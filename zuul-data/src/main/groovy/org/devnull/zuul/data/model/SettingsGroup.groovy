@@ -9,6 +9,8 @@ import javax.persistence.Id
 import javax.persistence.OneToMany
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException
+import javax.persistence.ManyToOne
+import javax.persistence.JoinColumn
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -24,8 +26,11 @@ class SettingsGroup implements Serializable {
     @OneToMany(mappedBy = "group")
     List<SettingsEntry> entries = []
 
+    @ManyToOne
+    @JoinColumn(name="Environment")
+    Environment environment
+
     String name
-    String environment
 
 
     def asType(Class type) {

@@ -8,6 +8,12 @@ insert into SecurityUser (id, openId, firstName, lastName, email, enabled) value
 
 insert into SecurityUserRole(userId, roleId) values (2, 4)
 
+
+-- =========== Environments ===========
+insert into Environment (name) values ('prod')
+insert into Environment (name) values ('qa')
+insert into Environment (name) values ('dev')
+
 -- =========== Settings Groups ===========
 insert into SettingsGroup (id, name, environment) values (1, 'app-data-config', 'dev')
 insert into SettingsGroup (id, name, environment) values (2, 'app-data-config', 'qa')

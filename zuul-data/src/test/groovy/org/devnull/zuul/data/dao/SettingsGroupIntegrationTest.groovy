@@ -3,6 +3,7 @@ package org.devnull.zuul.data.dao
 import org.devnull.zuul.data.test.ZuulDataIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.devnull.zuul.data.model.Environment
 
 class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
 
@@ -11,10 +12,10 @@ class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
 
     @Test
     void findByNameShouldFindRecordAndMapCorrectly() {
-        def group = dao.findByNameAndEnvironment("app-data-config", "dev")
+        def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name:"dev"))
         assert group.id == 1
         assert group.name == "app-data-config"
-        assert group.environment == "dev"
+        assert group.environment.name == "dev"
         assert group.entries.size() == 7
 
         assert group.entries[0].key == "jdbc.zuul.url"
