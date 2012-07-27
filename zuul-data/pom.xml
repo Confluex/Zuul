@@ -66,6 +66,11 @@
             <artifactId>hibernate-entitymanager</artifactId>
         </dependency>
 
+        <!-- Misc -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency>
 
     </dependencies>
 

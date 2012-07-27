@@ -40,8 +40,9 @@
                 <div class="nav-collapse">
                     <ul class="nav">
                         <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                        <li><a href="#tab1">Applications</a></li>
-                        <li><a href="#tab2">Security</a></li>
+                        <li id="settingsMenu" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Settings <b class="caret"></b></a>
+                        </li>
                     </ul>
                     <security:authorize access="isAuthenticated()">
                         <ul class="nav pull-right">
@@ -76,5 +77,10 @@
             tristique enim suscipit conubia molestie iaculis.</em>
     </footer>
 </div>
+<script>
+    $(function() {
+       $("#settingsMenu").settingsMenu({url:"${pageContext.request.contextPath}/settings.json"});
+    });
+</script>
 </body>
 </html>

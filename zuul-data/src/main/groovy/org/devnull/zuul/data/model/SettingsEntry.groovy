@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToOne
 import javax.persistence.JoinColumn
+import org.codehaus.jackson.annotate.JsonBackReference
 
 @Entity
 @EqualsAndHashCode()
@@ -22,6 +23,7 @@ class SettingsEntry implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="groupId")
+    @JsonBackReference
     SettingsGroup group
 
     String key

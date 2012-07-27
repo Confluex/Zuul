@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello World</title>
+    <title>Home</title>
 </head>
 <body>
 <!-- Main hero unit for a primary marketing message or call to action -->

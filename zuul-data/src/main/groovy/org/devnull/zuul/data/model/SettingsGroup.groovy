@@ -11,6 +11,7 @@ import org.devnull.zuul.data.config.ZuulDataConstants
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 import javax.persistence.ManyToOne
 import javax.persistence.JoinColumn
+import org.codehaus.jackson.annotate.JsonBackReference
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -28,6 +29,7 @@ class SettingsGroup implements Serializable {
 
     @ManyToOne
     @JoinColumn(name="Environment")
+    @JsonBackReference
     Environment environment
 
     String name

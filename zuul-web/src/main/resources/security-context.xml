@@ -18,6 +18,7 @@
         <intercept-url pattern="/register/**" access="hasRole('ROLE_GUEST')"/>
         <intercept-url pattern="/welcome/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/profile/**" access="hasRole('ROLE_USER')"/>
+        <!--<intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>-->
         <intercept-url pattern="/**" access="isAnonymous() or isAuthenticated()"/>
 
         <logout logout-url="/logout" logout-success-url="/"/>
