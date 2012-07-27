@@ -7,4 +7,6 @@ import org.devnull.zuul.data.model.Environment
 public interface ZuulService {
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env)
     List<Environment> listEnvironments()
+    List<SettingsGroup> listSettingsGroups()
+
 }

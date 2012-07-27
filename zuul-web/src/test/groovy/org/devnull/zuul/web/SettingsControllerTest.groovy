@@ -37,4 +37,13 @@ public class SettingsControllerTest {
         assert properties['jdbc.driver'] == "com.awesome.db.Driver"
         assert properties['jdbc.username'] == "maxPower"
     }
+    
+    @Test
+    void listJsonShouldReturnResultsFromService() {
+        def expected = [new SettingsGroup(name: "a")]
+        when(controller.zuulService.listSettingsGroups()).thenReturn(expected)
+        def results = controller.listJson()
+        verify(controller.zuulService).listSettingsGroups()
+        assert results.is(expected)
+    }
 }

@@ -7,6 +7,7 @@ import org.devnull.zuul.data.model.SettingsGroup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.data.domain.Sort
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -26,5 +27,9 @@ class ZuulServiceImpl implements ZuulService {
 
     List<Environment> listEnvironments() {
         return environmentDao.findAll() as List<Environment>
+    }
+
+    List<SettingsGroup> listSettingsGroups() {
+        return settingsGroupDao.findAll(new Sort("name")) as List<SettingsGroup>
     }
 }

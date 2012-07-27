@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.bind.annotation.ResponseBody
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsGroup
 
 @Controller
 class SettingsController {
@@ -28,7 +29,7 @@ class SettingsController {
 
     @RequestMapping(value="/settings.json")
     @ResponseBody
-    List<Environment> listByEnvironmentJson() {
-        zuulService.listEnvironments()
+    List<SettingsGroup> listJson() {
+        return zuulService.listSettingsGroups()
     }
 }

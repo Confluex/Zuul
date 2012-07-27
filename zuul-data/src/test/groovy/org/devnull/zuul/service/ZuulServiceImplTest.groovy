@@ -7,6 +7,7 @@ import org.junit.Test
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.dao.EnvironmentDao
+import org.springframework.data.domain.Sort
 
 public class ZuulServiceImplTest {
 
@@ -33,6 +34,16 @@ public class ZuulServiceImplTest {
         when(service.environmentDao.findAll()).thenReturn(expected)
         def results = service.listEnvironments()
         verify(service.environmentDao).findAll()
+        assert results.is(expected)
+    }
+    
+    @Test
+    void listSettingsGroupsShouldSortByName() {
+        def expected = [new SettingsGroup(name:"foo")]
+        def sort = new Sort("name")
+        when(service.settingsGroupDao.findAll(sort)).thenReturn(expected)
+        def results = service.listSettingsGroups()
+        verify(service.settingsGroupDao).findAll(sort)
         assert results.is(expected)
     }
 }
