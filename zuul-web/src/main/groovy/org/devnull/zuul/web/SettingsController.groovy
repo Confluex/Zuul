@@ -31,7 +31,7 @@ class SettingsController {
      ModelAndView show(@PathVariable("name") String name) {
         def groups = zuulService.findSettingsGroupByName(name)
         def groupsByEnv = groups.groupBy { it.environment.name }
-        return new ModelAndView("/settings/show", [groupsByEnv:groupsByEnv, groupName:name])
+        return new ModelAndView("/settings/show", [groupsByEnv:groupsByEnv, groupName:name, environments: groupsByEnv.keySet()])
     }
 
     @RequestMapping(value="/settings.json")

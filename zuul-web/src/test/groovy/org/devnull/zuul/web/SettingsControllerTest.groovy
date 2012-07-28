@@ -58,6 +58,11 @@ public class SettingsControllerTest {
         def mv = controller.show("group-1")
         assert mv.viewName == "/settings/show"
 
+        def environments = mv.model.environments as List
+        assert environments[0] == groups[0].environment.name
+        assert environments[1] == groups[1].environment.name
+        assert environments[2] == groups[2].environment.name
+
         def dev = mv.model.groupsByEnv.dev
         assert dev.size() == 1
         assert dev.first() == groups[0]
