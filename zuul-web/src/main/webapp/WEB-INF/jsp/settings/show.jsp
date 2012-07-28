@@ -37,7 +37,7 @@
                         <td>${e.value}</td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
+                                <a class="btn btn-small btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
                                     Action
                                     <span class="caret"></span>
                                 </a>
