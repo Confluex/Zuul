@@ -12,7 +12,7 @@
                 for each (var name in fileNames) {
                     var link = $(document.createElement('a'));
                     link.text(name);
-                    link.attr('href', settings.context + "/" + name);
+                    link.attr('href', settings.context + "/settings/" + encodeURI(name));
                     var subMenuItem = $(document.createElement('li'));
                     subMenuItem.append(link);
                     subMenu.append(subMenuItem);
