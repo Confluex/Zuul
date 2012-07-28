@@ -79,7 +79,7 @@
 </div>
 <script>
     $(function() {
-       $("#settingsMenu").settingsMenu({url:"${pageContext.request.contextPath}/settings.json"});
+       $("#settingsMenu").settingsMenu({context:"${pageContext.request.contextPath}"});
     });
 </script>
 </body>
