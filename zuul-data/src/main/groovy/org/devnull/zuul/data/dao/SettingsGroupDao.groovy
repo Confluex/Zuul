@@ -6,4 +6,5 @@ import org.springframework.data.repository.PagingAndSortingRepository
 
 interface SettingsGroupDao extends PagingAndSortingRepository<SettingsGroup, Long> {
     SettingsGroup findByNameAndEnvironment(String name, Environment environment)
+    List<SettingsGroup> findByName(String name)
 }

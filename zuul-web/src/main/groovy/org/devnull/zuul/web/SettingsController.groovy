@@ -27,6 +27,13 @@ class SettingsController {
         properties.store(response.outputStream, "Generated from Zuul  with parameters: name=${name}, environment=${env}")
     }
 
+    @RequestMapping(value="/settings/{name}")
+     ModelAndView show(@PathVariable("name") String name) {
+        def groups = zuulService.findSettingsGroupByName(name)
+        def groupsByEnv = groups.groupBy { it.environment.name }
+        return new ModelAndView("/settings/show", [groupsByEnv:groupsByEnv, groupName:name])
+    }
+
     @RequestMapping(value="/settings.json")
     @ResponseBody
     List<SettingsGroup> listJson() {

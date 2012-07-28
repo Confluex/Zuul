@@ -46,4 +46,29 @@ public class SettingsControllerTest {
         verify(controller.zuulService).listSettingsGroups()
         assert results.is(expected)
     }
+
+    @Test
+    void showShouldGroupResultsByEnvironment() {
+        def groups = [
+                new SettingsGroup(name: "group-1", environment: new Environment(name:"dev")),
+                new SettingsGroup(name: "group-1", environment: new Environment(name:"qa")),
+                new SettingsGroup(name: "group-1", environment: new Environment(name:"prod"))
+        ]
+        when(controller.zuulService.findSettingsGroupByName("group-1")).thenReturn(groups)
+        def mv = controller.show("group-1")
+        assert mv.viewName == "/settings/show"
+
+        def dev = mv.model.groupsByEnv.dev
+        assert dev.size() == 1
+        assert dev.first() == groups[0]
+
+        def qa = mv.model.groupsByEnv.qa
+        assert qa.size() == 1
+        assert qa.first() == groups[1]
+
+        def prod = mv.model.groupsByEnv.prod
+        assert prod.size() == 1
+        assert prod.first() == groups[2]
+
+    }
 }

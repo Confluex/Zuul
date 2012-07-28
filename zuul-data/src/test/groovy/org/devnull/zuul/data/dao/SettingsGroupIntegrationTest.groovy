@@ -39,4 +39,14 @@ class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
         assert group.entries[6].key == "jdbc.zuul.validationQuery"
         assert group.entries[6].value == "select 1"
     }
+
+    @Test
+    void findByNameShouldReturnCorrectNumberOfRecords() {
+        def groups = dao.findByName("app-data-config")
+        assert groups.size() == 3
+        groups.each { assert it.name == "app-data-config" }
+        assert groups.find { it.environment.name == "dev" }
+        assert groups.find { it.environment.name == "qa" }
+        assert groups.find { it.environment.name == "prod" }
+    }
 }

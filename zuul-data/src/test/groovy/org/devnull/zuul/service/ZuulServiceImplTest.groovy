@@ -19,6 +19,15 @@ public class ZuulServiceImplTest {
     }
     
     @Test
+    void findSettingsGroupByNameShouldReturnResultsFromDao() {
+        def expected = [new SettingsGroup(name:"some-config")]
+        when(service.settingsGroupDao.findByName("some-config")).thenReturn(expected)
+        def result = service.findSettingsGroupByName("some-config")
+        verify(service.settingsGroupDao).findByName("some-config")
+        assert result.is(expected)
+    }
+    
+    @Test
     void findSettingsGroupByNameAndEnvironmentShouldReturnResultsFromDao() {
         def expected = new SettingsGroup()
         def env = new Environment(name:"prod")

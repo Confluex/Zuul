@@ -19,10 +19,12 @@ class ZuulServiceImpl implements ZuulService {
     @Autowired
     EnvironmentDao environmentDao
 
+    List<SettingsGroup> findSettingsGroupByName(String name) {
+        return settingsGroupDao.findByName(name)
+    }
+
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env) {
-        def group = settingsGroupDao.findByNameAndEnvironment(name, new Environment(name: env))
-        group.entries.size() // lazy-init (TODO: stop being so lazy)
-        return group
+        return settingsGroupDao.findByNameAndEnvironment(name, new Environment(name: env))
     }
 
     List<Environment> listEnvironments() {
