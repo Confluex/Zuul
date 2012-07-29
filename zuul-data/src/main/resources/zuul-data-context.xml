@@ -74,4 +74,14 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
         <property name="persistenceUnitName" value="zuul"/>
     </bean>
 
+    <bean class="org.devnull.orm.boot.DataBootStrap">
+        <property name="tester">
+            <bean class="org.devnull.orm.boot.DataSourceDatabasePopulator">
+                <constructor-arg ref="dataSource"/>
+            </bean>
+        </property>
+        <property name="ddlStrategy" value="${jdbc.zuul.generate.ddl}"/>
+        <property name="triggerStrategy" value="create-drop"/>
+        <property name="csvImportsPath" value="classpath:/data"/>
+    </bean>
 </beans>
