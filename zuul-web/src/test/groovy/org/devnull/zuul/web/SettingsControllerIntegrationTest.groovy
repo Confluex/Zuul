@@ -13,17 +13,13 @@ public class SettingsControllerIntegrationTest extends ZuulWebIntegrationTest {
 
     @Test
     void listJsonShouldReturnValidResults() {
+        def environments = ["dev", "qa", "prod"]
         def results = controller.listJson()
-        println results
-        assert results.size() == 3
-        def dev = results.find { it.environment.name == "dev" }
-        def qa = results.find { it.environment.name == "qa" }
-        def prod = results.find { it.environment.name == "prod" }
-
-        assert loadTestProperties("/test-app-data-config-dev.properties") == dev as Properties
-        assert loadTestProperties("/test-app-data-config-qa.properties") == qa as Properties
-        assert loadTestProperties("/test-app-data-config-prod.properties") == prod as Properties
-
+        assert results.size() == environments.size()
+        environments.each { env ->
+            def group = results.find { it.environment.name == env }
+            loadTestProperties("/test-app-data-config-${env}.properties") == group as Properties
+        }
     }
 
 

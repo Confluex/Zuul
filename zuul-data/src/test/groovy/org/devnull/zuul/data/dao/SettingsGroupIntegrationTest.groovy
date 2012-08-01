@@ -11,7 +11,7 @@ class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
     SettingsGroupDao dao
 
     @Test
-    void findByNameShouldFindRecordAndMapCorrectly() {
+    void findByNameAndEnvironmentShouldFindRecordAndMapCorrectly() {
         def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name:"dev"))
         assert group.id == 1
         assert group.name == "app-data-config"
