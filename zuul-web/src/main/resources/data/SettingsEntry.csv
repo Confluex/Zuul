@@ -1,0 +1,14 @@
+id, groupId, key, value
+1, 1, jdbc.zuul.url, jdbc:h2:mem:zuul
+2, 1, jdbc.zuul.generate.ddl, create-drop
+3, 1, jdbc.zuul.username, sa
+4, 1, jdbc.zuul.password, 
+5, 1, jdbc.zuul.driver, org.h2.Driver
+6, 1, jdbc.zuul.dialect, org.hibernate.dialect.H2Dialect
+7, 1, jdbc.zuul.validationQuery, select 1
+8, 2, jdbc.zuul.url, jdbc:h2:file:zuul-qa
+9, 2, jdbc.zuul.generate.ddl, validate
+10, 3, jdbc.zuul.url, jdbc:h2:file:zuul-qa
+11, 3, jdbc.zuul.generate.ddl, none
+12, 3, jdbc.zuul.username, zuul
+13, 3, jdbc.zuul.password, supersecure
