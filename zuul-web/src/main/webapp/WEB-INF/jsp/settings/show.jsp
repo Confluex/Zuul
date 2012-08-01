@@ -19,7 +19,11 @@
         </div>
 
         <c:forEach var="env" items="${groupsByEnv}">
-            <h2>${fn:escapeXml(env.key)}</h2>
+            <h1>
+                <c:url var="downloadUrl" value="/settings/${env.key}/${env.value[0].name}.properties"/>
+                <a href="${downloadUrl}">${fn:escapeXml(env.key)}</a>
+                <small>TODO: description</small>
+            </h1>
 
             <table class="table table-bordered table-condensed">
                 <thead>
