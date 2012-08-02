@@ -11,11 +11,14 @@ import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 import javax.persistence.Id
+import org.devnull.zuul.data.config.ZuulDataConstants
 
 @Entity
-@EqualsAndHashCode(excludes="groups")
+@EqualsAndHashCode(includes="name")
 @ToString(includeNames = true, excludes="groups")
-class Environment {
+class Environment implements Serializable {
+
+    static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
     String name

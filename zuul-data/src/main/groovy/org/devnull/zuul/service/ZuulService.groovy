@@ -9,5 +9,6 @@ public interface ZuulService {
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env)
     List<Environment> listEnvironments()
     List<SettingsGroup> listSettingsGroups()
-
+    String encryptByKeyName(String value, String key)
+    String decrypt(String value, String key)
 }

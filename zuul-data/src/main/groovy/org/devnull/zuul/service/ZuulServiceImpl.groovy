@@ -1,17 +1,22 @@
 package org.devnull.zuul.service
 
+import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsGroup
+import org.jasypt.util.text.BasicTextEncryptor
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.data.domain.Sort
 
 @Service("zuulService")
 @Transactional(readOnly = true)
 class ZuulServiceImpl implements ZuulService {
+
+    @Autowired
+    EncryptionKeyDao encryptionKeyDao
 
     @Autowired
     SettingsGroupDao settingsGroupDao
@@ -33,5 +38,19 @@ class ZuulServiceImpl implements ZuulService {
 
     List<SettingsGroup> listSettingsGroups() {
         return settingsGroupDao.findAll(new Sort("name")) as List<SettingsGroup>
+    }
+
+    String encryptByKeyName(String value, String keyName) {
+        def key = encryptionKeyDao.findOne(keyName)
+        def encryptor = new BasicTextEncryptor();
+        encryptor.password = key.password
+        return encryptor.encrypt(value)
+    }
+
+    String decrypt(String value, String keyName) {
+        def key = encryptionKeyDao.findOne(keyName)
+        def encryptor = new BasicTextEncryptor();
+        encryptor.password = key.password
+        return encryptor.decrypt(value)
     }
 }

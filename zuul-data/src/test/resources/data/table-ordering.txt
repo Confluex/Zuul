@@ -1,3 +1,4 @@
+EncryptionKey
 SecurityRole
 SecurityUser
 SecurityUserRole

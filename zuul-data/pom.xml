@@ -76,6 +76,13 @@
             <artifactId>jackson-mapper-asl</artifactId>
         </dependency>
 
+        <!-- Encryption -->
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+
 
     </dependencies>
 

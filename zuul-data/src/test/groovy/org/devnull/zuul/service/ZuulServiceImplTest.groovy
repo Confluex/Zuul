@@ -8,6 +8,8 @@ import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.dao.EnvironmentDao
 import org.springframework.data.domain.Sort
+import org.devnull.zuul.data.dao.EncryptionKeyDao
+import org.devnull.zuul.data.model.EncryptionKey
 
 public class ZuulServiceImplTest {
 
@@ -15,7 +17,11 @@ public class ZuulServiceImplTest {
 
     @Before
     void createService() {
-        service = new ZuulServiceImpl(settingsGroupDao: mock(SettingsGroupDao), environmentDao: mock(EnvironmentDao))
+        service = new ZuulServiceImpl(
+                settingsGroupDao: mock(SettingsGroupDao),
+                environmentDao: mock(EnvironmentDao),
+                encryptionKeyDao: mock(EncryptionKeyDao)
+        )
     }
     
     @Test
@@ -54,5 +60,18 @@ public class ZuulServiceImplTest {
         def results = service.listSettingsGroups()
         verify(service.settingsGroupDao).findAll(sort)
         assert results.is(expected)
+    }
+
+    @Test
+    void shouldEncryptAndDecryptGivenKeyAndValue() {
+        when(service.encryptionKeyDao.findOne("Default Key")).thenReturn(new EncryptionKey(password: "k;2(&.sffd919"))
+
+        def encrypted = service.encryptByKeyName("foo", "Default Key")
+        println encrypted
+        assert encrypted != "foo"
+        def decrypted = service.decrypt(encrypted, "Default Key")
+        assert decrypted == "foo"
+
+        verify(service.encryptionKeyDao, times(2)).findOne("Default Key")
     }
 }
