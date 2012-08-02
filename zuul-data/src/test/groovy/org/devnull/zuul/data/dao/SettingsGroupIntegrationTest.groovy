@@ -17,6 +17,7 @@ class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
         assert group.name == "app-data-config"
         assert group.environment.name == "dev"
         assert group.entries.size() == 7
+        assert group.key.name == "Default Key"
 
         assert group.entries[0].key == "jdbc.zuul.url"
         assert group.entries[0].value == "jdbc:h2:mem:zuul"

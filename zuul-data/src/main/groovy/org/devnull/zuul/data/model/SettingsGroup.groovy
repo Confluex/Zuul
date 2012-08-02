@@ -12,6 +12,7 @@ import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 import javax.persistence.ManyToOne
 import javax.persistence.JoinColumn
 import org.codehaus.jackson.annotate.JsonBackReference
+import org.codehaus.jackson.annotate.JsonIgnore
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -28,9 +29,14 @@ class SettingsGroup implements Serializable {
     List<SettingsEntry> entries = []
 
     @ManyToOne
-    @JoinColumn(name="Environment")
+    @JoinColumn(name="environment")
     @JsonBackReference
     Environment environment
+
+    @ManyToOne
+    @JoinColumn(name="key")
+    @JsonIgnore
+    EncryptionKey key
 
     String name
 

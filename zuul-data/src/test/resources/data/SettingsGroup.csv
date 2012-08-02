@@ -1,4 +1,4 @@
-id,name,environment
-1,app-data-config,dev
-2,app-data-config,qa
-3,app-data-config,prod
+id,name,environment,key
+1,app-data-config,dev,Default Key
+2,app-data-config,qa,Default Key
+3,app-data-config,prod,Default Key
