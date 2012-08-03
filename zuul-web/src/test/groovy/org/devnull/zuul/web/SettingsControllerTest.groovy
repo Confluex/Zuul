@@ -1,13 +1,14 @@
 package org.devnull.zuul.web
 
+import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.junit.Before
-import static org.mockito.Mockito.*
 import org.junit.Test
 import org.springframework.mock.web.MockHttpServletResponse
-import org.devnull.zuul.data.model.SettingsGroup
-import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.Environment
+
+import static org.mockito.Mockito.*
 
 public class SettingsControllerTest {
 
@@ -21,9 +22,9 @@ public class SettingsControllerTest {
     @Test
     void renderPropertiesByNameAndEnvRenderPropertiesFile() {
         def mockResponse = new MockHttpServletResponse()
-        def group = new SettingsGroup(name:"my-application", environment: new Environment(name:"dev"))
-        group.entries.add(new SettingsEntry(key:"jdbc.driver", value: "com.awesome.db.Driver"))
-        group.entries.add(new SettingsEntry(key:"jdbc.username", value: "maxPower"))
+        def group = new SettingsGroup(name: "my-application", environment: new Environment(name: "dev"))
+        group.entries.add(new SettingsEntry(key: "jdbc.driver", value: "com.awesome.db.Driver"))
+        group.entries.add(new SettingsEntry(key: "jdbc.username", value: "maxPower"))
 
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment(group.name, group.environment.name)).thenReturn(group)
         controller.renderPropertiesByNameAndEnv(mockResponse, group.name, group.environment.name)
@@ -37,7 +38,7 @@ public class SettingsControllerTest {
         assert properties['jdbc.driver'] == "com.awesome.db.Driver"
         assert properties['jdbc.username'] == "maxPower"
     }
-    
+
     @Test
     void listJsonShouldReturnResultsFromService() {
         def expected = [new SettingsGroup(name: "a")]
@@ -50,9 +51,9 @@ public class SettingsControllerTest {
     @Test
     void showShouldGroupResultsByEnvironment() {
         def groups = [
-                new SettingsGroup(name: "group-1", environment: new Environment(name:"dev")),
-                new SettingsGroup(name: "group-1", environment: new Environment(name:"qa")),
-                new SettingsGroup(name: "group-1", environment: new Environment(name:"prod"))
+                new SettingsGroup(name: "group-1", environment: new Environment(name: "dev")),
+                new SettingsGroup(name: "group-1", environment: new Environment(name: "qa")),
+                new SettingsGroup(name: "group-1", environment: new Environment(name: "prod"))
         ]
         when(controller.zuulService.findSettingsGroupByName("group-1")).thenReturn(groups)
         def mv = controller.show("group-1")
@@ -74,6 +75,25 @@ public class SettingsControllerTest {
         def prod = mv.model.groupsByEnv.prod
         assert prod.size() == 1
         assert prod.first() == groups[2]
-
     }
+
+    @Test
+    void encryptionShouldReturnResultsFromService() {
+        def expected = new SettingsEntry(id: 1, key: "a.b.c", value: "foo", encrypted: false)
+        when(controller.zuulService.encryptSettingsEntryValue(expected.id)).thenReturn(expected)
+        def result = controller.encrypt(expected.id)
+        verify(controller.zuulService).encryptSettingsEntryValue(expected.id)
+        assert result.is(expected)
+    }
+
+    @Test
+    void decryptionShouldReturnResultsFromService() {
+        def expected = new SettingsEntry(id: 1, key: "a.b.c", value: "foo", encrypted: true)
+        when(controller.zuulService.decryptSettingsEntryValue(expected.id)).thenReturn(expected)
+        def result = controller.decrypt(expected.id)
+        verify(controller.zuulService).decryptSettingsEntryValue(expected.id)
+        assert result.is(expected)
+    }
+
+
 }

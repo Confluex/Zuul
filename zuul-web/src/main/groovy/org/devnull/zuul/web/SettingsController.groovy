@@ -1,17 +1,15 @@
 package org.devnull.zuul.web
 
+import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletResponse
-import org.springframework.web.servlet.ModelAndView
-import org.springframework.web.bind.annotation.ResponseBody
-import org.devnull.zuul.data.model.Environment
-import org.devnull.zuul.data.model.SettingsGroup
+
+import org.springframework.web.bind.annotation.*
 
 @Controller
 class SettingsController {
@@ -27,18 +25,28 @@ class SettingsController {
         properties.store(response.outputStream, "Generated from Zuul  with parameters: name=${name}, environment=${env}")
     }
 
-    @RequestMapping(value="/settings/{name}")
-     ModelAndView show(@PathVariable("name") String name) {
+    @RequestMapping(value = "/settings/{name}")
+    ModelAndView show(@PathVariable("name") String name) {
         def groups = zuulService.findSettingsGroupByName(name)
         def groupsByEnv = groups.groupBy { it.environment.name }
-        return new ModelAndView("/settings/show", [groupsByEnv:groupsByEnv, groupName:name, environments: groupsByEnv.keySet()])
+        return new ModelAndView("/settings/show", [groupsByEnv: groupsByEnv, groupName: name, environments: groupsByEnv.keySet()])
     }
 
-    @RequestMapping(value="/settings.json")
+    @RequestMapping(value = "/settings.json")
     @ResponseBody
     List<SettingsGroup> listJson() {
         return zuulService.listSettingsGroups()
     }
 
+    @RequestMapping(value = "/settings/encrypt.json")
+    @ResponseBody
+    SettingsEntry encrypt(@RequestParam("id") Integer id) {
+        return zuulService.encryptSettingsEntryValue(id)
+    }
 
+    @RequestMapping(value = "/settings/decrypt.json")
+    @ResponseBody
+    SettingsEntry decrypt(@RequestParam("id") Integer id) {
+        return zuulService.decryptSettingsEntryValue(id)
+    }
 }
