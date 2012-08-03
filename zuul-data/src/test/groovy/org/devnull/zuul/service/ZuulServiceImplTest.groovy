@@ -1,15 +1,18 @@
 package org.devnull.zuul.service
 
-import org.devnull.zuul.data.dao.SettingsGroupDao
-import org.junit.Before
-import static org.mockito.Mockito.*
-import org.junit.Test
-import org.devnull.zuul.data.model.SettingsGroup
-import org.devnull.zuul.data.model.Environment
-import org.devnull.zuul.data.dao.EnvironmentDao
-import org.springframework.data.domain.Sort
 import org.devnull.zuul.data.dao.EncryptionKeyDao
+import org.devnull.zuul.data.dao.EnvironmentDao
+import org.devnull.zuul.data.dao.SettingsEntryDao
+import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
+import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
+import org.junit.Before
+import org.junit.Test
+import org.springframework.data.domain.Sort
+
+import static org.mockito.Mockito.*
 
 public class ZuulServiceImplTest {
 
@@ -19,24 +22,25 @@ public class ZuulServiceImplTest {
     void createService() {
         service = new ZuulServiceImpl(
                 settingsGroupDao: mock(SettingsGroupDao),
+                settingsEntryDao: mock(SettingsEntryDao),
                 environmentDao: mock(EnvironmentDao),
                 encryptionKeyDao: mock(EncryptionKeyDao)
         )
     }
-    
+
     @Test
     void findSettingsGroupByNameShouldReturnResultsFromDao() {
-        def expected = [new SettingsGroup(name:"some-config")]
+        def expected = [new SettingsGroup(name: "some-config")]
         when(service.settingsGroupDao.findByName("some-config")).thenReturn(expected)
         def result = service.findSettingsGroupByName("some-config")
         verify(service.settingsGroupDao).findByName("some-config")
         assert result.is(expected)
     }
-    
+
     @Test
     void findSettingsGroupByNameAndEnvironmentShouldReturnResultsFromDao() {
         def expected = new SettingsGroup()
-        def env = new Environment(name:"prod")
+        def env = new Environment(name: "prod")
         when(service.settingsGroupDao.findByNameAndEnvironment("some-config", env)).thenReturn(expected)
         def result = service.findSettingsGroupByNameAndEnvironment("some-config", "prod")
         verify(service.settingsGroupDao).findByNameAndEnvironment("some-config", env)
@@ -51,10 +55,10 @@ public class ZuulServiceImplTest {
         verify(service.environmentDao).findAll()
         assert results.is(expected)
     }
-    
+
     @Test
     void listSettingsGroupsShouldSortByName() {
-        def expected = [new SettingsGroup(name:"foo")]
+        def expected = [new SettingsGroup(name: "foo")]
         def sort = new Sort("name")
         when(service.settingsGroupDao.findAll(sort)).thenReturn(expected)
         def results = service.listSettingsGroups()
@@ -63,15 +67,18 @@ public class ZuulServiceImplTest {
     }
 
     @Test
-    void shouldEncryptAndDecryptGivenKeyAndValue() {
-        when(service.encryptionKeyDao.findOne("Default Key")).thenReturn(new EncryptionKey(password: "k;2(&.sffd919"))
+    void shouldEncryptAndDecryptSettingsEntry() {
+        def group = new SettingsGroup(key: new EncryptionKey(password: "abc123"))
+        def entries = [new SettingsEntry(id: 1, key: "a", value: "foo", group: group)]
 
-        def encrypted = service.encryptByKeyName("foo", "Default Key")
-        println encrypted
-        assert encrypted != "foo"
-        def decrypted = service.decrypt(encrypted, "Default Key")
-        assert decrypted == "foo"
+        when(service.settingsEntryDao.findOne(entries[0].id)).thenReturn(entries[0])
+        when(service.settingsEntryDao.save(entries[0])).thenReturn(entries[0])
 
-        verify(service.encryptionKeyDao, times(2)).findOne("Default Key")
+        def encryptedEntry = service.encryptSettingsEntryValue(entries[0].id)
+        println encryptedEntry.value
+        assert encryptedEntry.value != "foo"
+
+        def decryptedEntry = service.decryptSettingsEntryValue(encryptedEntry.id)
+        assert decryptedEntry.value == "foo"
     }
 }

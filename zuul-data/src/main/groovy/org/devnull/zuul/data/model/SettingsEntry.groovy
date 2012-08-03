@@ -1,15 +1,11 @@
 package org.devnull.zuul.data.model
 
-import org.devnull.zuul.data.config.ZuulDataConstants
-import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
-import javax.persistence.Entity
-import javax.persistence.GenerationType
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToOne
-import javax.persistence.JoinColumn
+import groovy.transform.ToString
 import org.codehaus.jackson.annotate.JsonBackReference
+import org.devnull.zuul.data.config.ZuulDataConstants
+
+import javax.persistence.*
 
 @Entity
 @EqualsAndHashCode()
@@ -19,10 +15,10 @@ class SettingsEntry implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id
+    Integer id
 
     @ManyToOne
-    @JoinColumn(name="groupId")
+    @JoinColumn(name = "groupId")
     @JsonBackReference
     SettingsGroup group
 

@@ -23,7 +23,7 @@ class SettingsGroup implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id
+    Integer id
 
     @OneToMany(mappedBy = "group")
     List<SettingsEntry> entries = []

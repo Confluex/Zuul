@@ -2,8 +2,10 @@ package org.devnull.zuul.service
 
 import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
+import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.jasypt.util.text.BasicTextEncryptor
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +22,9 @@ class ZuulServiceImpl implements ZuulService {
 
     @Autowired
     SettingsGroupDao settingsGroupDao
+
+    @Autowired
+    SettingsEntryDao settingsEntryDao
 
     @Autowired
     EnvironmentDao environmentDao
@@ -40,17 +45,19 @@ class ZuulServiceImpl implements ZuulService {
         return settingsGroupDao.findAll(new Sort("name")) as List<SettingsGroup>
     }
 
-    String encryptByKeyName(String value, String keyName) {
-        def key = encryptionKeyDao.findOne(keyName)
+    SettingsEntry encryptSettingsEntryValue(Integer entryId) {
+        def entry = settingsEntryDao.findOne(entryId)
         def encryptor = new BasicTextEncryptor();
-        encryptor.password = key.password
-        return encryptor.encrypt(value)
+        encryptor.password = entry.group.key.password
+        entry.value = encryptor.encrypt(entry.value)
+        return settingsEntryDao.save(entry)
     }
 
-    String decrypt(String value, String keyName) {
-        def key = encryptionKeyDao.findOne(keyName)
+    SettingsEntry decryptSettingsEntryValue(Integer entryId) {
+        def entry = settingsEntryDao.findOne(entryId)
         def encryptor = new BasicTextEncryptor();
-        encryptor.password = key.password
-        return encryptor.decrypt(value)
+        encryptor.password = entry.group.key.password
+        entry.value = encryptor.decrypt(entry.value)
+        return settingsEntryDao.save(entry)
     }
 }
