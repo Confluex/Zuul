@@ -77,8 +77,10 @@ public class ZuulServiceImplTest {
         def encryptedEntry = service.encryptSettingsEntryValue(entries[0].id)
         println encryptedEntry.value
         assert encryptedEntry.value != "foo"
+        verify(service.settingsEntryDao).save(encryptedEntry)
 
         def decryptedEntry = service.decryptSettingsEntryValue(encryptedEntry.id)
         assert decryptedEntry.value == "foo"
+        verify(service.settingsEntryDao, times(2)).save(decryptedEntry)
     }
 }
