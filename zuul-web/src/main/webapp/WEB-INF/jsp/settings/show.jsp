@@ -36,7 +36,7 @@
                 <tbody>
                 <c:set var="entries" value="${env.value[0].entries}"/>
                 <c:forEach var="e" items="${entries}">
-                    <tr>
+                    <tr data-entry-id="${e.id}" data-encrypted="${e.encrypted}">
                         <td>${e.key}</td>
                         <td>${e.value}</td>
                         <td>
@@ -46,7 +46,7 @@
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Encrypt</a></li>
+                                    <li><a href="javascript:void(0);" data-entry>Encrypt</a></li>
                                     <li><a href="#">Edit</a></li>
                                     <li><a href="#">Delete</a></li>
                                 </ul>
@@ -59,5 +59,21 @@
         </c:forEach>
     </div>
 </div>
+<%--<script>
+    function encrypt(id) {
+        $.ajax({
+            url:"${pageContext.request.contextPath}/settings/encrypt",
+            data:{id:id},
+            success:function (data) {
+                alert('Load was performed: ' + data.value);
+                $('#row-key' + data.id).next().next().html(data.value);
+
+            },
+            error:function(jqXHR, textStatus, errorThrown) {
+               alert("Error encrypting value: " + errorThrown);
+            }
+        });
+    }
+</script>--%>
 </body>
 </html>
