@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.devnull.zuul.service.error.ConflictingOperationException
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -45,8 +46,12 @@ class ZuulServiceImpl implements ZuulService {
         return settingsGroupDao.findAll(new Sort("name")) as List<SettingsGroup>
     }
 
-    SettingsEntry encryptSettingsEntryValue(Integer entryId) {
+    @Transactional(readOnly = false)
+    synchronized SettingsEntry encryptSettingsEntryValue(Integer entryId) {
         def entry = settingsEntryDao.findOne(entryId)
+        if (entry.encrypted) {
+            throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entryId)
+        }
         def encryptor = new BasicTextEncryptor();
         encryptor.password = entry.group.key.password
         entry.value = encryptor.encrypt(entry.value)
@@ -54,8 +59,12 @@ class ZuulServiceImpl implements ZuulService {
         return settingsEntryDao.save(entry)
     }
 
-    SettingsEntry decryptSettingsEntryValue(Integer entryId) {
+    @Transactional(readOnly = false)
+    synchronized SettingsEntry decryptSettingsEntryValue(Integer entryId) {
         def entry = settingsEntryDao.findOne(entryId)
+        if (!entry.encrypted) {
+            throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entryId)
+        }
         def encryptor = new BasicTextEncryptor();
         encryptor.password = entry.group.key.password
         entry.value = encryptor.decrypt(entry.value)

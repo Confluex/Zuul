@@ -8,6 +8,7 @@ import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
+import org.devnull.zuul.service.error.ConflictingOperationException
 import org.junit.Before
 import org.junit.Test
 import org.springframework.data.domain.Sort
@@ -64,6 +65,20 @@ public class ZuulServiceImplTest {
         def results = service.listSettingsGroups()
         verify(service.settingsGroupDao).findAll(sort)
         assert results.is(expected)
+    }
+
+    @Test(expected = ConflictingOperationException)
+    void shouldErrorWhenTryingToEncryptValuesWhichAreAlreadyEncrypted() {
+        def entry = new SettingsEntry(id: 1, encrypted: true)
+        when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
+        service.encryptSettingsEntryValue(entry.id)
+    }
+
+    @Test(expected = ConflictingOperationException)
+    void shouldErrorWhenTryingToDecryptValuesWhichAreAlreadyDecrypted() {
+        def entry = new SettingsEntry(id: 1, encrypted: false)
+        when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
+        service.decryptSettingsEntryValue(entry.id)
     }
 
     @Test
