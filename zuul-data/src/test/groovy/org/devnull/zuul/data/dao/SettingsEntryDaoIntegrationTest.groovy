@@ -13,5 +13,11 @@ class SettingsEntryDaoIntegrationTest extends ZuulDataIntegrationTest {
     void findOneShouldMapCorrectly() {
         def entry = dao.findOne(1)
         assert entry.id == 1
+        assert entry.key == "jdbc.zuul.url"
+        assert entry.value == "jdbc:h2:mem:zuul"
+        assert entry.group.name == "app-data-config"
+        assert entry.group.environment.name == "dev"
+        assert entry.group.key.name == "Default Key"
+
     }
 }

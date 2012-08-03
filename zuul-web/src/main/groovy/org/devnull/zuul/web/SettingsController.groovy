@@ -39,4 +39,6 @@ class SettingsController {
     List<SettingsGroup> listJson() {
         return zuulService.listSettingsGroups()
     }
+
+
 }

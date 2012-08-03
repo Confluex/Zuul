@@ -24,4 +24,6 @@ class SettingsEntry implements Serializable {
 
     String key
     String value
+
+    Boolean encrypted = false
 }

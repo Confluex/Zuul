@@ -50,6 +50,7 @@ class ZuulServiceImpl implements ZuulService {
         def encryptor = new BasicTextEncryptor();
         encryptor.password = entry.group.key.password
         entry.value = encryptor.encrypt(entry.value)
+        entry.encrypted = true
         return settingsEntryDao.save(entry)
     }
 
@@ -58,6 +59,7 @@ class ZuulServiceImpl implements ZuulService {
         def encryptor = new BasicTextEncryptor();
         encryptor.password = entry.group.key.password
         entry.value = encryptor.decrypt(entry.value)
+        entry.encrypted = false
         return settingsEntryDao.save(entry)
     }
 }
