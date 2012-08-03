@@ -38,13 +38,13 @@ class SettingsController {
         return zuulService.listSettingsGroups()
     }
 
-    @RequestMapping(value = "/settings/encrypt.json")
+    @RequestMapping(value = "/settings/entry/encrypt.json")
     @ResponseBody
     SettingsEntry encrypt(@RequestParam("id") Integer id) {
         return zuulService.encryptSettingsEntryValue(id)
     }
 
-    @RequestMapping(value = "/settings/decrypt.json")
+    @RequestMapping(value = "/settings/entry/decrypt.json")
     @ResponseBody
     SettingsEntry decrypt(@RequestParam("id") Integer id) {
         return zuulService.decryptSettingsEntryValue(id)

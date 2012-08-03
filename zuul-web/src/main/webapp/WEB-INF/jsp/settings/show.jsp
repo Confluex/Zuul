@@ -36,17 +36,22 @@
                 <tbody>
                 <c:set var="entries" value="${env.value[0].entries}"/>
                 <c:forEach var="e" items="${entries}">
-                    <tr data-entry-id="${e.id}" data-encrypted="${e.encrypted}">
-                        <td>${e.key}</td>
-                        <td>${e.value}</td>
+                    <tr class="entry">
+                        <td class="key">${e.key}</td>
+                        <td class="value">${e.value}</td>
                         <td>
                             <div class="btn-group">
                                 <a class="btn btn-small btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
                                     Action
                                     <span class="caret"></span>
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="javascript:void(0);" data-entry>Encrypt</a></li>
+                                <ul class="settings-entry dropdown-menu">
+                                    <li>
+                                        <a href="#" class="encrypt-link" data-id="${e.id}"
+                                           data-encrypted="${e.encrypted}">
+                                                ${e.encrypted ? 'Decrypt' : 'Encrypt'}
+                                        </a>
+                                    </li>
                                     <li><a href="#">Edit</a></li>
                                     <li><a href="#">Delete</a></li>
                                 </ul>
@@ -59,21 +64,30 @@
         </c:forEach>
     </div>
 </div>
-<%--<script>
-    function encrypt(id) {
-        $.ajax({
-            url:"${pageContext.request.contextPath}/settings/encrypt",
-            data:{id:id},
-            success:function (data) {
-                alert('Load was performed: ' + data.value);
-                $('#row-key' + data.id).next().next().html(data.value);
+<script>
+    $(function () {
+        var toggleEncrypt = function () {
+            var link = $(this);
+            var operation = link.data('encrypted') ? 'decrypt' : 'encrypt';
+            var id = link.data('id');
+            $.ajax({
+                url:"${pageContext.request.contextPath}/settings/entry/" + operation + ".json",
+                data:{id:id},
+                success:function (data) {
+                    link.data('encrypted', data.encrypted);
+                    link.text(data.encrypted ? 'Decrypt' : 'Encrypt');
+                    // TODO this feels a little excessive... should be simpler
+                    link.parents("tr").children(".value").text(data.value);
 
-            },
-            error:function(jqXHR, textStatus, errorThrown) {
-               alert("Error encrypting value: " + errorThrown);
-            }
-        });
-    }
-</script>--%>
+                },
+                error:function (jqXHR, textStatus, errorThrown) {
+                    alert("Error encrypting value: " + errorThrown);
+                }
+            });
+        };
+
+        $(".encrypt-link").click(toggleEncrypt);
+    });
+</script>
 </body>
 </html>
