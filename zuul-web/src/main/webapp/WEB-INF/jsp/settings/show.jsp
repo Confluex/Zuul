@@ -47,7 +47,7 @@
                                 </a>
                                 <ul class="settings-entry dropdown-menu">
                                     <li>
-                                        <a href="#" class="encrypt-link" data-id="${e.id}"
+                                        <a href="javascript:void(0);" class="encrypt-link" data-id="${e.id}"
                                            data-encrypted="${e.encrypted}">
                                                 ${e.encrypted ? 'Decrypt' : 'Encrypt'}
                                         </a>
