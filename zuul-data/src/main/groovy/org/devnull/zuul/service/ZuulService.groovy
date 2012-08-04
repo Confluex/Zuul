@@ -12,4 +12,5 @@ public interface ZuulService {
     List<SettingsGroup> listSettingsGroups()
     SettingsEntry encryptSettingsEntryValue(Integer entryId)
     SettingsEntry decryptSettingsEntryValue(Integer entryId)
+    SettingsEntry findSettingsEntry(Integer id)
 }
