@@ -52,8 +52,8 @@
                                                 ${e.encrypted ? 'Decrypt' : 'Encrypt'}
                                         </a>
                                     </li>
-                                    <li><a href="#">Edit</a></li>
-                                    <li><a href="#">Delete</a></li>
+                                    <li><a href="#" class="edit-link" data-id="${e.id}">Edit</a></li>
+                                    <li><a href="#" data-id="${e.id}">Delete</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -62,6 +62,36 @@
                 </tbody>
             </table>
         </c:forEach>
+    </div>
+</div>
+<div class="modal hide" id="editEntryForm">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Edit Entry</h3>
+    </div>
+    <div class="modal-body">
+        <form action="${pageContext.request.contextPath}/settings/entry" onsubmit="return false;" method="POST" class="form-horizontal">
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="key">Key</label>
+
+                    <div class="controls">
+                        <input id="key" name="key" class="span3" type="text">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="value">Value</label>
+
+                    <div class="controls">
+                        <input id="value" name="value" class="span3" type="text">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn btn-primary">Save changes</a>
     </div>
 </div>
 <script>
@@ -87,6 +117,17 @@
         };
 
         $(".encrypt-link").click(toggleEncrypt);
+        $(".edit-link").click(function() {
+            var link = $(this);
+            var row = link.parents("tr");
+            var id = link.data('id');
+            var key = row.children(".key").text();
+            var value = row.children(".value").text();
+            var form = $('#editEntryForm');
+            form.find("input[name=key]").val(key);
+            form.find("input[name=value]").val(value);
+            form.modal();
+        });
     });
 </script>
 </body>
