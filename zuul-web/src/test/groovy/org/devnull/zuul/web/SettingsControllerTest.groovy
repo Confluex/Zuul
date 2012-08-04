@@ -95,5 +95,12 @@ public class SettingsControllerTest {
         assert result.is(expected)
     }
 
+    @Test
+    void showEntryJsonShouldReturnResultsFromService() {
+        def expected = new SettingsEntry(id:1)
+        when(controller.zuulService.findSettingsEntry(1)).thenReturn(expected)
+        def result = controller.showEntryJson(1)
+        assert result.is(expected)
+    }
 
 }

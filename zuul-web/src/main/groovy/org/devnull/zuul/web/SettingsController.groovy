@@ -38,6 +38,12 @@ class SettingsController {
         return zuulService.listSettingsGroups()
     }
 
+    @RequestMapping(value = "/settings/entry/{id}.json", method=RequestMethod.GET)
+    @ResponseBody
+    SettingsEntry showEntryJson(@PathVariable("id") Integer id) {
+        return zuulService.findSettingsEntry(id)
+    }
+
     @RequestMapping(value = "/settings/entry/encrypt.json")
     @ResponseBody
     SettingsEntry encrypt(@RequestParam("id") Integer id) {
