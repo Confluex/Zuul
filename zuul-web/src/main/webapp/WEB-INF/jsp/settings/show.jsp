@@ -10,6 +10,7 @@
 <html>
 <head>
     <title>${fn:escapeXml(groupName)}</title>
+    <script src="${pageContext.request.contextPath}/assets/ext/binder-0.3.js"></script>
 </head>
 <body>
 <div class="row">
@@ -64,13 +65,14 @@
         </c:forEach>
     </div>
 </div>
-<div class="modal hide" id="editEntryForm">
+<div class="modal hide" id="editEntryDialog">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3>Edit Entry</h3>
     </div>
     <div class="modal-body">
-        <form action="${pageContext.request.contextPath}/settings/entry" onsubmit="return false;" method="POST" class="form-horizontal">
+        <form  id="editEntryForm" action="${pageContext.request.contextPath}/settings/entry"
+               onsubmit="return false;" method="PUT" class="form-horizontal">
             <fieldset>
                 <div class="control-group">
                     <label class="control-label" for="key">Key</label>
@@ -119,14 +121,11 @@
         $(".encrypt-link").click(toggleEncrypt);
         $(".edit-link").click(function() {
             var link = $(this);
-            var row = link.parents("tr");
-            var id = link.data('id');
-            var key = row.children(".key").text();
-            var value = row.children(".value").text();
-            var form = $('#editEntryForm');
-            form.find("input[name=key]").val(key);
-            form.find("input[name=value]").val(value);
-            form.modal();
+            var dialog = $('#editEntryDialog').modal();
+            var form = $("#editEntryForm").jsonForm({
+                resourceId: link.data('id'),
+                dialog: dialog
+            });
         });
     });
 </script>
