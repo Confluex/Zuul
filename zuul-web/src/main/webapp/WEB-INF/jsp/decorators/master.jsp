@@ -8,6 +8,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="contextPath" content="${pageContext.request.contextPath}">
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/assets/images/favicon.ico">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/ext/bootstrap-2.0.4/css/bootstrap.min.css"
           type="text/css">
@@ -101,7 +102,7 @@
 </div>
 <script>
     $(function () {
-        $("#settingsMenu").settingsMenu({context:"${pageContext.request.contextPath}"});
+        $("#settingsMenu").settingsMenu();
     });
 </script>
 </body>

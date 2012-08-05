@@ -1,9 +1,12 @@
+function getContextPath() {
+    return $('meta[name=contextPath]').attr('content');
+}
 (function ($) {
     $.fn.settingsMenu = function (options) {
-        var settings = $.extend({  context:'/' }, options);
+        var settings = $.extend({  nothing:'' }, options);
         var menuItem = this;
         $.ajax({
-            url:settings.context + "/settings.json",
+            url: getContextPath() + "/settings.json",
             success:function (data) {
                 var fileNames = distinctGroupNames(data);
                 var subMenu = $(document.createElement('ul'));
@@ -13,7 +16,7 @@
                     var name = fileNames[i];
                     var link = $(document.createElement('a'));
                     link.text(name);
-                    link.attr('href', settings.context + "/settings/" + encodeURI(name));
+                    link.attr('href', getContextPath() + "/settings/" + encodeURI(name));
                     var subMenuItem = $(document.createElement('li'));
                     subMenuItem.append(link);
                     subMenu.append(subMenuItem);
