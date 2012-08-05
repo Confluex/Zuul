@@ -42,7 +42,8 @@
                         <td class="value">${e.value}</td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-small btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
+                                <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="icon-cog"></i>
                                     Action
                                     <span class="caret"></span>
                                 </a>
@@ -50,11 +51,23 @@
                                     <li>
                                         <a href="javascript:void(0);" class="encrypt-link" data-id="${e.id}"
                                            data-encrypted="${e.encrypted}">
+                                            <i class="icon-lock"></i>
                                                 ${e.encrypted ? 'Decrypt' : 'Encrypt'}
                                         </a>
                                     </li>
-                                    <li><a href="#" class="edit-link" data-id="${e.id}">Edit</a></li>
-                                    <li><a href="#" data-id="${e.id}">Delete</a></li>
+                                    <li>
+                                        <a href="#" class="edit-link" data-id="${e.id}">
+                                            <i class="icon-edit"></i>
+                                            Edit
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="#" data-id="${e.id}">
+                                            <i class="icon-trash"></i>
+                                            Delete
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </td>
@@ -108,7 +121,10 @@
                 data:{id:id},
                 success:function (data) {
                     link.data('encrypted', data.encrypted);
-                    link.text(data.encrypted ? 'Decrypt' : 'Encrypt');
+                    link.text(data.encrypted ? 'Decrypt ' : 'Encrypt ');
+                    var icon = $(document.createElement('i'));
+                    icon.addClass("icon-lock");
+                    link.prepend(icon);
                     // TODO this feels a little excessive... should be simpler
                     link.parents("tr").children(".value").text(data.value);
 

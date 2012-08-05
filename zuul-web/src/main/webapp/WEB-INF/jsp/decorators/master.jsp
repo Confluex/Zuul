@@ -39,29 +39,51 @@
 
                 <div class="nav-collapse">
                     <ul class="nav">
-                        <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
+                        <li class="active">
+                            <a href="${pageContext.request.contextPath}/">
+                                <i class="icon-home icon-white"></i>
+                                Home
+                            </a>
+                        </li>
                         <li id="settingsMenu" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Settings <b class="caret"></b></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Settings
+                                <b class="caret"></b>
+                            </a>
                         </li>
                     </ul>
                     <security:authorize access="isAuthenticated()">
                         <ul class="nav pull-right">
-                            <li class="dropdown">
+                            <li class="dropdown active">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="icon-user icon-white"></i>
                                     <security:authentication property="principal.firstName"/>
                                     <security:authentication property="principal.lastName"/>
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="${pageContext.request.contextPath}/profile">My Profile</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+                                    <li>
+                                        <a href="${pageContext.request.contextPath}/profile">
+                                            <i class="icon-edit"></i>
+                                            My Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${pageContext.request.contextPath}/logout">
+                                            <i class="icon-off"></i>
+                                            Logout
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
                     </security:authorize>
                     <security:authorize access="isAnonymous()">
                         <p class="navbar-text pull-right">
-                            <a href="${pageContext.request.contextPath}/login" class="btn btn-primary">Login</a>
+                            <a href="${pageContext.request.contextPath}/login" class="btn btn-primary">
+                                <i class="icon-user icon-white"></i>
+                                Login
+                            </a>
                         </p>
                     </security:authorize>
                 </div>
@@ -78,8 +100,8 @@
     </footer>
 </div>
 <script>
-    $(function() {
-       $("#settingsMenu").settingsMenu({context:"${pageContext.request.contextPath}"});
+    $(function () {
+        $("#settingsMenu").settingsMenu({context:"${pageContext.request.contextPath}"});
     });
 </script>
 </body>
