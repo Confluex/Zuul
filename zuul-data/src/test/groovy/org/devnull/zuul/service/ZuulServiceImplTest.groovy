@@ -112,6 +112,15 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void saveSettingsEntryShouldReturnResultsFromDao() {
+        def expected = new SettingsEntry(id: 1, key: "a", value: 1)
+        when(service.settingsEntryDao.save(expected)).thenReturn(expected)
+        def result = service.save(expected)
+        verify(service.settingsEntryDao).save(expected)
+        assert result.is(expected)
+    }
+
+    @Test
     void doWithFlagLockShouldNotAllowConcurrentInvocations() {
         def completed = []
         def threads = []

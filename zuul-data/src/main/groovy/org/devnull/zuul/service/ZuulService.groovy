@@ -13,4 +13,5 @@ public interface ZuulService {
     SettingsEntry encryptSettingsEntryValue(Integer entryId)
     SettingsEntry decryptSettingsEntryValue(Integer entryId)
     SettingsEntry findSettingsEntry(Integer id)
+    SettingsEntry save(SettingsEntry entry)
 }
