@@ -4,7 +4,7 @@ $(function () {
         var operation = link.data('encrypted') ? 'decrypt' : 'encrypt';
         var id = link.data('id');
         $.ajax({
-            url: getContextPath() + "/settings/entry/" + operation + ".json",
+            url:getContextPath() + "/settings/entry/" + operation + ".json",
             data:{id:id},
             success:function (data) {
                 link.data('encrypted', data.encrypted);
@@ -21,23 +21,42 @@ $(function () {
             }
         });
     };
-    function onSaveHandler(entry) {
+    var deleteEntry = function () {
+        link = $(this);
+        $.ajax({
+            url:getContextPath() + '/settings/entry/' + link.data('id') + ".json",
+            type:'DELETE',
+            success:function (data, status, xhr) {
+                onDeleteHandler();
+            },
+            error:function (xhr, status, error) {
+                alert("An error has occurred while deleting the record. Please check the log for more details.");
+            }
+        });
+    };
+    var onDeleteHandler = function () {
+        var row = link.parents("tr");
+        row.fadeOut('slow', function() {
+            row.remove();
+        });
+    };
+    var onSaveHandler = function (entry) {
         var row = link.parents("tr");
         row.fadeOut('slow', function () {
             row.children(".value").text(entry.value);
             row.children(".key").text(entry.key);
         });
         row.fadeIn('slow');
-    }
+    };
 
     var dialog = $('#editEntryDialog').modal({show:false});
     var link = null;
-    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler });
+    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
     $(".encrypt-link").click(toggleEncrypt);
     $(".edit-link").click(function () {
         link = $(this);
         $('#editEntryDialog').modal('show');
         $('#editEntryForm').jsonForm('loadResourceById', link.data('id'));
     });
-
+    $(".delete-link").click(deleteEntry);
 });

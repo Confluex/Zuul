@@ -112,6 +112,12 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void deleteSettingsEntryShouldInvokeDao() {
+        service.deleteSettingsEntry(1)
+        verify(service.settingsEntryDao).delete(1)
+    }
+
+    @Test
     void saveSettingsEntryShouldReturnResultsFromDao() {
         def expected = new SettingsEntry(id: 1, key: "a", value: 1)
         when(service.settingsEntryDao.save(expected)).thenReturn(expected)

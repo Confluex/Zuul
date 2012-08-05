@@ -90,6 +90,11 @@ class ZuulServiceImpl implements ZuulService {
     }
 
     @Transactional(readOnly=false)
+    void deleteSettingsEntry(Integer entryId) {
+        settingsEntryDao.delete(entryId)
+    }
+
+    @Transactional(readOnly=false)
     SettingsEntry save(SettingsEntry entry) {
         return settingsEntryDao.save(entry)
     }

@@ -64,7 +64,7 @@
                                     </li>
                                     <li class="divider"></li>
                                     <li>
-                                        <a href="#" data-id="${e.id}">
+                                        <a href="#" class="delete-link" data-id="${e.id}">
                                             <i class="icon-trash"></i>
                                             Delete
                                         </a>

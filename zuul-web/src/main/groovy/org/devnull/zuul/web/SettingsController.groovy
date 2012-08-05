@@ -53,6 +53,14 @@ class SettingsController {
         return zuulService.save(entry)
     }
 
+    @RequestMapping(value = "/settings/entry/{id}.json", method = RequestMethod.DELETE)
+    @ResponseBody()
+    String deleteEntryJson(@PathVariable("id") Integer id, HttpServletResponse response) {
+        zuulService.deleteSettingsEntry(id)
+        response.status = 204
+        return ""
+    }
+
     @RequestMapping(value = "/settings/entry/encrypt.json")
     @ResponseBody
     SettingsEntry encrypt(@RequestParam("id") Integer id) {

@@ -6,7 +6,7 @@ function getContextPath() {
         var settings = $.extend({  nothing:'' }, options);
         var menuItem = this;
         $.ajax({
-            url: getContextPath() + "/settings.json",
+            url:getContextPath() + "/settings.json",
             success:function (data) {
                 var fileNames = distinctGroupNames(data);
                 var subMenu = $(document.createElement('ul'));
@@ -44,6 +44,7 @@ function getContextPath() {
     var resourceUri = '/';
     var dialog = null;
     var onSave = null;
+    var onDelete = null;
     var methods = {
         init:function (options) {
             form = this;
@@ -51,6 +52,7 @@ function getContextPath() {
             resourceId = -1;
             dialog = options.dialog;
             onSave = options.onSave;
+            onDelete = options.onDelete;
             if (dialog) {
                 registerButtonHandlers();
             }
@@ -85,10 +87,12 @@ function getContextPath() {
             url:resourceUri + '/' + resourceId + ".json",
             type:form.attr('method'),
             data:JSON.stringify(data),
-            contentType: 'application/json',
+            contentType:'application/json',
             success:function (data, status, xhr) {
                 dialog.modal('hide');
-                if (onSave) { onSave(data) }
+                if (onSave) {
+                    onSave(data)
+                }
             },
             statusCode:{
                 406:function (xhr, status, error) {
@@ -104,7 +108,17 @@ function getContextPath() {
     }
 
     function deleteRecord() {
-        alert("TODO: deleteRecord");
+        $.ajax({
+            url:resourceUri + '/' + resourceId + ".json",
+            type: 'DELETE',
+            success:function (data, status, xhr) {
+                dialog.modal('hide');
+                if (onDelete) { onDelete() }
+            },
+            error:function (xhr, status, error) {
+                createAlert("An error has occurred while deleting the record. Please check the log for more details.");
+            }
+        });
     }
 
     function resetForm() {

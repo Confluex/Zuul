@@ -116,4 +116,12 @@ public class SettingsControllerTest {
         assert resultEntry.value == "b"
 
     }
+
+    @Test
+    void deleteEntryJsonShouldInvokeServiceAndReturnCorrectResponseCode() {
+        def response = new MockHttpServletResponse()
+        controller.deleteEntryJson(123, response)
+        verify(controller.zuulService).deleteSettingsEntry(123)
+        assert response.status == 204
+    }
 }
