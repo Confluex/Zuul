@@ -10,3 +10,7 @@ body {
 .modal {
     display: none;
 }
+
+h1 {
+    padding-bottom: 0.5em;
+}

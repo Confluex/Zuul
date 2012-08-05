@@ -51,6 +51,7 @@ $(function () {
 
     var dialog = $('#editEntryDialog').modal({show:false});
     var link = null;
+    $(".download").popover();
     $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
     $(".encrypt-link").click(toggleEncrypt);
     $(".edit-link").click(function () {
