@@ -92,6 +92,7 @@
         </form>
     </div>
     <div class="modal-footer">
+        <a href="#" class="btn btn-danger pull-left">Delete</a>
         <a href="#" class="btn" data-dismiss="modal">Close</a>
         <a href="#" class="btn btn-primary">Save changes</a>
     </div>
@@ -118,14 +119,13 @@
             });
         };
 
+        var dialog = $('#editEntryDialog').modal({show:false});
+        $("#editEntryForm").jsonForm({ dialog:dialog});
         $(".encrypt-link").click(toggleEncrypt);
         $(".edit-link").click(function() {
             var link = $(this);
-            var dialog = $('#editEntryDialog').modal();
-            var form = $("#editEntryForm").jsonForm({
-                resourceId: link.data('id'),
-                dialog: dialog
-            });
+            $('#editEntryDialog').modal('show');
+            $('#editEntryForm').jsonForm('loadResourceById', link.data('id'));
         });
     });
 </script>

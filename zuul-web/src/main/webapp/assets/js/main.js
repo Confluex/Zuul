@@ -33,89 +33,110 @@
 
         return this;
     };
+})(jQuery);
 
-    $.fn.jsonForm = function (options) {
-        var settings = $.extend({  dialog:null, resourceId:-1 }, options);
-        var form = this;
-        var resourceUri = this.attr("action");
-        loadFormFromJson();
-        if (settings.dialog) {
-            registerButtonHandlers();
-        }
-        function loadFormFromJson() {
+(function ($) {
+    var form = null;
+    var resourceId = -1;
+    var resourceUri = '/';
+    var dialog = null;
+
+    var methods = {
+        init:function (options) {
+            form = this;
+            resourceUri = form.attr("action");
+            resourceId = -1;
+            dialog = options.dialog;
+            if (dialog) {
+                registerButtonHandlers();
+            }
+            return this;
+        },
+        loadResourceById:function (id) {
+            resourceId = id;
             $.ajax({
-                url:resourceUri + "/" + settings.resourceId + ".json",
+                url:resourceUri + "/" + resourceId + ".json",
                 type:'GET',
                 success:function (data, status, xhr) {
                     var binder = Binder.FormBinder.bind(form.get(0), data);
                     binder.deserialize();
                 }
             });
+            return this;
         }
-
-        function registerButtonHandlers() {
-            settings.dialog.find('.btn-primary').click(saveRecord);
-            settings.dialog.find('.btn-danger').click(deleteRecord);
-            settings.dialog.on('hidden', resetForm);
-        }
-
-        function saveRecord() {
-            var binder = Binder.FormBinder.bind(form.get(0));
-            var data = binder.serialize();
-            $.ajax({
-                url:resourceUri + '/' + settings.resourceId + ".json",
-                type:form.attr('method'),
-                data:JSON.stringify(data),
-                success:function (data, status, xhr) {
-                    settings.dialog.modal('hide');
-                },
-                statusCode:{
-                    406:function (xhr, status, error) {
-                        var message = 'Some fields on the form were invalid. Please fix them and try again.';
-                        createAlert(message, JSON.parse(xhr.responseText));
-                    }
-                },
-                error:function (xhr, status, error) {
-                    createAlert("An error has occurred while saving the record. Please check the log for more details.");
-                }
-            });
-            return false;
-        }
-
-        function deleteRecord() {
-            alert("TODO: deleteRecord");
-        }
-
-        function resetForm() {
-            form.get(0).reset();
-            form.find('.alert').remove();
-            form.find('.control-group').removeClass('error');
-            form.find('input').attr('title', '');
-        }
-
-        function createAlert(message, errors) {
-            var alert = form.find('.alert');
-            if (!alert.length) {
-                alert = $(document.createElement('div'));
-                alert.addClass('alert alert-error').text(message);
-                form.prepend(alert);
-            }
-            else {
-                alert.text(message);
-            }
-            if (errors) {
-                for (var i = 0; i < errors.length; i++) {
-                    var fieldError = errors[i];
-                    var input = form.find("input[name=" + fieldError.field + "]");
-                    input.parent().parent().addClass('error');
-                    input.attr('title', fieldError.error);
-                    input.tooltip({trigger:'focus', placement:'right'});
-                }
-            }
-        }
-
-        return this;
     };
 
+
+    function registerButtonHandlers() {
+        dialog.find('.btn-primary').click(saveRecord);
+        dialog.find('.btn-danger').click(deleteRecord);
+        dialog.on('hidden', resetForm);
+    }
+
+    function saveRecord() {
+        var binder = Binder.FormBinder.bind(form.get(0));
+        var data = binder.serialize();
+        $.ajax({
+            url:resourceUri + '/' + resourceId + ".json",
+            type:form.attr('method'),
+            data:JSON.stringify(data),
+            success:function (data, status, xhr) {
+                dialog.modal('hide');
+            },
+            statusCode:{
+                406:function (xhr, status, error) {
+                    var message = 'Some fields on the form were invalid. Please fix them and try again.';
+                    createAlert(message, JSON.parse(xhr.responseText));
+                }
+            },
+            error:function (xhr, status, error) {
+                createAlert("An error has occurred while saving the record. Please check the log for more details.");
+            }
+        });
+        return false;
+    }
+
+    function deleteRecord() {
+        alert("TODO: deleteRecord");
+    }
+
+    function resetForm() {
+        form.get(0).reset();
+        form.find('.alert').remove();
+        form.find('.control-group').removeClass('error');
+        form.find('input').attr('title', '');
+    }
+
+    function createAlert(message, errors) {
+        var alert = form.find('.alert');
+        if (!alert.length) {
+            alert = $(document.createElement('div'));
+            alert.addClass('alert alert-error').text(message);
+            form.prepend(alert);
+        }
+        else {
+            alert.text(message);
+        }
+        if (errors) {
+            for (var i = 0; i < errors.length; i++) {
+                var fieldError = errors[i];
+                var input = form.find("input[name=" + fieldError.field + "]");
+                input.parent().parent().addClass('error');
+                input.attr('title', fieldError.error);
+                input.tooltip({trigger:'focus', placement:'right'});
+            }
+        }
+    }
+
+
+    $.fn.jsonForm = function (method) {
+        if (methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method ' + method + ' does not exist on jQuery.jsonForm');
+        }
+    };
 
 })(jQuery);
