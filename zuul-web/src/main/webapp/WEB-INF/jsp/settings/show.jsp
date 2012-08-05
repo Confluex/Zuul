@@ -71,8 +71,8 @@
         <h3>Edit Entry</h3>
     </div>
     <div class="modal-body">
-        <form  id="editEntryForm" action="${pageContext.request.contextPath}/settings/entry"
-               onsubmit="return false;" method="PUT" class="form-horizontal">
+        <form id="editEntryForm" action="${pageContext.request.contextPath}/settings/entry"
+              onsubmit="return false;" method="PUT" class="form-horizontal">
             <fieldset>
                 <div class="control-group">
                     <label class="control-label" for="key">Key</label>
@@ -123,16 +123,17 @@
         var link = null;
         $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler });
         $(".encrypt-link").click(toggleEncrypt);
-        $(".edit-link").click(function() {
+        $(".edit-link").click(function () {
             link = $(this);
             $('#editEntryDialog').modal('show');
             $('#editEntryForm').jsonForm('loadResourceById', link.data('id'));
         });
         function onSaveHandler(entry) {
             var row = link.parents("tr");
-            row.children(".value").text(entry.value);
-            row.children(".key").text(entry.key);
-            row.fadeOut('slow');
+            row.fadeOut('slow', function () {
+                row.children(".value").text(entry.value);
+                row.children(".key").text(entry.key);
+            });
             row.fadeIn('slow');
         }
     });
