@@ -40,13 +40,14 @@
     var resourceId = -1;
     var resourceUri = '/';
     var dialog = null;
-
+    var onSave = null;
     var methods = {
         init:function (options) {
             form = this;
             resourceUri = form.attr("action");
             resourceId = -1;
             dialog = options.dialog;
+            onSave = options.onSave;
             if (dialog) {
                 registerButtonHandlers();
             }
@@ -76,12 +77,15 @@
     function saveRecord() {
         var binder = Binder.FormBinder.bind(form.get(0));
         var data = binder.serialize();
+        delete data['']; // TODO weird empty key being generated for some reason. Figure out where it's coming from..
         $.ajax({
             url:resourceUri + '/' + resourceId + ".json",
             type:form.attr('method'),
             data:JSON.stringify(data),
+            contentType: 'application/json',
             success:function (data, status, xhr) {
                 dialog.modal('hide');
+                if (onSave) { onSave(data) }
             },
             statusCode:{
                 406:function (xhr, status, error) {

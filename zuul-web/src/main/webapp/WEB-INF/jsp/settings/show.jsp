@@ -120,13 +120,21 @@
         };
 
         var dialog = $('#editEntryDialog').modal({show:false});
-        $("#editEntryForm").jsonForm({ dialog:dialog});
+        var link = null;
+        $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler });
         $(".encrypt-link").click(toggleEncrypt);
         $(".edit-link").click(function() {
-            var link = $(this);
+            link = $(this);
             $('#editEntryDialog').modal('show');
             $('#editEntryForm').jsonForm('loadResourceById', link.data('id'));
         });
+        function onSaveHandler(entry) {
+            var row = link.parents("tr");
+            row.children(".value").text(entry.value);
+            row.children(".key").text(entry.key);
+            row.fadeOut('slow');
+            row.fadeIn('slow');
+        }
     });
 </script>
 </body>
