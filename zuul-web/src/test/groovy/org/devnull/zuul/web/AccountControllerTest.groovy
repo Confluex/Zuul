@@ -7,6 +7,7 @@ import org.devnull.zuul.web.config.WebConstants
 import org.junit.Before
 import org.junit.Test
 import static org.mockito.Mockito.*
+import static org.devnull.zuul.data.config.ZuulDataConstants.*
 
 public class AccountControllerTest {
     AccountController controller
@@ -28,8 +29,8 @@ public class AccountControllerTest {
 
     @Test
     void registerSubmitShouldRemoveGuestRoleAndAddUserRole() {
-        def guestRole = new Role(id: 1, name: WebConstants.ROLE_GUEST)
-        def userRole = new Role(id: 2, name: WebConstants.ROLE_USER)
+        def guestRole = new Role(id: 1, name: ROLE_GUEST)
+        def userRole = new Role(id: 2, name: ROLE_USER)
         def user = new User(id: 1, openId: "http://fake.openid.com", roles: [guestRole])
 
         when(controller.securityService.currentUser).thenReturn(user)

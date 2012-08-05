@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import org.devnull.zuul.web.config.WebConstants
+import static org.devnull.zuul.data.config.ZuulDataConstants.*
 
 @Controller
 class AccountController {
@@ -37,9 +37,9 @@ class AccountController {
         currentUser.firstName = user.firstName
         currentUser.lastName = user.lastName
         currentUser.email = user.email
-        currentUser.addToRoles(securityService.findRoleByName(WebConstants.ROLE_USER))
+        currentUser.addToRoles(securityService.findRoleByName(ROLE_USER))
         currentUser.roles.removeAll {
-            it.name == WebConstants.ROLE_GUEST
+            it.name == ROLE_GUEST
         }
 
         securityService.updateCurrentUser(true)
