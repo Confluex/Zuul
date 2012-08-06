@@ -39,7 +39,7 @@
                             <c:url var="downloadUrl"
                                    value="/settings/${env.key}/${env.value[0].name}.properties"/>
                             <a class="btn btn-primary download" href="${downloadUrl}" title="Download"
-                               data-content="Download the ${fn:escapeXml(env.value[0].name)}.properties file for ${fn:escapeXml(env.key)}">
+                               data-content="Use this URL in your application.">
                                 <i class="icon-white icon-download-alt"></i>
                                     ${fn:escapeXml(env.key)}
                             </a>
