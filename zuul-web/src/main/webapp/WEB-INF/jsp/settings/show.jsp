@@ -24,76 +24,84 @@
 
         <div class="tabbable tabs-left">
             <ul class="nav nav-tabs">
-                <c:forEach var="env" items="${groupsByEnv}" varStatus="i">
+                <c:forEach var="env" items="${environments}" varStatus="i">
                     <c:set var="activeFlag" value="${i.index == 0 ? 'active' : ''}"/>
                     <li class="${activeFlag}">
-                        <a data-toggle="tab" href="#${fn:escapeXml(env.key)}">${fn:escapeXml(env.key)}</a>
+                        <a data-toggle="tab" href="#${fn:escapeXml(env.name)}">${fn:escapeXml(env.name)}</a>
                     </li>
                 </c:forEach>
             </ul>
             <div class="tab-content">
-                <c:forEach var="env" items="${groupsByEnv}" varStatus="i">
+                <c:forEach var="env" items="${environments}" varStatus="i">
                     <c:set var="activeFlag" value="${i.index == 0 ? 'active' : ''}"/>
-                    <div id="${fn:escapeXml(env.key)}" class="tab-pane ${activeFlag}" style="min-height: 300px;">
-                        <h1>
-                            <c:url var="downloadUrl"
-                                   value="/settings/${env.key}/${env.value[0].name}.properties"/>
-                            <a class="btn btn-primary download" href="${downloadUrl}" title="Download"
-                               data-content="Use this URL in your application.">
-                                <i class="icon-white icon-download-alt"></i>
-                                    ${fn:escapeXml(env.key)}
-                            </a>
-                        </h1>
-
-                        <table class="table table-bordered table-condensed" style="margin-bottom: 10em;">
-                            <thead>
-                            <tr>
-                                <th style="width: 10%; white-space: nowrap;">Actions</th>
-                                <th style="width: 45%">Key</th>
-                                <th style="width: 45%">Value</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <c:set var="entries" value="${env.value[0].entries}"/>
-                            <c:forEach var="e" items="${entries}">
-                                <tr class="entry">
-                                    <td>
-                                        <div class="btn-group">
-                                            <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
-                                                <i class="icon-cog"></i>
-                                                Action
-                                                <span class="caret"></span>
-                                            </a>
-                                            <ul class="settings-entry dropdown-menu">
-                                                <li>
-                                                    <a href="javascript:void(0);" class="encrypt-link" data-id="${e.id}"
-                                                       data-encrypted="${e.encrypted}">
-                                                        <i class="icon-lock"></i>
-                                                            ${e.encrypted ? 'Decrypt' : 'Encrypt'}
+                    <c:set var="group" value="${groupsByEnv[env]}"/>
+                    <div id="${fn:escapeXml(env.name)}" class="tab-pane ${activeFlag}" style="min-height: 300px;">
+                        <c:choose>
+                            <c:when test="${group != null}">
+                                <h1>
+                                    <c:url var="downloadUrl"
+                                           value="/settings/${fn:escapeXml(env.name)}/${fn:escapeXml(group.name)}.properties"/>
+                                    <a class="btn btn-primary download" href="${downloadUrl}" title="Download"
+                                       data-content="Use this URL in your application.">
+                                        <i class="icon-white icon-download-alt"></i>
+                                            ${fn:escapeXml(env.name)}
+                                    </a>
+                                </h1>
+                                <table class="table table-bordered table-condensed" style="margin-bottom: 10em;">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 10%; white-space: nowrap;">Actions</th>
+                                        <th style="width: 45%">Key</th>
+                                        <th style="width: 45%">Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="e" items="${group.entries}">
+                                        <tr class="entry">
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-small dropdown-toggle" data-toggle="dropdown"
+                                                       href="#">
+                                                        <i class="icon-cog"></i>
+                                                        Action
+                                                        <span class="caret"></span>
                                                     </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="edit-link" data-id="${e.id}">
-                                                        <i class="icon-edit"></i>
-                                                        Edit
-                                                    </a>
-                                                </li>
-                                                <li class="divider"></li>
-                                                <li>
-                                                    <a href="#" class="delete-link" data-id="${e.id}">
-                                                        <i class="icon-trash"></i>
-                                                        Delete
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td class="key">${e.key}</td>
-                                    <td class="value">${e.value}</td>
-                                </tr>
-                            </c:forEach>
-                            </tbody>
-                        </table>
+                                                    <ul class="settings-entry dropdown-menu">
+                                                        <li>
+                                                            <a href="javascript:void(0);" class="encrypt-link"
+                                                               data-id="${e.id}"
+                                                               data-encrypted="${e.encrypted}">
+                                                                <i class="icon-lock"></i>
+                                                                    ${e.encrypted ? 'Decrypt' : 'Encrypt'}
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" class="edit-link" data-id="${e.id}">
+                                                                <i class="icon-edit"></i>
+                                                                Edit
+                                                            </a>
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                        <li>
+                                                            <a href="#" class="delete-link" data-id="${e.id}">
+                                                                <i class="icon-trash"></i>
+                                                                Delete
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td class="key">${e.key}</td>
+                                            <td class="value">${e.value}</td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+                            </c:when>
+                            <c:otherwise>
+                                TODO: create new properties
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </c:forEach>
             </div>

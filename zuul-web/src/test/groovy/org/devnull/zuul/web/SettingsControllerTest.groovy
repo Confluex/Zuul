@@ -50,31 +50,31 @@ public class SettingsControllerTest {
 
     @Test
     void showShouldGroupResultsByEnvironment() {
-        def groups = [
-                new SettingsGroup(name: "group-1", environment: new Environment(name: "dev")),
-                new SettingsGroup(name: "group-1", environment: new Environment(name: "qa")),
-                new SettingsGroup(name: "group-1", environment: new Environment(name: "prod"))
+        def environments = [
+                new Environment(name: "dev"),
+                new Environment(name: "qa"),
+                new Environment(name: "prod")
         ]
-        when(controller.zuulService.findSettingsGroupByName("group-1")).thenReturn(groups)
+        def groups = [
+                new SettingsGroup(name: "group-1", environment: environments[0]),
+                new SettingsGroup(name: "group-1", environment: environments[1]),
+                new SettingsGroup(name: "group-1", environment: environments[2])
+        ]
+
+        when(controller.zuulService.listEnvironments()).thenReturn(environments)
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment('group-1', 'dev')).thenReturn(groups[0])
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment('group-1', 'qa')).thenReturn(groups[1])
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment('group-1', 'prod')).thenReturn(groups[2])
+
         def mv = controller.show("group-1")
+
         assert mv.viewName == "/settings/show"
-
-        def environments = mv.model.environments as List
-        assert environments[0] == groups[0].environment.name
-        assert environments[1] == groups[1].environment.name
-        assert environments[2] == groups[2].environment.name
-
-        def dev = mv.model.groupsByEnv.dev
-        assert dev.size() == 1
-        assert dev.first() == groups[0]
-
-        def qa = mv.model.groupsByEnv.qa
-        assert qa.size() == 1
-        assert qa.first() == groups[1]
-
-        def prod = mv.model.groupsByEnv.prod
-        assert prod.size() == 1
-        assert prod.first() == groups[2]
+        assert mv.model.environments.is(environments)
+        assert mv.model.groupsByEnv instanceof Map
+        environments.each { env ->
+            assert mv.model.groupsByEnv[env] == groups.find { it.environment == env }
+        }
+        assert mv.model.groupName == "group-1"
     }
 
     @Test
@@ -97,7 +97,7 @@ public class SettingsControllerTest {
 
     @Test
     void showEntryJsonShouldReturnResultsFromService() {
-        def expected = new SettingsEntry(id:1)
+        def expected = new SettingsEntry(id: 1)
         when(controller.zuulService.findSettingsEntry(1)).thenReturn(expected)
         def result = controller.showEntryJson(1)
         assert result.is(expected)
