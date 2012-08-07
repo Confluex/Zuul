@@ -53,7 +53,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#">
+                                    <a id="create-settings-group" href="#">
                                         <i class="icon-plus"></i>
                                         Create New
                                     </a>
