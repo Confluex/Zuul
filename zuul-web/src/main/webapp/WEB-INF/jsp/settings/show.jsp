@@ -42,14 +42,28 @@
                                 <jsp:include page="_viewGroup.jsp"/>
                             </c:when>
                             <c:otherwise>
-                                <div class="alert alert-info">
-                                    You don't have any settings for this environment yet.
-                                    Use one of the following options to create a new set of properties for this environment.
-                                </div>
-                                <div class="btn-group">
-                                    <a href="#" class="btn btn-large btn-primary">Create New</a>
-                                    <a href="#" class="btn btn-large btn-primary">Upload File</a>
-                                    <a href="#" class="btn btn-large btn-primary">Copy Environment</a>
+                                <div class="hero-unit">
+                                <h1>New File</h1>
+                                <p>
+                                    You don't have any settings for this environment yet. Use one of the following
+                                    options to create a new set of properties for this environment.
+                                </p>
+                                <p>
+                                    <div class="btn-group">
+                                        <a href="#" class="btn btn-large btn-primary">
+                                            <i class="icon-plus icon-white"></i>
+                                            Create New
+                                        </a>
+                                        <a href="#" class="btn btn-large btn-primary">
+                                            <i class="icon-upload icon-white"></i>
+                                            Upload File
+                                        </a>
+                                        <a href="#" class="btn btn-large btn-primary">
+                                            <i class="icon-share-alt icon-white"></i>
+                                            Copy Existing
+                                        </a>
+                                    </div>
+                                </p>
                                 </div>
                             </c:otherwise>
                         </c:choose>

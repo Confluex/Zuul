@@ -10,3 +10,7 @@ body {
 .modal {
     display: none;
 }
+
+.centered {
+    text-align: center;
+}
