@@ -42,7 +42,15 @@
                                 <jsp:include page="_viewGroup.jsp"/>
                             </c:when>
                             <c:otherwise>
-                                TODO: create new properties
+                                <div class="alert alert-info">
+                                    You don't have any settings for this environment yet.
+                                    Use one of the following options to create a new set of properties for this environment.
+                                </div>
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-large btn-primary">Create New</a>
+                                    <a href="#" class="btn btn-large btn-primary">Upload File</a>
+                                    <a href="#" class="btn btn-large btn-primary">Copy Environment</a>
+                                </div>
                             </c:otherwise>
                         </c:choose>
                     </div>
