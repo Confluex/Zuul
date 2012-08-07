@@ -4,14 +4,11 @@ function getContextPath() {
 (function ($) {
     $.fn.settingsMenu = function (options) {
         var settings = $.extend({  nothing:'' }, options);
-        var menuItem = this;
+        var subMenu = this;
         $.ajax({
             url:getContextPath() + "/settings.json",
             success:function (data) {
                 var fileNames = distinctGroupNames(data);
-                var subMenu = $(document.createElement('ul'));
-                subMenu.addClass('dropdown-menu');
-                menuItem.append(subMenu);
                 for (var i = 0; i < fileNames.length; i++) {
                     var name = fileNames[i];
                     var link = $(document.createElement('a'));

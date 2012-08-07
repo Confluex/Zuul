@@ -51,6 +51,15 @@
                                 Settings
                                 <b class="caret"></b>
                             </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">
+                                        <i class="icon-plus"></i>
+                                        Create New
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                            </ul>
                         </li>
                     </ul>
                     <security:authorize access="isAuthenticated()">
@@ -102,7 +111,7 @@
 </div>
 <script>
     $(function () {
-        $("#settingsMenu").settingsMenu();
+        $("#settingsMenu .dropdown-menu").settingsMenu();
     });
 </script>
 </body>
