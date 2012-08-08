@@ -20,18 +20,29 @@
         <p>
             Provide a file name (without an extension) and we'll get started creating a new settings
             group.
+
+        <div class="alert alert-info">
+            <button class="close" data-dismiss="alert">&times;</button>
+            <p>Although it is not necessary, you might want to consider using a URL friendly name since
+                it will be used as a path to retrieve the file.</p>
+
+            <p><strong>Example: </strong><br/>
+                myapp-data-config = /settings/dev/myapp-data-config.properties
+            </p>
+        </div>
         </p>
     </div>
     <div class="span6">
         <form action="#" id="newSettingsForm" method="GET" class="well form-inline">
-            <input id="groupName" name="name" type="text" class="input-large" placeholder="File Name" autocomplete="off">
+            <input id="groupName" name="name" type="text" class="input-large" placeholder="File Name"
+                   autocomplete="off">
             <button type="submit" class="btn btn-primary">Go</button>
         </form>
     </div>
 </div>
 <script>
-    $(function() {
-        $("#newSettingsForm").submit(function() {
+    $(function () {
+        $("#newSettingsForm").submit(function () {
             document.location = "${pageContext.request.contextPath}/settings/" + encodeURI($("#groupName").val());
             return false;
         })
