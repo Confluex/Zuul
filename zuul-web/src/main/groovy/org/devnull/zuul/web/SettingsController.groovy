@@ -25,6 +25,11 @@ class SettingsController {
         properties.store(response.outputStream, "Generated from Zuul  with parameters: name=${name}, environment=${env}")
     }
 
+    @RequestMapping(value = "/settings/new", method = RequestMethod.GET)
+    String newSettingsGroupForm() {
+        return "/settings/new"
+    }
+
     @RequestMapping(value = "/settings/{name}")
     ModelAndView show(@PathVariable("name") String name) {
         def environments = zuulService.listEnvironments()
@@ -32,7 +37,7 @@ class SettingsController {
         environments.each { env ->
             groupsByEnv[env] = zuulService.findSettingsGroupByNameAndEnvironment(name, env.name)
         }
-        def model = [groupsByEnv: groupsByEnv, groupName: name, environments:environments]
+        def model = [groupsByEnv: groupsByEnv, groupName: name, environments: environments]
         return new ModelAndView("/settings/show", model)
     }
 

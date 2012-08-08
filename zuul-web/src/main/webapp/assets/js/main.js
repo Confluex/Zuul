@@ -5,11 +5,6 @@ function getContextPath() {
     $.fn.settingsMenu = function (options) {
         var settings = $.extend({  nothing:'' }, options);
         var subMenu = this;
-        $('#create-settings-group').click(function() {
-           var newGroupName = prompt('Name:');
-            // TODO this should be a modal dialog form
-            document.location = getContextPath() + '/settings/' + encodeURI(newGroupName)
-        });
         $.ajax({
             url:getContextPath() + "/settings.json",
             success:function (data) {

@@ -53,7 +53,7 @@
                                     <div class="btn-group">
                                         <a href="#" class="btn btn-large btn-primary">
                                             <i class="icon-plus icon-white"></i>
-                                            Create New
+                                            From Scratch
                                         </a>
                                         <a href="#" class="btn btn-large btn-primary">
                                             <i class="icon-upload icon-white"></i>

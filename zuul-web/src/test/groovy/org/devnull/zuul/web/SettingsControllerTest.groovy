@@ -124,4 +124,10 @@ public class SettingsControllerTest {
         verify(controller.zuulService).deleteSettingsEntry(123)
         assert response.status == 204
     }
+
+    @Test
+    void newSettingsGroupFormShouldReturnCorrectView() {
+        def view = controller.newSettingsGroupForm()
+        assert view == "/settings/new"
+    }
 }

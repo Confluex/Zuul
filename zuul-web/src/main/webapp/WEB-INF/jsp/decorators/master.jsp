@@ -53,7 +53,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a id="create-settings-group" href="#">
+                                    <a id="create-settings-group" href="${pageContext.request.contextPath}/settings/new">
                                         <i class="icon-plus"></i>
                                         Create New
                                     </a>
