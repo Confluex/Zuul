@@ -44,7 +44,7 @@
                             </c:when>
                             <c:otherwise>
                                 <div class="hero-unit">
-                                <h1>New File</h1>
+                                <h1>New File - ${fn:escapeXml(env.name)}</h1>
                                 <p>
                                     You don't have any settings for this environment yet. Use one of the following
                                     options to create a new set of properties for this environment.
