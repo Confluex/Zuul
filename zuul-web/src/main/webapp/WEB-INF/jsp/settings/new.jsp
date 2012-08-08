@@ -20,7 +20,11 @@
         <p>
             Provide a file name (without an extension) and we'll get started creating a new settings
             group.
+        </p>
 
+        <p>You'll have an opportunity to define the environments in the next step.</p>
+    </div>
+    <div class="span6">
         <div class="alert alert-info">
             <button class="close" data-dismiss="alert">&times;</button>
             <p>Although it is not necessary, you might want to consider using a URL friendly name since
@@ -30,13 +34,13 @@
                 myapp-data-config = /settings/dev/myapp-data-config.properties
             </p>
         </div>
-        </p>
-    </div>
-    <div class="span6">
         <form action="#" id="newSettingsForm" method="GET" class="well form-inline">
             <input id="groupName" name="name" type="text" class="input-large" placeholder="File Name"
                    autocomplete="off">
-            <button type="submit" class="btn btn-primary">Go</button>
+            <button type="submit" class="btn btn-primary">
+                <i class="icon-arrow-right icon-white"></i>
+                Next
+            </button>
         </form>
     </div>
 </div>
