@@ -30,9 +30,10 @@ class SettingsController {
         properties.store(response.outputStream, "Generated from Zuul  with parameters: name=${name}, environment=${env}")
     }
 
-    @RequestMapping(value = "/settings/{environment}/{name}", method=RequestMethod.POST)
-    ModelAndView createFromScratch(@PathVariable("name") String name, @PathVariable("environment") String env) {
-
+    @RequestMapping(value = "/settings/create/scratch")
+    String createFromScratch(@RequestParam("name") String name, @RequestParam("environment") String env) {
+        def settingsGroup = zuulService.createEmptySettingsGroup(name, env)
+        return "redirect:/settings/${settingsGroup.name}#${settingsGroup.environment.name}"
     }
 
     @RequestMapping(value = "/settings/{name}", method=RequestMethod.GET)

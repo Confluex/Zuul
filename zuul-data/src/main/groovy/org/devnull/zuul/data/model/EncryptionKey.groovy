@@ -17,4 +17,5 @@ class EncryptionKey implements Serializable {
     String name
     String description
     String password
+    Boolean defaultKey = false
 }

@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort
 import java.util.concurrent.locks.Lock
 
 import static org.mockito.Mockito.*
+import org.mockito.Matchers
+import org.mockito.ArgumentCaptor
 
 public class ZuulServiceImplTest {
 
@@ -30,6 +32,46 @@ public class ZuulServiceImplTest {
                 encryptionKeyDao: mock(EncryptionKeyDao)
         )
     }
+
+    @Test
+    void shouldFindCorrectDefaultKey() {
+        def mockKeys = [
+                               new EncryptionKey(name:"a", defaultKey: false),
+                               new EncryptionKey(name:"b", defaultKey: false),
+                               new EncryptionKey(name:"c", defaultKey: true),
+                               new EncryptionKey(name:"d", defaultKey: false)
+                       ]
+        when(service.encryptionKeyDao.findAll()).thenReturn(mockKeys)
+        assert service.findDefaultKey().is(mockKeys[2])
+    }
+
+    @Test
+    void shouldCreateEmptySettingsGroupWithCorrectValues() {
+        def mockKeys = [
+                        new EncryptionKey(name:"a", defaultKey: false),
+                        new EncryptionKey(name:"b", defaultKey: false),
+                        new EncryptionKey(name:"c", defaultKey: true),
+                        new EncryptionKey(name:"d", defaultKey: false)
+                ]
+        def mockEnvironment = new Environment(name: "testEnv")
+        def mockGroup = new SettingsGroup(id: 1, name: "testGroup", environment: mockEnvironment, key:  mockKeys[2])
+
+
+        when(service.environmentDao.findOne(mockEnvironment.name)).thenReturn(mockEnvironment)
+        when(service.encryptionKeyDao.findAll()).thenReturn(mockKeys)
+        when(service.settingsGroupDao.save(Matchers.any(SettingsGroup))).thenReturn(mockGroup)
+        def result = service.createEmptySettingsGroup("testGroup", "testEnv")
+
+        def groupArg = ArgumentCaptor.forClass(SettingsGroup.class)
+        verify(service.settingsGroupDao).save(groupArg.capture())
+        assert groupArg.value.name == mockGroup.name
+        assert groupArg.value.environment == mockGroup.environment
+        assert groupArg.value.key == mockGroup.key
+        assert !groupArg.value.entries
+        assert result.is(mockGroup)
+    }
+
+
 
     @Test
     void findSettingsGroupByNameShouldReturnResultsFromDao() {

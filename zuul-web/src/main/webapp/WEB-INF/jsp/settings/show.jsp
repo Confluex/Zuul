@@ -44,18 +44,23 @@
                             </c:when>
                             <c:otherwise>
                                 <div class="hero-unit">
-                                <h1>New File - ${fn:escapeXml(env.name)}</h1>
-                                <p>
-                                    You don't have any settings for this environment yet. Use one of the following
-                                    options to create a new set of properties for this environment.
-                                </p>
-                                <p>
+                                    <h1>New File - ${fn:escapeXml(env.name)}</h1>
+
+                                    <p>
+                                        You don't have any settings for this environment yet. Use one of the following
+                                        options to create a new set of properties for this environment.
+                                    </p>
+
                                     <div class="btn-group">
-                                        <a href="#" class="btn btn-large btn-primary">
+                                        <c:url var="scratchUrl" value="/settings/create/scratch">
+                                            <c:param name="name" value="${groupName}"/>
+                                            <c:param name="environment" value="${env.name}"/>
+                                        </c:url>
+                                        <a id="uploadLink" href="${scratchUrl}" class="btn btn-large btn-primary">
                                             <i class="icon-plus icon-white"></i>
                                             From Scratch
                                         </a>
-                                        <a href="#" class="btn btn-large btn-primary">
+                                        <a id="uploadLink" href="#" class="btn btn-large btn-primary">
                                             <i class="icon-upload icon-white"></i>
                                             Upload File
                                         </a>
@@ -64,7 +69,6 @@
                                             Copy Existing
                                         </a>
                                     </div>
-                                </p>
                                 </div>
                             </c:otherwise>
                         </c:choose>

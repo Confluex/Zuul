@@ -130,4 +130,13 @@ public class SettingsControllerTest {
         def view = controller.newSettingsGroupForm()
         assert view == "/settings/new"
     }
+
+    @Test
+    void createFromScratchShouldInvokeServiceAndRedirectToCorrectView() {
+        def group = new SettingsGroup(name: "foo", environment: new Environment(name:"dev"))
+        when(controller.zuulService.createEmptySettingsGroup("foo", "dev")).thenReturn(group)
+        def view = controller.createFromScratch("foo", "dev")
+        verify(controller.zuulService).createEmptySettingsGroup("foo", "dev")
+        assert view == "redirect:/settings/foo#dev"
+    }
 }

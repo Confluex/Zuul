@@ -15,6 +15,7 @@ class EncryptionKeyDaoTest extends ZuulDataIntegrationTest {
         assert result.name == "Default Key"
         assert result.description == "Default key which can be used for evaluation purposes.."
         assert result.password == "k(2jsd&01m_.u<"
+        assert result.defaultKey
     }
 
     @Test

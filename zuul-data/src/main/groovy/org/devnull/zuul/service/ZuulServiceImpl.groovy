@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import org.slf4j.LoggerFactory
+import org.devnull.zuul.data.model.EncryptionKey
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -38,6 +39,14 @@ class ZuulServiceImpl implements ZuulService {
 
 
     Lock toggleFlagLock = new ReentrantLock(true)
+
+    @Transactional(readOnly=false)
+    SettingsGroup createEmptySettingsGroup(String groupName, String environmentName) {
+        def env = environmentDao.findOne(environmentName)
+        def key = findDefaultKey()
+        def group = new SettingsGroup(name:groupName, environment: env, key: key)
+        return settingsGroupDao.save(group)
+    }
 
     List<SettingsGroup> findSettingsGroupByName(String name) {
         return settingsGroupDao.findByName(name)
@@ -110,5 +119,10 @@ class ZuulServiceImpl implements ZuulService {
             toggleFlagLock.unlock()
             log.info("toggleFlagLock released")
         }
+    }
+
+    protected EncryptionKey findDefaultKey() {
+        //noinspection GroovyAssignabilityCheck
+        return encryptionKeyDao.findAll().find { it.defaultKey }
     }
 }
