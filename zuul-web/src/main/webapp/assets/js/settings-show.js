@@ -60,4 +60,7 @@ $(function () {
         $('#editEntryForm').jsonForm('loadResourceById', link.data('id'));
     });
     $(".delete-link").click(deleteEntry);
+    if (window.location.hash) {
+        $('ul.nav a[href="' + window.location.hash + '"]').tab('show');
+    }
 });
