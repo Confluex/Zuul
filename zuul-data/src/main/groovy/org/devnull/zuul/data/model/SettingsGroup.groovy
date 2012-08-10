@@ -40,6 +40,10 @@ class SettingsGroup implements Serializable {
 
     String name
 
+    void addToEntries(SettingsEntry entry) {
+        entry.group = this
+        entries << entry
+    }
 
     def asType(Class type) {
         switch (type) {

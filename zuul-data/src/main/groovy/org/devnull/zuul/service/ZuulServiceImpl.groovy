@@ -108,6 +108,11 @@ class ZuulServiceImpl implements ZuulService {
         return settingsEntryDao.save(entry)
     }
 
+    @Transactional(readOnly=false)
+    SettingsGroup save(SettingsGroup group) {
+        return settingsGroupDao.save(group)
+    }
+
     protected def doWithFlagLock = { closure ->
         try {
             log.info("Obtaining toggleFlagLock")

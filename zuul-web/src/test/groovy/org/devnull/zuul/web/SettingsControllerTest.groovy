@@ -132,6 +132,19 @@ public class SettingsControllerTest {
     }
 
     @Test
+    void addEntryJsonShouldAddToCorrectGroupAndSaveAndRedirect() {
+        def response = new MockHttpServletResponse()
+        def entry = new SettingsEntry(id: 1)
+        def group = new SettingsGroup(name: "testName", environment: new Environment(name: "testEnv"))
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("testName", "testEnv")).thenReturn(group)
+        when(controller.zuulService.save(group)).thenReturn(group)
+        def view = controller.addEntryJson(response, "testName", "testEnv", entry)
+        assert group.entries.contains(entry)
+        assert entry.group == group
+        assert view == "redirect:/settings/entry/1.json"
+    }
+
+    @Test
     void createFromScratchShouldInvokeServiceAndRedirectToCorrectView() {
         def group = new SettingsGroup(name: "foo", environment: new Environment(name:"dev"))
         when(controller.zuulService.createEmptySettingsGroup("foo", "dev")).thenReturn(group)

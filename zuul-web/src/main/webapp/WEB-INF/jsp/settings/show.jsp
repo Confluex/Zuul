@@ -106,7 +106,7 @@
     </div>
     <div class="modal-footer">
         <a href="#" class="btn btn-danger pull-left">Delete</a>
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
         <a href="#" class="btn btn-primary">Save changes</a>
     </div>
 </div>

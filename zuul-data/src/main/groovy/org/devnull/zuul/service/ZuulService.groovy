@@ -17,4 +17,5 @@ public interface ZuulService {
     SettingsEntry findSettingsEntry(Integer id)
     void deleteSettingsEntry(Integer entryId)
     SettingsEntry save(SettingsEntry entry)
+    SettingsGroup save(SettingsGroup group)
 }

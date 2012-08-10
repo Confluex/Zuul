@@ -21,6 +21,14 @@ public class SettingsGroupTest {
         assert props['a.b.c'] == 'foo'
         assert props['d.e.f'] == 'bar'
     }
+
+    @Test
+    void shouldSetBiDirectionalRelationshipWhenAddingEntries() {
+        def entry = new SettingsEntry(key: "testkey", value: "testval")
+        group.addToEntries(entry)
+        assert entry.group == group
+        assert group.entries.contains(entry)
+    }
     
     @Test(expected=GroovyCastException)
     void shouldThrowExceptionWhenCastToInvalidType() {
