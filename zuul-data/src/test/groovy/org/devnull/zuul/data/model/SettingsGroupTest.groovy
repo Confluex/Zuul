@@ -9,7 +9,12 @@ public class SettingsGroupTest {
 
     @Before
     void createConverter() {
-        group = new SettingsGroup()
+        group = new SettingsGroup(
+                id: 1,
+                name: "testGroup",
+                environment: new Environment(name: "testEnv"),
+                key:  new EncryptionKey(name:"testKey")
+        )
         group.entries.add(new SettingsEntry(key: 'a.b.c', value: 'foo'))
         group.entries.add(new SettingsEntry(key: 'd.e.f', value: 'bar'))
     }
@@ -32,7 +37,15 @@ public class SettingsGroupTest {
     
     @Test(expected=GroovyCastException)
     void shouldThrowExceptionWhenCastToInvalidType() {
-        def props = group as Map
+        group as List
+    }
 
+    @Test
+    void shouldCastAsMap() {
+        def map = group as Map
+        assert map.name == "testGroup"
+        assert map.key  == "testKey"
+        assert map.environment == "testEnv"
+        assert map.id == 1
     }
 }

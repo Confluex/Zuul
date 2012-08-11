@@ -2,18 +2,12 @@ package org.devnull.zuul.data.model
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.OneToMany
-import org.devnull.zuul.data.config.ZuulDataConstants
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException
-import javax.persistence.ManyToOne
-import javax.persistence.JoinColumn
 import org.codehaus.jackson.annotate.JsonBackReference
 import org.codehaus.jackson.annotate.JsonIgnore
-import javax.persistence.CascadeType
+import org.devnull.zuul.data.config.ZuulDataConstants
+
+import javax.persistence.*
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -26,16 +20,16 @@ class SettingsGroup implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id
 
-    @OneToMany(mappedBy = "group", cascade=[CascadeType.ALL])
+    @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL])
     List<SettingsEntry> entries = []
 
     @ManyToOne
-    @JoinColumn(name="environment")
+    @JoinColumn(name = "environment")
     @JsonBackReference
     Environment environment
 
     @ManyToOne
-    @JoinColumn(name="key")
+    @JoinColumn(name = "key")
     @JsonIgnore
     EncryptionKey key
 
@@ -48,13 +42,21 @@ class SettingsGroup implements Serializable {
 
     def asType(Class type) {
         switch (type) {
+            case SettingsGroup:
+                return this
             case Properties:
                 def properties = new Properties()
                 entries.each {
                     properties.put(it.key, it.value)
                 }
                 return properties
-            break
+            case Map:
+                def map = [:]
+                map.id = id
+                map.name = name
+                map.environment = environment.name
+                map.key = key.name
+                return map
             default:
                 throw new GroovyCastException("Hmm... ${this.class} cannot be converted to ${type}")
         }
