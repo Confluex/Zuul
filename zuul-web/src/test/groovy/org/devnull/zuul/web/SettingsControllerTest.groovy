@@ -9,6 +9,7 @@ import org.junit.Test
 import org.springframework.mock.web.MockHttpServletResponse
 
 import static org.mockito.Mockito.*
+import org.mockito.ArgumentCaptor
 
 public class SettingsControllerTest {
 
@@ -132,21 +133,32 @@ public class SettingsControllerTest {
     }
 
     @Test
-    void addEntryJsonShouldAddToCorrectGroupAndSaveAndRedirect() {
-        def response = new MockHttpServletResponse()
-        def entry = new SettingsEntry(id: 1)
-        def group = new SettingsGroup(name: "testName", environment: new Environment(name: "testEnv"))
-        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("testName", "testEnv")).thenReturn(group)
-        when(controller.zuulService.save(group)).thenReturn(group)
-        def view = controller.addEntryJson(response, "testName", "testEnv", entry)
-        assert group.entries.contains(entry)
-        assert entry.group == group
-        assert view == "redirect:/settings/entry/1.json"
+    void addEntryFormShouldHaveCorrectViewNameAndModelValue() {
+        def mv = controller.addEntryForm("testGroup", "testEnvironment")
+        assert mv.viewName == "/settings/entry"
+    }
+
+    @Test
+    void addEntrySubmitShouldAddNewEntryToCorrectGroupAndRedirectToCorrectView() {
+        def environmentName = 'testEnvironment'
+        def groupName = 'testGroup'
+        def group = new SettingsGroup(name:groupName)
+        def entry = new SettingsEntry(key: 'a', value: 'b')
+
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment(groupName, environmentName)).thenReturn(group)
+        def view = controller.addEntrySubmit(groupName, environmentName, entry)
+        def args = ArgumentCaptor.forClass(SettingsEntry)
+        verify(controller.zuulService).save(args.capture())
+
+        assert args.value.group == group
+        assert args.value.key == entry.key
+        assert args.value.value == entry.value
+        assert view == "redirect:/settings/testGroup#testEnvironment"
     }
 
     @Test
     void createFromScratchShouldInvokeServiceAndRedirectToCorrectView() {
-        def group = new SettingsGroup(name: "foo", environment: new Environment(name:"dev"))
+        def group = new SettingsGroup(name: "foo", environment: new Environment(name: "dev"))
         when(controller.zuulService.createEmptySettingsGroup("foo", "dev")).thenReturn(group)
         def view = controller.createFromScratch("foo", "dev")
         verify(controller.zuulService).createEmptySettingsGroup("foo", "dev")

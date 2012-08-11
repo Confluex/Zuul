@@ -11,6 +11,14 @@
     <i class="icon-white icon-download-alt"></i>
     ${fn:escapeXml(environment.name)}
 </a>
+<c:url var="addUrl"
+       value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}/entry"/>
+<a class="btn btn-primary" href="${addUrl}" title="Add Entry"
+   data-content="Create a new key value pair">
+    <i class="icon-white icon-plus"></i>
+    Create Entry
+</a>
+
 
 
 <table class="table table-bordered table-condensed" style="margin-bottom: 10em; margin-top: 1em;">

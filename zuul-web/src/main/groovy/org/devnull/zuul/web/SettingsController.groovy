@@ -37,7 +37,7 @@ class SettingsController {
         return "redirect:/settings/${settingsGroup.name}#${settingsGroup.environment.name}"
     }
 
-    /* -------- View/Render Actions ------ */
+    /* -------- View SettingsGroup Actions ------ */
 
     /**
      * Render a java properties file usable in an application.
@@ -63,6 +63,32 @@ class SettingsController {
         return new ModelAndView("/settings/show", model)
     }
 
+    /* -------- Settings Entry Form  ------ */
+
+    /**
+     * Show the form for a new key/value entry for the settings group
+     */
+    @RequestMapping(value = "/settings/{environment}/{name}/entry", method = RequestMethod.GET)
+    ModelAndView addEntryForm(@PathVariable("name") String groupName, @PathVariable("environment") String environment) {
+        def model = [groupName: groupName, environment: environment]
+        return new ModelAndView("/settings/entry", model)
+    }
+
+    /**
+     * Create a new key/value entry for the settings group
+     */
+    @RequestMapping(value = "/settings/{environment}/{name}/entry", method = RequestMethod.POST)
+    String addEntrySubmit(@PathVariable("name") String name, @PathVariable("environment") String env,
+                          SettingsEntry formEntry) {
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
+        def entry = new SettingsEntry(key: formEntry.key, value: formEntry.value, group: group)
+        zuulService.save(entry)
+        return "redirect:/settings/${name}#${env}"
+    }
+
+
+    /* -------- JSON Actions ------ */
+
     /**
      * View all of the settings groups as JSON
      */
@@ -79,21 +105,6 @@ class SettingsController {
     @ResponseBody
     SettingsEntry showEntryJson(@PathVariable("id") Integer id) {
         return zuulService.findSettingsEntry(id)
-    }
-
-    /* -------- Entry Modification Actions ------ */
-
-    /**
-     * Create a new key/value entry for the settings group
-     */
-    @RequestMapping(value = "/settings/{environment}/{name}/entry.json", method = RequestMethod.POST)
-    @ResponseBody
-    String addEntryJson(HttpServletResponse response, @PathVariable("name") String name,
-                               @PathVariable("environment") String env, @RequestBody SettingsEntry entry) {
-        def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
-        group.addToEntries(entry)
-        zuulService.save(group)
-        return "redirect:/settings/entry/${entry.id}.json"
     }
 
     /**
