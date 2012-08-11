@@ -49,8 +49,9 @@ class SettingsApiController {
      */
     @RequestMapping(value = "/settings.json")
     @ResponseBody
-    List<SettingsGroup> listJson() {
-        return zuulService.listSettingsGroups()
+    List<SettingsGroup> listJson(@RequestParam(required=false, value="deepFetch", defaultValue="false") Boolean deepFetch) {
+        def groups = zuulService.listSettingsGroups()
+        return deepFetch ? groups : groups.collect { it as Map } as List<SettingsGroup>
     }
 
     /**

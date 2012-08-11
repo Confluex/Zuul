@@ -12,13 +12,25 @@ public class SettingsApiControllerIntegrationTest extends ZuulWebIntegrationTest
     SettingsApiController controller
 
     @Test
-    void listJsonShouldReturnValidResults() {
+    void listJsonShouldContainEntriesIfDeepFetchIsTrue() {
         def environments = ["dev", "qa", "prod"]
-        def results = controller.listJson()
+        def results = controller.listJson(true)
         assert results.size() == environments.size()
         environments.each { env ->
             def group = results.find { it.environment.name == env }
+            assert group.entries
             loadTestProperties("/test-app-data-config-${env}.properties") == group as Properties
+        }
+    }
+
+    @Test
+    void listJsonShouldNotContainEntriesIfDeepFetchIsFalse() {
+        def environments = ["dev", "qa", "prod"]
+        def results = controller.listJson(false)
+        assert results.size() == environments.size()
+        environments.each { env ->
+            def group = results.find { it.environment.name == env }
+            assert !group.entries
         }
     }
 

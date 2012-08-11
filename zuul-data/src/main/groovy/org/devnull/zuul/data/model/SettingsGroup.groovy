@@ -54,8 +54,8 @@ class SettingsGroup implements Serializable {
                 def map = [:]
                 map.id = id
                 map.name = name
-                map.environment = environment.name
-                map.key = key.name
+                map.environment = [ name: environment.name ]
+                map.key = [ name: key.name, description:key.description ]
                 return map
             default:
                 throw new GroovyCastException("Hmm... ${this.class} cannot be converted to ${type}")
