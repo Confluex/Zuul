@@ -68,7 +68,11 @@
                                             <i class="icon-upload icon-white"></i>
                                             Upload File
                                         </a>
-                                        <a href="#" class="btn btn-large btn-primary">
+                                        <c:url var="copyUrl" value="/settings/create/copy">
+                                            <c:param name="name" value="${groupName}"/>
+                                            <c:param name="environment" value="${env.name}"/>
+                                        </c:url>
+                                        <a href="${copyUrl}" class="btn btn-large btn-primary">
                                             <i class="icon-share-alt icon-white"></i>
                                             Copy Existing
                                         </a>

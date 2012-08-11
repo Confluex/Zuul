@@ -1,16 +1,14 @@
 package org.devnull.zuul.web
 
 import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.ModelAndView
-
-import javax.servlet.http.HttpServletResponse
-
-import org.springframework.web.bind.annotation.*
 
 @Controller
 class SettingsController {
@@ -41,8 +39,17 @@ class SettingsController {
      */
     @RequestMapping(value = "/settings/create/upload", method = RequestMethod.GET)
     public ModelAndView createFromUpload(@RequestParam("name") String name, @RequestParam("environment") String env) {
-        def model = [environment: env, groupName:  name]
+        def model = [environment: env, groupName: name]
         return new ModelAndView("/settings/upload", model)
+    }
+
+    /**
+     * Display form for creating new settings groups from property file uploads
+     */
+    @RequestMapping(value = "/settings/create/copy", method = RequestMethod.GET)
+    public ModelAndView createFromCopy(@RequestParam("name") String name, @RequestParam("environment") String env) {
+        def model = [environment: env, groupName: name]
+        return new ModelAndView("/settings/copy", model)
     }
 
     /**
