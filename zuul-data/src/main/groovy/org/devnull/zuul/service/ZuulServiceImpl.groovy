@@ -42,9 +42,23 @@ class ZuulServiceImpl implements ZuulService {
 
     @Transactional(readOnly=false)
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName) {
+        log.info("Creating empty group for name: {}, environment: {}", groupName, environmentName)
         def env = environmentDao.findOne(environmentName)
         def key = findDefaultKey()
         def group = new SettingsGroup(name:groupName, environment: env, key: key)
+        return settingsGroupDao.save(group)
+    }
+
+    @Transactional(readOnly=false)
+    SettingsGroup createSettingsGroupFromPropertiesFile(String groupName, String environmentName, InputStream inputStream) {
+        def group = createEmptySettingsGroup(groupName, environmentName)
+        log.info("Appending entries from properties file..")
+        def properties = new Properties()
+        properties.load(inputStream)
+        log.debug("Loading entries: {}", properties)
+        properties.each {k, v ->
+            group.addToEntries(new SettingsEntry(key: k, value: v))
+        }
         return settingsGroupDao.save(group)
     }
 
@@ -71,6 +85,7 @@ class ZuulServiceImpl implements ZuulService {
             if (entry.encrypted) {
                 throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entryId)
             }
+            log.info("Encrypting entry: key={}", entry.key)
             def encryptor = new BasicTextEncryptor();
             encryptor.password = entry.group.key.password
             entry.value = encryptor.encrypt(entry.value)
@@ -86,6 +101,7 @@ class ZuulServiceImpl implements ZuulService {
             if (!entry.encrypted) {
                 throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entryId)
             }
+            log.info("Decrypting entry: key={}", entry.key)
             def encryptor = new BasicTextEncryptor();
             encryptor.password = entry.group.key.password
             entry.value = encryptor.decrypt(entry.value)
@@ -115,19 +131,21 @@ class ZuulServiceImpl implements ZuulService {
 
     protected def doWithFlagLock = { closure ->
         try {
-            log.info("Obtaining toggleFlagLock")
+            log.debug("Obtaining toggleFlagLock")
             toggleFlagLock.lock()
-            log.info("toggleFlagLock obtained")
+            log.debug("toggleFlagLock obtained")
             return closure()
         } finally {
-            log.info("Releasing toggleFlagLock")
+            log.debug("Releasing toggleFlagLock")
             toggleFlagLock.unlock()
-            log.info("toggleFlagLock released")
+            log.debug("toggleFlagLock released")
         }
     }
 
     protected EncryptionKey findDefaultKey() {
+        def key = encryptionKeyDao.findAll().find { it.defaultKey }
+        log.debug("Found default encryption key: {}", key)
         //noinspection GroovyAssignabilityCheck
-        return encryptionKeyDao.findAll().find { it.defaultKey }
+        return key
     }
 }

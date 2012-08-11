@@ -1,18 +1,22 @@
 package org.devnull.zuul.data.dao
 
+import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.test.ZuulDataIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.devnull.zuul.data.model.Environment
 
 class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
 
     @Autowired
     SettingsGroupDao dao
 
+    @Autowired
+    SettingsEntryDao entryDao
+
     @Test
     void findByNameAndEnvironmentShouldFindRecordAndMapCorrectly() {
-        def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name:"dev"))
+        def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
         assert group.id == 1
         assert group.name == "app-data-config"
         assert group.environment.name == "dev"
@@ -49,5 +53,26 @@ class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
         assert groups.find { it.environment.name == "dev" }
         assert groups.find { it.environment.name == "qa" }
         assert groups.find { it.environment.name == "prod" }
+    }
+
+    @Test
+    void shouldCascadePersistNewEntries() {
+        def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        assert group.entries.size() == 7
+        group.addToEntries(new SettingsEntry(key: "new.key", value: "woohoo!"))
+        dao.save(group)
+        def result = dao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        assert result.entries.size() == 8
+        assert result.entries.last().key == "new.key"
+        assert result.entries.last().value == "woohoo!"
+    }
+
+    @Test
+    void shouldCascadeDeleteEntries() {
+        def count = entryDao.count()
+        def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        def decrementBy = group.entries.size()
+        dao.delete(group.id)
+        assert entryDao.count() == count - decrementBy
     }
 }

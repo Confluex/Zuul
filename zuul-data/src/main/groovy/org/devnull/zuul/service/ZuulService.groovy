@@ -8,6 +8,7 @@ import org.devnull.zuul.data.model.EncryptionKey
 
 public interface ZuulService {
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName)
+    SettingsGroup createSettingsGroupFromPropertiesFile(String name, String env, InputStream inputStream)
     List<SettingsGroup> findSettingsGroupByName(String name)
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env)
     List<Environment> listEnvironments()

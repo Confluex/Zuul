@@ -5,6 +5,7 @@ import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletResponse
@@ -16,8 +17,6 @@ class SettingsController {
 
     @Autowired
     ZuulService zuulService
-
-    /* -------- Create Settings Group Workflow ------ */
 
     /**
      * Start the workflow for creating a new settings group
@@ -37,7 +36,23 @@ class SettingsController {
         return "redirect:/settings/${settingsGroup.name}#${settingsGroup.environment.name}"
     }
 
-    /* -------- View SettingsGroup Actions ------ */
+    @RequestMapping(value = "/settings/create/upload", method = RequestMethod.GET)
+    public ModelAndView createFromUpload(@RequestParam("name") String name, @RequestParam("environment") String env) {
+        def model = [environment: env, groupName:  name]
+        return new ModelAndView("/settings/upload", model)
+    }
+
+    /**
+     * Create a new settings group with entries from an uploaded properties file. Note that this must
+     * be multipart form encoded until I can figure out how to get browsers to simply post an inputstream
+     * of the raw file bytes. Need to look closer at XmlHTTPRequest and FileReader APIs. This would likely
+     * break any compatibility with IE (but will anyone care/notice?).
+     */
+    @RequestMapping(value = "/settings/{environment}/{name}.properties", method = RequestMethod.POST)
+    public String createFromProperties(@RequestParam("file") MultipartFile file, @PathVariable("name") String name, @PathVariable("environment") String env) {
+        zuulService.createSettingsGroupFromPropertiesFile(name, env, file.inputStream)
+        return "redirect:/settings/${name}#${env}"
+    }
 
     /**
      * Render a java properties file usable in an application.
@@ -63,8 +78,6 @@ class SettingsController {
         return new ModelAndView("/settings/show", model)
     }
 
-    /* -------- Settings Entry Form  ------ */
-
     /**
      * Show the form for a new key/value entry for the settings group
      */
@@ -85,9 +98,6 @@ class SettingsController {
         zuulService.save(entry)
         return "redirect:/settings/${name}#${env}"
     }
-
-
-    /* -------- JSON Actions ------ */
 
     /**
      * View all of the settings groups as JSON

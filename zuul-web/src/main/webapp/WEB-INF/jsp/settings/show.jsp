@@ -60,7 +60,11 @@
                                             <i class="icon-plus icon-white"></i>
                                             From Scratch
                                         </a>
-                                        <a id="uploadLink" href="#" class="btn btn-large btn-primary">
+                                        <c:url var="uploadUrl" value="/settings/create/upload">
+                                            <c:param name="name" value="${groupName}"/>
+                                            <c:param name="environment" value="${env.name}"/>
+                                        </c:url>
+                                        <a id="uploadLink" href="${uploadUrl}" class="btn btn-large btn-primary">
                                             <i class="icon-upload icon-white"></i>
                                             Upload File
                                         </a>

@@ -11,7 +11,7 @@
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>New Settings File</h1>
+            <h1>Give your file a name..</h1>
         </div>
     </div>
 </div>
@@ -19,12 +19,20 @@
     <div class="span6">
         <p>
             Provide a file name (without an extension) and we'll get started creating a new settings
-            group.
+            group. In the next step, we'll define the environments and the content of the file.
         </p>
 
-        <p>You'll have an opportunity to define the environments in the next step.</p>
+        <form action="#" id="newSettingsForm" method="GET" class="well form-inline">
+            <input id="groupName" name="name" type="text" class="input-large" placeholder="File Name"
+                   autocomplete="off">
+            <button type="submit" class="btn btn-primary">
+                <i class="icon-arrow-right icon-white"></i>
+                Next
+            </button>
+        </form>
     </div>
     <div class="span6">
+
         <div class="alert alert-info">
             <button class="close" data-dismiss="alert">&times;</button>
             <p>Although it is not necessary, you might want to consider using a URL friendly name since
@@ -34,14 +42,6 @@
                 myapp-data-config = /settings/dev/myapp-data-config.properties
             </p>
         </div>
-        <form action="#" id="newSettingsForm" method="GET" class="well form-inline">
-            <input id="groupName" name="name" type="text" class="input-large" placeholder="File Name"
-                   autocomplete="off">
-            <button type="submit" class="btn btn-primary">
-                <i class="icon-arrow-right icon-white"></i>
-                Next
-            </button>
-        </form>
     </div>
 </div>
 <script>

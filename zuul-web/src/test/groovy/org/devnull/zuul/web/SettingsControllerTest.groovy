@@ -6,10 +6,11 @@ import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import org.springframework.mock.web.MockHttpServletResponse
 
 import static org.mockito.Mockito.*
-import org.mockito.ArgumentCaptor
+import org.springframework.web.multipart.MultipartFile
 
 public class SettingsControllerTest {
 
@@ -142,7 +143,7 @@ public class SettingsControllerTest {
     void addEntrySubmitShouldAddNewEntryToCorrectGroupAndRedirectToCorrectView() {
         def environmentName = 'testEnvironment'
         def groupName = 'testGroup'
-        def group = new SettingsGroup(name:groupName)
+        def group = new SettingsGroup(name: groupName)
         def entry = new SettingsEntry(key: 'a', value: 'b')
 
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment(groupName, environmentName)).thenReturn(group)
@@ -162,6 +163,24 @@ public class SettingsControllerTest {
         when(controller.zuulService.createEmptySettingsGroup("foo", "dev")).thenReturn(group)
         def view = controller.createFromScratch("foo", "dev")
         verify(controller.zuulService).createEmptySettingsGroup("foo", "dev")
+        assert view == "redirect:/settings/foo#dev"
+    }
+
+    @Test
+    void createFromUploadShouldDisplayCorrectViewAndModel() {
+        def mv = controller.createFromUpload("foo", "dev")
+        assert mv.viewName == "/settings/upload"
+        assert mv.model.environment == "dev"
+        assert mv.model.groupName == "foo"
+    }
+
+    @Test
+    void createFromPropertiesFileShouldInvokeServiceWithFileInputStream() {
+        def multipartFile = mock(MultipartFile)
+        def inputStream = mock(InputStream)
+        when(multipartFile.getInputStream()).thenReturn(inputStream)
+        def view = controller.createFromProperties(multipartFile, "foo", "dev")
+        verify(controller.zuulService).createSettingsGroupFromPropertiesFile("foo", "dev", inputStream)
         assert view == "redirect:/settings/foo#dev"
     }
 }

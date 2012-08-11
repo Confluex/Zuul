@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.JoinColumn
 import org.codehaus.jackson.annotate.JsonBackReference
 import org.codehaus.jackson.annotate.JsonIgnore
+import javax.persistence.CascadeType
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -25,7 +26,7 @@ class SettingsGroup implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade=[CascadeType.ALL])
     List<SettingsEntry> entries = []
 
     @ManyToOne
