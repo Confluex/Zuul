@@ -4,21 +4,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
 
-<c:url var="downloadUrl"
-       value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}.properties"/>
-<a class="btn btn-primary download" href="${downloadUrl}" title="Download"
-   data-content="Use this URL in your application.">
-    <i class="icon-white icon-download-alt"></i>
-    ${fn:escapeXml(environment.name)}
-</a>
-<c:url var="addUrl"
-       value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}/entry"/>
-<a class="btn btn-primary" href="${addUrl}" title="Add Entry"
-   data-content="Create a new key value pair">
-    <i class="icon-white icon-plus"></i>
-    Create Entry
-</a>
-
+<div class="btn-group">
+    <c:url var="downloadUrl"
+           value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}.properties"/>
+    <a class="btn btn-primary descriptive" href="${downloadUrl}" title="Download"
+       data-content="Use this URL in your application.">
+        <i class="icon-white icon-download-alt"></i>
+        ${fn:escapeXml(environment.name)}
+    </a>
+    <c:url var="addUrl"
+           value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}/entry"/>
+    <a class="btn btn-primary descriptive" href="${addUrl}" title="Add Entry"
+       data-content="Create a new key value pair">
+        <i class="icon-white icon-plus"></i>
+        Create Entry
+    </a>
+</div>
 
 
 <table class="table table-bordered table-condensed" style="margin-bottom: 10em; margin-top: 1em;">
