@@ -21,6 +21,8 @@
         <c:url var="actionUrl" value="/settings/create/copy"/>
         <form id="copyForm" action="${actionUrl}" method="POST" class="form-inline" enctype="multipart/form-data">
             <input id="searchFiles" name="search" type="text" placeholder="Search.." autocomplete="off"/>
+            <input type="hidden" name="name" value="${fn:escapeXml(groupName)}"/>
+            <input type="hidden" name="environment" value="${fn:escapeXml(environment)}"/>
             <div class="form-actions">
                 <c:url var="backUrl" value="/settings/${groupName}"/>
                 <a href="${backUrl}" class="btn">
