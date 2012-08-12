@@ -4,22 +4,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
 
-<div class="btn-group">
-    <c:url var="downloadUrl"
-           value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}.properties"/>
-    <a class="btn btn-primary descriptive" href="${downloadUrl}" title="Download"
-       data-content="Use this URL in your application.">
-        <i class="icon-white icon-download-alt"></i>
-        ${fn:escapeXml(environment.name)}
-    </a>
-    <c:url var="addUrl"
-           value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}/entry"/>
-    <a class="btn btn-primary descriptive" href="${addUrl}" title="Add Entry"
-       data-content="Create a new key value pair">
-        <i class="icon-white icon-plus"></i>
-        Create Entry
-    </a>
-</div>
+<c:url var="downloadUrl"
+       value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}.properties"/>
+<a class="btn btn-primary descriptive" href="${downloadUrl}" title="Download"
+   data-content="Use this URL in your application.">
+    <i class="icon-white icon-download-alt"></i>
+    ${fn:escapeXml(environment.name)}
+</a>
+<c:url var="addUrl"
+       value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}/entry"/>
+<a class="btn btn-primary descriptive" href="${addUrl}" title="Add Entry"
+   data-content="Create a new key value pair">
+    <i class="icon-white icon-plus"></i>
+    Create Entry
+</a>
+<a class="btn btn-danger descriptive pull-right" href="#" title="Warning"
+   data-content="This will delete the ${environment.name} settings group. This operation cannot be undone.">
+    <i class="icon-white icon-trash"></i>
+    Delete
+</a>
 
 
 <table class="table table-bordered table-condensed" style="margin-bottom: 10em; margin-top: 1em;">
