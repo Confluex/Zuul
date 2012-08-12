@@ -35,6 +35,7 @@
             <div class="tab-content">
                 <c:forEach var="env" items="${environments}" varStatus="i">
                     <c:set var="activeFlag" value="${i.index == 0 ? 'active' : ''}"/>
+                    <c:set var="groupName" value="${groupName}" scope="request"/>
                     <c:set var="group" value="${groupsByEnv[env]}" scope="request"/>
                     <c:set var="environment" value="${env}" scope="request"/>
                     <div id="${fn:escapeXml(env.name)}" class="tab-pane ${activeFlag}" style="min-height: 300px;">
@@ -43,41 +44,7 @@
                                 <jsp:include page="_viewGroup.jsp"/>
                             </c:when>
                             <c:otherwise>
-                                <div class="hero-unit">
-                                    <h1>New File - ${fn:escapeXml(env.name)}</h1>
-
-                                    <p>
-                                        You don't have any settings for this environment yet. Use one of the following
-                                        options to create a new set of properties for this environment.
-                                    </p>
-
-                                    <div class="btn-group">
-                                        <c:url var="scratchUrl" value="/settings/create/scratch">
-                                            <c:param name="name" value="${groupName}"/>
-                                            <c:param name="environment" value="${env.name}"/>
-                                        </c:url>
-                                        <a id="uploadLink" href="${scratchUrl}" class="btn btn-large btn-primary">
-                                            <i class="icon-plus icon-white"></i>
-                                            From Scratch
-                                        </a>
-                                        <c:url var="uploadUrl" value="/settings/create/upload">
-                                            <c:param name="name" value="${groupName}"/>
-                                            <c:param name="environment" value="${env.name}"/>
-                                        </c:url>
-                                        <a id="uploadLink" href="${uploadUrl}" class="btn btn-large btn-primary">
-                                            <i class="icon-upload icon-white"></i>
-                                            Upload File
-                                        </a>
-                                        <c:url var="copyUrl" value="/settings/create/copy">
-                                            <c:param name="name" value="${groupName}"/>
-                                            <c:param name="environment" value="${env.name}"/>
-                                        </c:url>
-                                        <a href="${copyUrl}" class="btn btn-large btn-primary">
-                                            <i class="icon-share-alt icon-white"></i>
-                                            Copy Existing
-                                        </a>
-                                    </div>
-                                </div>
+                                <jsp:include page="_viewEmpty.jsp"/>
                             </c:otherwise>
                         </c:choose>
                     </div>
