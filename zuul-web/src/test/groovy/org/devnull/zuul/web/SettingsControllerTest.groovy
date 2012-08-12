@@ -107,5 +107,15 @@ public class SettingsControllerTest {
         assert mv.model.groupName == "foo"
     }
 
+    @Test
+    void createFromCopySubmitShouldFindCorrectEntryToCopyAndSave() {
+        def groupToCopy = new SettingsGroup(id:1, name:"some-config", environment: new Environment(name: "qa"))
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("some-config", "qa")).thenReturn(groupToCopy)
+        def view = controller.createFromCopySubmit("foo", "dev", "/qa/some-config.properties")
+        verify(controller.zuulService).findSettingsGroupByNameAndEnvironment("some-config", "qa")
+        verify(controller.zuulService).createSettingsGroupFromCopy("foo", "dev", groupToCopy)
+        assert view == "redirect:/settings/foo#dev"
+    }
+
 
 }

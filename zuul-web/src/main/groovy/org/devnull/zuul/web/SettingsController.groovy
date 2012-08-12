@@ -53,6 +53,21 @@ class SettingsController {
     }
 
     /**
+     * Create the new group from the submitted copy
+     */
+    @RequestMapping(value = "/settings/create/copy", method = RequestMethod.POST)
+    public String createFromCopySubmit(@RequestParam("name") String name, @RequestParam("environment") String env,
+                                       @RequestParam("search") String search) {
+        def match = search =~ /\/(.+)\/(.+)\.properties$/
+        if (match) {
+            def group = zuulService.findSettingsGroupByNameAndEnvironment(match.group(2), match.group(1))
+            zuulService.createSettingsGroupFromCopy(name, env, group)
+        }
+        // TODO needs some error handling
+        return "redirect:/settings/${name}#${env}"
+    }
+
+    /**
      * User interface for editing settings group
      */
     @RequestMapping(value = "/settings/{name}", method = RequestMethod.GET)

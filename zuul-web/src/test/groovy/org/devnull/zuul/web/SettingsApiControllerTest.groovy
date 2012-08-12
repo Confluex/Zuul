@@ -55,7 +55,7 @@ class SettingsApiControllerTest {
     void listJsonShouldReturnResultsFromService() {
         def expected = [new SettingsGroup(name: "a")]
         when(controller.zuulService.listSettingsGroups()).thenReturn(expected)
-        def results = controller.listJson()
+        def results = controller.listJson(true)
         verify(controller.zuulService).listSettingsGroups()
         assert results.is(expected)
     }

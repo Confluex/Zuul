@@ -71,6 +71,41 @@ public class ZuulServiceImplTest {
         assert result.is(mockGroup)
     }
 
+    @Test
+    void shouldCopySettingsGroupFromExistingWithCorrectValues() {
+        def groupToCopy = new SettingsGroup(
+                id:1, name: "test-config",
+                environment:  new Environment(name: "prod"),
+                key: new EncryptionKey(name: "testKey")
+        )
+        groupToCopy.addToEntries(new SettingsEntry(key: "username", value:"jdoe"))
+        groupToCopy.addToEntries(new SettingsEntry(key: "password", value:"3s+3_23s.zze3if", encrypted: true))
+        def environment = new Environment(name: "dev")
+
+
+        when(service.environmentDao.findOne("dev")).thenReturn(environment)
+        service.createSettingsGroupFromCopy("some-config", "dev", groupToCopy)
+
+        def copy = ArgumentCaptor.forClass(SettingsGroup)
+        verify(service.settingsGroupDao).save(copy.capture())
+
+        assert copy.value.name == "some-config"
+        assert copy.value.environment == environment
+        assert copy.value.key == groupToCopy.key
+
+        assert copy.value.entries.size() == 2
+        assert !copy.value.entries[0].is(groupToCopy.entries[0])
+        assert !copy.value.entries[1].is(groupToCopy.entries[1])
+
+        assert copy.value.entries[0].key == "username"
+        assert copy.value.entries[0].value == "jdoe"
+        assert !copy.value.entries[0].encrypted
+
+        assert copy.value.entries[1].key == "password"
+        assert copy.value.entries[1].value == "3s+3_23s.zze3if"
+        assert copy.value.entries[1].encrypted
+    }
+
 
 
     @Test

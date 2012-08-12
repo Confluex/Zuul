@@ -3,7 +3,6 @@ package org.devnull.zuul.web
 import org.devnull.security.model.Role
 import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
-import org.devnull.zuul.web.config.WebConstants
 import org.junit.Before
 import org.junit.Test
 import static org.mockito.Mockito.*
