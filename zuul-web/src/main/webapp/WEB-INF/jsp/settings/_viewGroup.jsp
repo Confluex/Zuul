@@ -18,7 +18,8 @@
     <i class="icon-white icon-plus"></i>
     Create Entry
 </a>
-<a class="btn btn-danger descriptive pull-right" href="#" title="Warning"
+<a class="btn btn-danger descriptive delete-group-link pull-right" href="#" title="Warning"
+   data-env="${fn:escapeXml(environment.name)}" data-group="${fn:escapeXml(group.name)}"
    data-content="This will delete the ${environment.name} settings group. This operation cannot be undone.">
     <i class="icon-white icon-trash"></i>
     Delete

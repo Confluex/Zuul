@@ -1,6 +1,9 @@
 $(function () {
+    var dialog = $('#editEntryDialog').modal({show:false});
+    var link = null;
+
     var toggleEncrypt = function () {
-        var link = $(this);
+        link = $(this);
         var operation = link.data('encrypted') ? 'decrypt' : 'encrypt';
         var id = link.data('id');
         $.ajax({
@@ -36,7 +39,7 @@ $(function () {
     };
     var onDeleteHandler = function () {
         var row = link.parents("tr");
-        row.fadeOut('slow', function() {
+        row.fadeOut('slow', function () {
             row.remove();
         });
     };
@@ -48,18 +51,36 @@ $(function () {
         });
         row.fadeIn('slow');
     };
-
-    var dialog = $('#editEntryDialog').modal({show:false});
-    var link = null;
-    $(".descriptive").popover({placement:'bottom'});
-    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
-    $(".encrypt-link").click(toggleEncrypt);
-    $(".edit-link").click(function () {
+    var showEditDialog = function () {
         link = $(this);
         $('#editEntryDialog').modal('show');
         $('#editEntryForm').jsonForm('loadResourceById', link.data('id'));
-    });
+    };
+    var deleteGroup = function () {
+        link = $(this);
+        var env = link.data("env");
+        var group = link.data("group");
+        $.ajax({
+            url: getContextPath() + "/settings/" + encodeURI(env) + "/" + encodeURI(group) + ".properties",
+            type:'DELETE',
+            success:function (data, status, xhr) {
+                var location = getContextPath() + "/settings/" + encodeURI(group) + "#" + encodeURI(env);
+                window.location = location;
+                window.location.reload();
+            },
+            error:function (xhr, status, error) {
+                alert("An error has occurred while deleting the record. Please check the log for more details." + status);
+            }
+        });
+    };
+
+
+    $(".descriptive").popover({placement:'bottom'});
+    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
+    $(".encrypt-link").click(toggleEncrypt);
+    $(".edit-link").click(showEditDialog);
     $(".delete-link").click(deleteEntry);
+    $(".delete-group-link").click(deleteGroup);
     if (window.location.hash) {
         $('ul.nav a[href="' + window.location.hash + '"]').tab('show');
     }

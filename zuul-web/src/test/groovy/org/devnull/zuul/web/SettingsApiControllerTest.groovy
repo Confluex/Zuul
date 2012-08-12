@@ -50,6 +50,16 @@ class SettingsApiControllerTest {
         assert properties['jdbc.username'] == "maxPower"
     }
 
+    @Test
+    void deletePropertiesByNameAndEnvShouldInvokeServiceAndReturnCorrectResponseCode() {
+        def response = new MockHttpServletResponse()
+        def group = new SettingsGroup(id:123)
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "dev")).thenReturn(group)
+        controller.deletePropertiesByNameAndEnv(response, "test-config", "dev")
+        verify(controller.zuulService).deleteSettingsGroup(123)
+        assert response.status == 204
+    }
+
 
     @Test
     void listJsonShouldReturnResultsFromService() {

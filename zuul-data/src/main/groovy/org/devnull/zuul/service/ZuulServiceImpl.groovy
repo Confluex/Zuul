@@ -75,6 +75,12 @@ class ZuulServiceImpl implements ZuulService {
         return settingsGroupDao.save(group)
     }
 
+    @Transactional(readOnly=false)
+    void deleteSettingsGroup(Integer groupId) {
+        log.info("Deleteing settings group: {} ", groupId)
+        settingsGroupDao.delete(groupId)
+    }
+
     List<SettingsGroup> findSettingsGroupByName(String name) {
         return settingsGroupDao.findByName(name)
     }

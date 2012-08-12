@@ -213,6 +213,12 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void deleteSettingsGroupShouldInvokeDao() {
+        service.deleteSettingsGroup(1)
+        verify(service.settingsGroupDao).delete(1)
+    }
+
+    @Test
     void doWithFlagLockShouldNotAllowConcurrentInvocations() {
         def completed = []
         def threads = []
@@ -239,6 +245,5 @@ public class ZuulServiceImplTest {
             throw new IllegalArgumentException("test error")
         }
         verify(service.toggleFlagLock).unlock()
-
     }
 }

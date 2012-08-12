@@ -42,6 +42,16 @@ class SettingsApiController {
         properties.store(response.outputStream, "Generated from Zuul  with parameters: name=${name}, environment=${env}")
     }
 
+    /**
+     * Delete a properties file
+     */
+    @RequestMapping(value = "/settings/{environment}/{name}.properties", method = RequestMethod.DELETE)
+    void deletePropertiesByNameAndEnv(HttpServletResponse response, @PathVariable("name") String name, @PathVariable("environment") String env) {
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
+        zuulService.deleteSettingsGroup(group.id)
+        response.status = 204
+    }
+
 
 
     /**

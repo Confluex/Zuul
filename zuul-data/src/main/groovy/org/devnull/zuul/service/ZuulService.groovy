@@ -7,17 +7,27 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.EncryptionKey
 
 public interface ZuulService {
+
+    /* Settings Groups -------------------- */
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName)
     SettingsGroup createSettingsGroupFromPropertiesFile(String name, String env, InputStream inputStream)
     SettingsGroup createSettingsGroupFromCopy(String name, String env, SettingsGroup copy)
+    void deleteSettingsGroup(Integer groupId)
     List<SettingsGroup> findSettingsGroupByName(String name)
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env)
-    List<Environment> listEnvironments()
     List<SettingsGroup> listSettingsGroups()
+    SettingsGroup save(SettingsGroup group)
+
+    /* Environments -------------------- */
+    List<Environment> listEnvironments()
+
+    /* Settings Entry -------------------- */
     SettingsEntry encryptSettingsEntryValue(Integer entryId)
     SettingsEntry decryptSettingsEntryValue(Integer entryId)
     SettingsEntry findSettingsEntry(Integer id)
     void deleteSettingsEntry(Integer entryId)
     SettingsEntry save(SettingsEntry entry)
-    SettingsGroup save(SettingsGroup group)
+
+
+
 }
