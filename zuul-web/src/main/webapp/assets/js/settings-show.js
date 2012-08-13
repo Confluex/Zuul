@@ -15,7 +15,6 @@ $(function () {
                 var icon = $(document.createElement('i'));
                 icon.addClass("icon-lock");
                 link.prepend(icon);
-                // TODO this feels a little excessive... should be simpler
                 link.parents("tr").children(".value").text(data.value);
 
             },

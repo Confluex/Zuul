@@ -23,7 +23,7 @@
         </p>
 
         <form action="#" id="newSettingsForm" method="GET" class="well form-inline">
-            <input id="groupName" name="name" type="text" class="input-large" placeholder="File Name"
+            <input id="groupName" name="name" type="text" class="input-large" placeholder="File Name.."
                    autocomplete="off">
             <button type="submit" class="btn btn-primary">
                 <i class="icon-arrow-right icon-white"></i>
@@ -35,6 +35,9 @@
 
         <div class="alert alert-info">
             <button class="close" data-dismiss="alert">&times;</button>
+            <h3 class="section-header">
+                Tip
+            </h3>
             <p>Although it is not necessary, you might want to consider using a URL friendly name since
                 it will be used as a path to retrieve the file.</p>
 

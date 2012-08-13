@@ -29,9 +29,9 @@
 <table class="table table-bordered table-condensed" style="margin-bottom: 10em; margin-top: 1em;">
     <thead>
     <tr>
-        <th style="width: 10%; white-space: nowrap;">Actions</th>
-        <th style="width: 45%">Key</th>
-        <th style="width: 45%">Value</th>
+        <th style="width: 15%; white-space: nowrap;">Actions</th>
+        <th style="width: 30%">Key</th>
+        <th style="width: 55%">Value</th>
     </tr>
     </thead>
     <tbody>

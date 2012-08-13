@@ -14,3 +14,7 @@ body {
 .centered {
     text-align: center;
 }
+
+.section-header {
+    margin-bottom: 0.5em;
+}

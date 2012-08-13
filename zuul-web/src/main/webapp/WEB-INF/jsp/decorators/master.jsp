@@ -53,12 +53,39 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a id="create-settings-group" href="${pageContext.request.contextPath}/settings/new">
+                                    <a id="create-settings-group"
+                                       href="${pageContext.request.contextPath}/settings/new">
                                         <i class="icon-plus"></i>
                                         Create New
                                     </a>
                                 </li>
                                 <li class="divider"></li>
+                            </ul>
+                        </li>
+                        <li id="adminMenu" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Administration
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">
+                                        <i class="icon-user"></i>
+                                        Users &amp; Roles
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="icon-wrench"></i>
+                                        Configuration
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="icon-lock"></i>
+                                        Key Management
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>

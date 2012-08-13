@@ -18,9 +18,7 @@
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>${fn:escapeXml(groupName)}
-                <small>TODO: description</small>
-            </h1>
+            <h1>${fn:escapeXml(groupName)}</h1>
         </div>
 
         <div class="tabbable tabs-left">

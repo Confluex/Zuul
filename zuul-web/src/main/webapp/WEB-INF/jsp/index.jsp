@@ -8,9 +8,9 @@
 <body>
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
-    <h1>Lorem Ipsum!</h1>
+    <h1>Zuul</h1>
 
-    <p>Enim duis aliquam vel convallis conubia habitant lectus, fermentum blandit ut habitasse lacinia senectus nam, neque habitant egestas leo tempor primis.</p>
+    <p>Centralized application configuration management and security.</p>
 
     <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
