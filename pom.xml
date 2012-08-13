@@ -7,6 +7,11 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Zuul: Parent POM</name>
+    <scm>
+        <connection>scm:git:git@github.com:mcantrell/Zuul.git</connection>
+        <url>scm:git:git@github.com:mcantrell/Zuul.git</url>
+        <developerConnection>scm:git:git@github.com:mcantrell/Zuul.git</developerConnection>
+    </scm>
     <properties>
         <devnull.version>1.0-SNAPSHOT</devnull.version>
     </properties>
