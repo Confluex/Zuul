@@ -7,6 +7,15 @@
     <title>Home</title>
 </head>
 <body>
+<div class="row">
+    <div class="hero-unit span9 offset1">
+        <h1>Beta..</h1>
+
+        <p>No, it's not beta to be cool. This really is a work in progress.</p>
+
+        <p><a href="http://github.com/mcantrell/zuul" class="btn btn-primary btn-large">Help Out &raquo;</a></p>
+    </div>
+</div>
 
 <div id="features" class="row">
     <div class="span10 offset1">
