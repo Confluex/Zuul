@@ -12,6 +12,20 @@
         <url>scm:git:git@github.com:mcantrell/Zuul.git</url>
         <developerConnection>scm:git:git@github.com:mcantrell/Zuul.git</developerConnection>
     </scm>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>mcantrell</id>
+            <name>Mike Cantrell</name>
+            <email>mike.humansonly@devnull.org</email>
+        </developer>
+    </developers>
     <properties>
         <devnull.version>1.0-SNAPSHOT</devnull.version>
     </properties>
