@@ -18,3 +18,16 @@ body {
 .section-header {
     margin-bottom: 0.5em;
 }
+
+footer {
+    text-align: center;
+}
+
+footer ul {
+    list-style: none outside none;
+}
+
+footer li {
+    display: inline;
+    padding-right: 20px;
+}

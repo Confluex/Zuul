@@ -131,9 +131,11 @@
     <hr>
 
     <footer>
-        <em>Lorem tortor aenean vehicula sapien feugiat nibh taciti suscipit himenaeos lacus,
-            congue potenti conubia justo eu diam vestibulum mattis mauris curae id, etiam lacinia maecenas
-            tristique enim suscipit conubia molestie iaculis.</em>
+        <ul>
+            <li><a href="https://github.com/mcantrell/Zuul/wiki">View the Documentation</a></li>
+            <li><a href="https://github.com/mcantrell/Zuul/issues">Request Support &amp; New Features</a></li>
+        </ul>
+        <span class="label label-warning">Version: 1.0.0-SNAPSHOT</span>
     </footer>
 </div>
 <script>
