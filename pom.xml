@@ -33,9 +33,21 @@
     <parent>
         <groupId>org.devnull</groupId>
         <artifactId>devnull-parent</artifactId>
-        <!-- Grrr... can't use ${devnull.version} expression here -->
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <name>Sonatype OSS Maven Repo (snapshots)</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
     <modules>
         <module>zuul-data</module>
         <module>zuul-web</module>
