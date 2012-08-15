@@ -18,7 +18,7 @@
 </div>
 <div class="row">
     <div class="span12">
-        <c:url var="actionUrl" value="/settings/${environment}/${groupName}/entry"/>
+        <c:url var="actionUrl" value="/settings/${environment}/${groupName}/create/entry"/>
         <form action="${actionUrl}" method="POST" class="form-inline">
             <input id="key" name="key" class="span3" type="text" placeholder="Key..">
             <input id="value" name="value" class="span3" type="text" placeholder="Value..">

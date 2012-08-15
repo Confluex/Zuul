@@ -20,9 +20,9 @@ class SettingsController {
      * Start the workflow for creating a new settings group
      * @return
      */
-    @RequestMapping(value = "/settings/new", method = RequestMethod.GET)
+    @RequestMapping(value = "/settings/create", method = RequestMethod.GET)
     String newSettingsGroupForm() {
-        return "/settings/new"
+        return "/settings/create"
     }
 
     /**
@@ -68,6 +68,27 @@ class SettingsController {
     }
 
     /**
+     * Show the form for a new key/value entry for the settings group
+     */
+    @RequestMapping(value = "/settings/{environment}/{name}/create/entry", method = RequestMethod.GET)
+    ModelAndView addEntryForm(@PathVariable("name") String groupName, @PathVariable("environment") String environment) {
+        def model = [groupName: groupName, environment: environment]
+        return new ModelAndView("/settings/entry", model)
+    }
+
+    /**
+     * Create a new key/value entry for the settings group
+     */
+    @RequestMapping(value = "/settings/{environment}/{name}/create/entry", method = RequestMethod.POST)
+    String addEntrySubmit(@PathVariable("name") String name, @PathVariable("environment") String env,
+                          SettingsEntry formEntry) {
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
+        def entry = new SettingsEntry(key: formEntry.key, value: formEntry.value, group: group)
+        zuulService.save(entry)
+        return "redirect:/settings/${name}#${env}"
+    }
+
+    /**
      * User interface for editing settings group
      */
     @RequestMapping(value = "/settings/{name}", method = RequestMethod.GET)
@@ -81,25 +102,5 @@ class SettingsController {
         return new ModelAndView("/settings/show", model)
     }
 
-    /**
-     * Show the form for a new key/value entry for the settings group
-     */
-    @RequestMapping(value = "/settings/{environment}/{name}/entry", method = RequestMethod.GET)
-    ModelAndView addEntryForm(@PathVariable("name") String groupName, @PathVariable("environment") String environment) {
-        def model = [groupName: groupName, environment: environment]
-        return new ModelAndView("/settings/entry", model)
-    }
-
-    /**
-     * Create a new key/value entry for the settings group
-     */
-    @RequestMapping(value = "/settings/{environment}/{name}/entry", method = RequestMethod.POST)
-    String addEntrySubmit(@PathVariable("name") String name, @PathVariable("environment") String env,
-                          SettingsEntry formEntry) {
-        def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
-        def entry = new SettingsEntry(key: formEntry.key, value: formEntry.value, group: group)
-        zuulService.save(entry)
-        return "redirect:/settings/${name}#${env}"
-    }
 
 }

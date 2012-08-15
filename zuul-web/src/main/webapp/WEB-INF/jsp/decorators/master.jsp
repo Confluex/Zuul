@@ -46,48 +46,54 @@
                                 Home
                             </a>
                         </li>
-                        <li id="settingsMenu" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Settings
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a id="create-settings-group"
-                                       href="${pageContext.request.contextPath}/settings/new">
-                                        <i class="icon-plus"></i>
-                                        Create New
+                        <security:authorize access="hasRole('ROLE_USER')">
+                            <li id="settingsMenu" class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Settings
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <security:authorize access="hasRole('ROLE_ADMIN')">
+                                        <li>
+                                            <a id="create-settings-group"
+                                               href="${pageContext.request.contextPath}/settings/create">
+                                                <i class="icon-plus"></i>
+                                                Create New
+                                            </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                    </security:authorize>
+                                </ul>
+                            </li>
+                            <security:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
+                                <li id="adminMenu" class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        Administration
+                                        <b class="caret"></b>
                                     </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="#">
+                                                <i class="icon-user"></i>
+                                                Users &amp; Roles
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="icon-wrench"></i>
+                                                Configuration
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="icon-lock"></i>
+                                                Key Management
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
-                                <li class="divider"></li>
-                            </ul>
-                        </li>
-                        <li id="adminMenu" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Administration
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#">
-                                        <i class="icon-user"></i>
-                                        Users &amp; Roles
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="icon-wrench"></i>
-                                        Configuration
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="icon-lock"></i>
-                                        Key Management
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            </security:authorize>
+                        </security:authorize>
                     </ul>
                     <security:authorize access="isAuthenticated()">
                         <ul class="nav pull-right">
@@ -111,6 +117,14 @@
                                             Logout
                                         </a>
                                     </li>
+                                    <security:authorize access="!hasRole('ROLE_ADMIN')">
+                                        <li>
+                                            <a href="#">
+                                                <i class="icon-ok-sign"></i>
+                                                Request Permissions
+                                            </a>
+                                        </li>
+                                    </security:authorize>
                                 </ul>
                             </li>
                         </ul>
@@ -138,10 +152,13 @@
         <span class="label label-warning">Version: 1.0.0-SNAPSHOT</span>
     </footer>
 </div>
-<script>
-    $(function () {
-        $("#settingsMenu .dropdown-menu").settingsMenu();
-    });
-</script>
+<security:authorize access="hasRole('ROLE_USER')">
+    <script>
+        $(function () {
+            $("#settingsMenu .dropdown-menu").settingsMenu();
+        });
+    </script>
+</security:authorize>
+
 </body>
 </html>
