@@ -224,7 +224,9 @@ public class ZuulServiceImplTest {
         def threads = []
         threads << Thread.start {
             completed << service.doWithFlagLock {
-                sleep(300)
+                while(threads.size() < 2) {
+                    sleep(500)
+                }
                 return 'a'
             }
         }
