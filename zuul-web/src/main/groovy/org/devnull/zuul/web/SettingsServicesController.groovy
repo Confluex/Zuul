@@ -49,7 +49,7 @@ class SettingsServicesController {
     void deletePropertiesByNameAndEnv(HttpServletResponse response, @PathVariable("name") String name, @PathVariable("environment") String env) {
         def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
         zuulService.deleteSettingsGroup(group.id)
-        response.status = 204
+        response.status = HttpServletResponse.SC_NO_CONTENT
     }
 
 
@@ -89,11 +89,9 @@ class SettingsServicesController {
      * Delete a key/value entry for a settings group
      */
     @RequestMapping(value = "/settings/entry/{id}.json", method = RequestMethod.DELETE)
-    @ResponseBody()
-    String deleteEntryJson(@PathVariable("id") Integer id, HttpServletResponse response) {
+    void deleteEntryJson(@PathVariable("id") Integer id, HttpServletResponse response) {
         zuulService.deleteSettingsEntry(id)
-        response.status = 204
-        return ""
+        response.status = HttpServletResponse.SC_NO_CONTENT
     }
 
     /**

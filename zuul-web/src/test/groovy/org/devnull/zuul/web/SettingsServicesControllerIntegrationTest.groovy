@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.MockHttpServletResponse
 
-public class SettingsApiControllerIntegrationTest extends ZuulWebIntegrationTest {
+public class SettingsServicesControllerIntegrationTest extends ZuulWebIntegrationTest {
 
     @Autowired
     SettingsServicesController controller
