@@ -73,7 +73,7 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="#">
+                                            <a href="${pageContext.request.contextPath}/admin/system/users">
                                                 <i class="icon-user"></i>
                                                 Users &amp; Roles
                                             </a>
