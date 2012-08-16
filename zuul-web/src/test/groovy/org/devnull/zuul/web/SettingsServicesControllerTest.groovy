@@ -11,13 +11,13 @@ import org.springframework.web.multipart.MultipartFile
 
 import static org.mockito.Mockito.*
 
-class SettingsApiControllerTest {
+class SettingsServicesControllerTest {
 
-    SettingsApiController controller
+    SettingsServicesController controller
 
     @Before
     void createController() {
-        controller = new SettingsApiController(zuulService: mock(ZuulService))
+        controller = new SettingsServicesController(zuulService: mock(ZuulService))
     }
 
     @Test

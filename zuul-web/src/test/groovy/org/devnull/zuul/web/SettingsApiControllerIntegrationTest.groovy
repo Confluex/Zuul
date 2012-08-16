@@ -9,7 +9,7 @@ import org.springframework.mock.web.MockHttpServletResponse
 public class SettingsApiControllerIntegrationTest extends ZuulWebIntegrationTest {
 
     @Autowired
-    SettingsApiController controller
+    SettingsServicesController controller
 
     @Test
     void listJsonShouldContainEntriesIfDeepFetchIsTrue() {

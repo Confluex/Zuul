@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 
 @Controller
-class SettingsApiController {
+class SettingsServicesController {
 
     @Autowired
     ZuulService zuulService
