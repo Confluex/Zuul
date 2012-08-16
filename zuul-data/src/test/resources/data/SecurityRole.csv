@@ -1,5 +1,5 @@
-id,name
-1,ROLE_GUEST
-2,ROLE_USER
-3,ROLE_ADMIN
-4,ROLE_SYSTEM_ADMIN
+id, name, description
+1, ROLE_GUEST, Guest
+2, ROLE_USER, User
+3, ROLE_ADMIN, Admin
+4, ROLE_SYSTEM_ADMIN, Sysadmin
