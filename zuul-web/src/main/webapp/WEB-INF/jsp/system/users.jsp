@@ -32,7 +32,7 @@
                     <td>${fn:escapeXml(user.email)}</td>
                     <td>
                         <c:forEach var="role" items="${user.roles}">
-                            <span class="label label-warning">${role.description}</span
+                            <span class="label label-warning">${fn:escapeXml(role.description)} <a style="color:white;" href="#">&times;</a></span
                         </c:forEach>
                     </td>
                 </tr>

@@ -3,6 +3,11 @@ body {
     padding-bottom: 40px;
 }
 
+.label a {
+    color: white;
+    text-decoration: none;
+}
+
 .sidebar-nav {
     padding: 9px 0;
 }
