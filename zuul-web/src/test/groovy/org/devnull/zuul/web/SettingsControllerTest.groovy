@@ -55,7 +55,7 @@ public class SettingsControllerTest {
     @Test
     void newSettingsGroupFormShouldReturnCorrectView() {
         def view = controller.newSettingsGroupForm()
-        assert view == "/settings/new"
+        assert view == "/settings/create"
     }
 
     @Test
