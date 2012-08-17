@@ -27,12 +27,14 @@
             </thead>
             <tbody>
             <c:forEach var="user" items="${users}">
-                <tr>
+                <tr data-user-id="${user.id}">
                     <td>${fn:escapeXml(user.lastName)}, ${fn:escapeXml(user.firstName)}</td>
                     <td>${fn:escapeXml(user.email)}</td>
                     <td>
                         <c:forEach var="role" items="${user.roles}">
-                            <span class="label label-warning">${fn:escapeXml(role.description)} <a style="color:white;" href="#">&times;</a></span>
+                            <span class="label label-warning">${fn:escapeXml(role.description)}
+                                <a class="role" data-role-id="${role.id}" href="#">&times;</a>
+                            </span>
                         </c:forEach>
                     </td>
                 </tr>
@@ -41,5 +43,30 @@
         </table>
     </div>
 </div>
+<script>
+    $(function () {
+        $(".role").click(function () {
+            var link = $(this);
+            var row = link.parents("tr");
+            var roleId = link.data("role-id");
+            var userId = row.data("user-id");
+            // note that something appears to be broken with .ajax delete with data. Hard coding
+            // url parameters for now.
+            $.ajax({
+                url:getContextPath() + "/admin/system/user/role?roleId=" + roleId + "&userId=" + userId,
+                type:'DELETE',
+                success:function (data, status, xhr) {
+                    var span = link.parents("span");
+                    span.hide('slow', function() {
+                       span.remove();
+                    })
+                },
+                error:function (xhr, status, error) {
+                    alert("An error has occurred while removing the role. Please check the log for more details.");
+                }
+            });
+        })
+    });
+</script>
 </body>
 </html>

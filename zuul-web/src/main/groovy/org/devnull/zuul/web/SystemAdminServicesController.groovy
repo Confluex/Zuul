@@ -17,7 +17,7 @@ class SystemAdminServicesController {
     @Autowired
     SecurityService securityService
 
-    @RequestMapping(value="/admin/system/user/role.json", method=RequestMethod.DELETE)
+    @RequestMapping(value="/admin/system/user/role", method=RequestMethod.DELETE)
     void removeRoleFromUser(HttpServletResponse response, @RequestParam("roleId") Integer roleId, @RequestParam("userId") Integer userId) {
         securityService.removeRoleFromUser(roleId, userId)
         response.status = HttpServletResponse.SC_NO_CONTENT
