@@ -20,17 +20,17 @@ class AccountController {
         return securityService.currentUser
     }
 
-    @RequestMapping("/profile")
+    @RequestMapping("/account/profile")
     String profile() {
-        return "/profile"
+        return "/account/profile"
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/register", method = RequestMethod.GET)
     String register() {
-        return "/register"
+        return "/account/register"
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/register", method = RequestMethod.POST)
     String registerSubmit(@ModelAttribute User user) {
         def currentUser = securityService.currentUser
 
@@ -43,11 +43,11 @@ class AccountController {
         }
 
         securityService.updateCurrentUser(true)
-        return "redirect:/welcome"
+        return "redirect:/account/welcome"
     }
 
-    @RequestMapping("/welcome")
+    @RequestMapping("/account/welcome")
     String welcome() {
-        return "/welcome"
+        return "/account/welcome"
     }
 }

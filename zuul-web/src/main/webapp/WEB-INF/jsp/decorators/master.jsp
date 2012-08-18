@@ -106,7 +106,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="${pageContext.request.contextPath}/profile">
+                                        <a href="${pageContext.request.contextPath}/account/profile">
                                             <i class="icon-edit"></i>
                                             My Profile
                                         </a>

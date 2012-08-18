@@ -18,12 +18,12 @@ public class AccountControllerTest {
 
     @Test
     void welcomeShouldReturnCorrectView() {
-        assert controller.welcome() == "/welcome"
+        assert controller.welcome() == "/account/welcome"
     }
 
     @Test
     void profileShouldReturnCorrectView() {
-        assert controller.profile() == "/profile"
+        assert controller.profile() == "/account/profile"
     }
 
     @Test
@@ -50,7 +50,7 @@ public class AccountControllerTest {
         assert user.email == "jdoe@fake.com"
         assert user.roles.size() == 1
         assert user.roles.first() == userRole
-        assert view == "redirect:/welcome"
+        assert view == "redirect:/account/welcome"
 
         verify(controller.securityService).updateCurrentUser(true)
 

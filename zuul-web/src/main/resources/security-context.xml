@@ -52,9 +52,7 @@
     <context:component-scan base-package="org.devnull.security"/>
 
     <http use-expressions="true" access-decision-manager-ref="accessDecisionManager">
-        <intercept-url pattern="/register/**" access="hasRole('ROLE_GUEST')"/>
-        <intercept-url pattern="/welcome/**" access="hasRole('ROLE_USER')"/>
-        <intercept-url pattern="/profile/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/account/**" access="hasRole('ROLE_GUEST')"/>
         <intercept-url pattern="/settings/create**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/admin/system**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>

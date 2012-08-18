@@ -27,7 +27,7 @@
         <div class="page-header">
             <h1>Registration Form</h1>
         </div>
-        <form action="${pageContext.request.contextPath}/register" method="POST" class="form-horizontal">
+        <form action="${pageContext.request.contextPath}/account/register" method="POST" class="form-horizontal">
             <fieldset>
                 <div class="control-group">
                     <label class="control-label" for="email">Email</label>
