@@ -43,24 +43,19 @@
             <td>
                 <c:if test="${isAdmin}">
                     <div class="btn-group">
-                        <a class="btn btn-small dropdown-toggle" data-toggle="dropdown"
-                           href="#">
-                            <i class="icon-cog"></i>
-                            Action
+                        <button class="btn edit-link" data-id="${e.id}">
+                            <i class="icon-edit"></i>
+                            Edit
+                        </button>
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
-                        </a>
+                        </button>
                         <ul class="settings-entry dropdown-menu">
                             <li>
                                 <a href="javascript:void(0);" class="encrypt-link" data-id="${e.id}"
                                    data-encrypted="${e.encrypted}">
                                     <i class="icon-lock"></i>
                                         ${e.encrypted ? 'Decrypt' : 'Encrypt'}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="edit-link" data-id="${e.id}">
-                                    <i class="icon-edit"></i>
-                                    Edit
                                 </a>
                             </li>
                             <li class="divider"></li>
