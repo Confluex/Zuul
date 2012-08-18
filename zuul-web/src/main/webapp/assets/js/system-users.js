@@ -25,26 +25,28 @@ $(function () {
         var link = $(this);
         var roleId = link.data("role-id");
         var userId = addRoleDialog.data("user-id");
+        var updateUserRow = function (data, status, xhr) {
+            link.parents("span").remove();
+            addRoleDialog.modal('hide');
+            var row = $("#userTable").find("[data-user-id='" + userId + "']");
+            var td = row.find(".role-column");
+            var roleLabel = $(document.createElement("span"));
+            roleLabel.addClass("label");
+            roleLabel.addClass("label-warning");
+            roleLabel.text(link.text());
+            var closeLink = $(document.createElement('a'));
+            closeLink.attr('href', '#');
+            closeLink.text('×');
+            closeLink.data("role-id", roleId);
+            closeLink.click(deleteRole);
+            roleLabel.append(closeLink);
+            td.append(roleLabel).show('slow');
+        };
         $.ajax({
-            url:getContextPath() + "/admin/system/user/role?roleId=" + roleId + "&userId=" + userId,
+            url:getContextPath() + "/admin/system/user/role",
             type:'POST',
-            success:function (data, status, xhr) {
-                link.parents("span").remove();
-                addRoleDialog.modal('hide');
-                var row = $("#userTable").find("[data-user-id='" + userId + "']");
-                var td = row.find(".role-column");
-                var roleLabel = $(document.createElement("span"));
-                roleLabel.addClass("label");
-                roleLabel.addClass("label-warning");
-                roleLabel.text(link.text());
-                var closeLink = $(document.createElement('a'));
-                closeLink.attr('href', '#');
-                closeLink.text('×');
-                closeLink.data("role-id", roleId);
-                closeLink.click(deleteRole);
-                roleLabel.append(closeLink);
-                td.append(roleLabel).show('slow');
-            },
+            data: { roleId: roleId, userId:userId},
+            success:updateUserRow,
             error:function (xhr, status, error) {
                 alert("An error has occurred while adding the role. Please check the log for more details.");
             }
