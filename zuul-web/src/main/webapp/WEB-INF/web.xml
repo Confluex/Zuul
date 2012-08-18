@@ -47,6 +47,8 @@
     <filter-mapping>
         <filter-name>sitemesh</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>ERROR</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
     <filter-mapping>
         <filter-name>oemInViewFilter</filter-name>
@@ -64,4 +66,12 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <error-page>
+        <error-code>403</error-code>
+        <location>/403.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.jsp</location>
+    </error-page>
 </web-app>

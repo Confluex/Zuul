@@ -25,7 +25,7 @@
     <![endif]-->
 
     <decorator:head/>
-    <c:set var="selectedTab"><decorator:extractProperty property="meta.tab" default="home" /></c:set>
+    <c:set var="selectedTab"><decorator:extractProperty property="meta.tab" default="home"/></c:set>
 </head>
 
 <body>
@@ -52,46 +52,42 @@
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <security:authorize access="hasRole('ROLE_ADMIN')">
-                                        <li>
-                                            <a id="create-settings-group"
-                                               href="${pageContext.request.contextPath}/settings/create">
-                                                <i class="icon-plus"></i>
-                                                Create New
-                                            </a>
-                                        </li>
-                                        <li class="divider"></li>
-                                    </security:authorize>
+                                    <li>
+                                        <a id="create-settings-group"
+                                           href="${pageContext.request.contextPath}/settings/create">
+                                            <i class="icon-plus"></i>
+                                            Create New
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
                                 </ul>
                             </li>
-                            <security:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                                <li id="adminMenu" class="dropdown ${selectedTab == 'admin' ? 'active' : ''}">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                        Administration
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="${pageContext.request.contextPath}/admin/system/users">
-                                                <i class="icon-user"></i>
-                                                Users &amp; Roles
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="icon-wrench"></i>
-                                                Configuration
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="icon-lock"></i>
-                                                Key Management
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </security:authorize>
+                            <li id="adminMenu" class="dropdown ${selectedTab == 'admin' ? 'active' : ''}">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Administration
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="${pageContext.request.contextPath}/admin/system/users">
+                                            <i class="icon-user"></i>
+                                            Users &amp; Roles
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="icon-wrench"></i>
+                                            Configuration
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="icon-lock"></i>
+                                            Key Management
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         </security:authorize>
                     </ul>
                     <security:authorize access="isAuthenticated()">
@@ -118,7 +114,7 @@
                                     </li>
                                     <security:authorize access="!hasRole('ROLE_ADMIN')">
                                         <li>
-                                            <a href="#">
+                                            <a href="${pageContext.request.contextPath}/account/permissions">
                                                 <i class="icon-ok-sign"></i>
                                                 Request Permissions
                                             </a>

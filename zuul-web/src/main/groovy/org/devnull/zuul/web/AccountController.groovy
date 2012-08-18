@@ -7,7 +7,10 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.servlet.ModelAndView
+
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
+import org.springframework.web.bind.annotation.PathVariable
 
 @Controller
 class AccountController {
@@ -49,5 +52,16 @@ class AccountController {
     @RequestMapping("/account/welcome")
     String welcome() {
         return "/account/welcome"
+    }
+
+    @RequestMapping("/account/permissions")
+    ModelAndView requestPermissions() {
+        return new ModelAndView("/account/permissions", [roles: securityService.listRoles()])
+    }
+
+    @RequestMapping("/account/permissions/{roleName}")
+    String submitPermissionsRequest(@PathVariable("roleName") String roleName) {
+        // TODO implement notifications system
+        return "/account/requested"
     }
 }

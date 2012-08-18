@@ -5,8 +5,9 @@ import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.junit.Before
 import org.junit.Test
-import static org.mockito.Mockito.*
+
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
+import static org.mockito.Mockito.*
 
 public class AccountControllerTest {
     AccountController controller
@@ -54,5 +55,20 @@ public class AccountControllerTest {
 
         verify(controller.securityService).updateCurrentUser(true)
 
+    }
+
+    @Test
+    void requestPermissionsShouldReturnCorrectViewWithRoles() {
+        def roles = [new Role(id: 1)]
+        when(controller.securityService.listRoles()).thenReturn(roles)
+        def mv = controller.requestPermissions()
+        assert mv.model.roles.is(roles)
+        assert mv.viewName == "/account/permissions"
+    }
+
+    @Test
+    void submitPermissionsRequestShouldReturnCorrectView() {
+        def view = controller.submitPermissionsRequest("ROLE_TEST")
+        assert view == "/account/requested"
     }
 }
