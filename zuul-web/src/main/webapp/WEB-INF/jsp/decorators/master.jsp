@@ -43,10 +43,7 @@
                 <div class="nav-collapse">
                     <ul class="nav">
                         <li class="${selectedTab == 'home' ? 'active' : ''}">
-                            <a href="${pageContext.request.contextPath}/">
-                                <i class="icon-home icon-white"></i>
-                                Home
-                            </a>
+                            <a href="${pageContext.request.contextPath}/">Home</a>
                         </li>
                         <security:authorize access="hasRole('ROLE_USER')">
                             <li id="settingsMenu" class="dropdown ${selectedTab == 'settings' ? 'active' : ''}">
