@@ -1,5 +1,8 @@
+<%--@elvariable id="roles" type="java.util.List<org.devnull.security.model.Role>"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -23,11 +26,12 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li>
-                        <a href="${pageContext.request.contextPath}/account/permissions/ROLE_SYSTEM_ADMIN">System Administration</a>
-                        <a href="${pageContext.request.contextPath}/account/permissions/ROLE_ADMIN">Edit Settings</a>
-                        <a href="${pageContext.request.contextPath}/account/permissions/ROLE_USER">Read Only</a>
-                    </li>
+                    <c:forEach var="role" items="${roles}">
+                        <li>
+                            <c:url var="url" value="/account/permissions/${role.name}"/>
+                            <a href="${url}">${fn:escapeXml(role.description)}</a>
+                        </li>
+                    </c:forEach>
                 </ul>
             </div>
         </div>
