@@ -20,9 +20,12 @@
     <div class="span12">
         <c:url var="actionUrl" value="/settings/${environment}/${groupName}/create/entry"/>
         <form action="${actionUrl}" method="POST" class="form-inline">
-            <input id="key" name="key" class="span3" type="text" placeholder="Key..">
-            <input id="value" name="value" class="span3" type="text" placeholder="Value..">
-            <button type="submit" class="btn btn-success">Add</button>
+            <div class="input-append">
+                <input id="key" name="key" class="span3" type="text" placeholder="Key..">
+                <span class="add-on">=</span>
+                <input id="value" name="value" class="span3" type="text" placeholder="Value..">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
         </form>
     </div>
 </div>
