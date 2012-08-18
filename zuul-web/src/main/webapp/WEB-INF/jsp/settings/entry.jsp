@@ -7,6 +7,7 @@
 <html>
 <head>
     <title>New Key Value Pair</title>
+    <meta name="tab" content="settings"/>
 </head>
 <body>
 <div class="row">

@@ -7,6 +7,7 @@
 <html>
 <head>
     <title>Users</title>
+    <meta name="tab" content="admin"/>
     <script src="${pageContext.request.contextPath}/assets/js/system-users.js"></script>
 </head>
 <body>

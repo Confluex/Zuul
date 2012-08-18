@@ -6,6 +6,7 @@
 <html>
 <head>
     <title>Create New</title>
+    <meta name="tab" content="settings"/>
 </head>
 <body>
 <div class="row">

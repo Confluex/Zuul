@@ -7,6 +7,7 @@
 <html>
 <head>
     <title>Copy Existing</title>
+    <meta name="tab" content="settings"/>
 </head>
 <body>
 <div class="row">

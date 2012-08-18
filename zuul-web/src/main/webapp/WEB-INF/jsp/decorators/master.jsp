@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +25,7 @@
     <![endif]-->
 
     <decorator:head/>
+    <c:set var="selectedTab"><decorator:extractProperty property="meta.tab" default="home" /></c:set>
 </head>
 
 <body>
@@ -40,14 +42,14 @@
 
                 <div class="nav-collapse">
                     <ul class="nav">
-                        <li class="active">
+                        <li class="${selectedTab == 'home' ? 'active' : ''}">
                             <a href="${pageContext.request.contextPath}/">
                                 <i class="icon-home icon-white"></i>
                                 Home
                             </a>
                         </li>
                         <security:authorize access="hasRole('ROLE_USER')">
-                            <li id="settingsMenu" class="dropdown">
+                            <li id="settingsMenu" class="dropdown ${selectedTab == 'settings' ? 'active' : ''}">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     Settings
                                     <b class="caret"></b>
@@ -66,7 +68,7 @@
                                 </ul>
                             </li>
                             <security:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                                <li id="adminMenu" class="dropdown">
+                                <li id="adminMenu" class="dropdown ${selectedTab == 'admin' ? 'active' : ''}">
                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                         Administration
                                         <b class="caret"></b>

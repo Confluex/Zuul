@@ -7,6 +7,7 @@
 <html>
 <head>
     <title>Upload Properties</title>
+    <meta name="tab" content="settings"/>
 </head>
 <body>
 <div class="row">

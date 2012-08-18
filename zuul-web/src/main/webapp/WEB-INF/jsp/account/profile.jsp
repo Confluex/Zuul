@@ -6,6 +6,7 @@
 <html>
 <head>
     <title>My Profile</title>
+    <meta name="tab" content="account"/>
 </head>
 <body>
 <div class="row">

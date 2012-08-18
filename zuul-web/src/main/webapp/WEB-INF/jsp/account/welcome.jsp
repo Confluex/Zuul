@@ -6,6 +6,7 @@
 <html>
 <head>
     <title>Welcome</title>
+    <meta name="tab" content="account"/>
 </head>
 <body>
 <div class="row">
