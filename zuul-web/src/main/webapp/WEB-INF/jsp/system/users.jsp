@@ -19,7 +19,7 @@
 </div>
 <div class="row">
     <div class="span12">
-        <table class="table table-bordered table-condensed">
+        <table id="userTable" class="table table-bordered table-condensed">
             <thead>
             <tr>
                 <th>Name</th>
@@ -32,7 +32,7 @@
                 <tr data-user-id="${user.id}">
                     <td>${fn:escapeXml(user.lastName)}, ${fn:escapeXml(user.firstName)}</td>
                     <td>${fn:escapeXml(user.email)}</td>
-                    <td>
+                    <td class="role-column">
                         <c:forEach var="role" items="${user.roles}">
                             <span class="label label-warning">
                                 ${fn:escapeXml(role.description)}
