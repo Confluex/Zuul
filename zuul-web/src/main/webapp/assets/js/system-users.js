@@ -46,7 +46,7 @@ $(function () {
                 td.append(roleLabel).show('slow');
             },
             error:function (xhr, status, error) {
-                alert("An error has occurred while removing the role. Please check the log for more details.");
+                alert("An error has occurred while adding the role. Please check the log for more details.");
             }
         });
     };
