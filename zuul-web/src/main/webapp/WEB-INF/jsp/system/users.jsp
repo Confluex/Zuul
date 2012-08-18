@@ -1,4 +1,5 @@
 <%--@elvariable id="users" type="java.util.List<org.devnull.security.model.User>"--%>
+<%--@elvariable id="roles" type="java.util.List<org.devnull.security.model.Role>"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -6,6 +7,7 @@
 <html>
 <head>
     <title>Users</title>
+    <script src="${pageContext.request.contextPath}/assets/js/system-users.js"></script>
 </head>
 <body>
 <div class="row">
@@ -32,10 +34,14 @@
                     <td>${fn:escapeXml(user.email)}</td>
                     <td>
                         <c:forEach var="role" items="${user.roles}">
-                            <span class="label label-warning">${fn:escapeXml(role.description)}
-                                <a class="role" data-role-id="${role.id}" href="#">&times;</a>
+                            <span class="label label-warning">
+                                ${fn:escapeXml(role.description)}
+                                <a class="delete-role" data-role-id="${role.id}" href="#">&times;</a>
                             </span>
                         </c:forEach>
+                        <a href="#" class="btn btn-mini pull-right descriptive add-role-action" title="Add Role">
+                            <i class="icon-plus"></i>
+                        </a>
                     </td>
                 </tr>
             </c:forEach>
@@ -43,30 +49,24 @@
         </table>
     </div>
 </div>
-<script>
-    $(function () {
-        $(".role").click(function () {
-            var link = $(this);
-            var row = link.parents("tr");
-            var roleId = link.data("role-id");
-            var userId = row.data("user-id");
-            // note that something appears to be broken with .ajax delete with data. Hard coding
-            // url parameters for now.
-            $.ajax({
-                url:getContextPath() + "/admin/system/user/role?roleId=" + roleId + "&userId=" + userId,
-                type:'DELETE',
-                success:function (data, status, xhr) {
-                    var span = link.parents("span");
-                    span.hide('slow', function() {
-                       span.remove();
-                    })
-                },
-                error:function (xhr, status, error) {
-                    alert("An error has occurred while removing the role. Please check the log for more details.");
-                }
-            });
-        })
-    });
-</script>
+<div class="modal hide" id="addRoleDialog">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Add Role</h3>
+    </div>
+    <div class="modal-body" style="text-align: center;">
+        <c:forEach var="role" items="${roles}">
+            <%-- TODO only display roles that the user does not have --%>
+            <span class="label label-warning">
+                <a class="add-role" data-role-id="${role.id}" data-user-id="${user.id}" href="#">
+                        ${fn:escapeXml(role.description)}
+                </a>
+            </span>
+        </c:forEach>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    </div>
+</div>
 </body>
 </html>

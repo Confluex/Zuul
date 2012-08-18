@@ -3,6 +3,9 @@ body {
     padding-bottom: 40px;
 }
 
+.label {
+    margin-right: 10px;
+}
 .label a {
     color: white;
     text-decoration: none;

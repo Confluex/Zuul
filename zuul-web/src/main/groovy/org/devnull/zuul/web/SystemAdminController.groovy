@@ -17,6 +17,7 @@ class SystemAdminController {
     ModelAndView listUsers() {
         def model = [:]
         model.users = securityService.listUsers()
+        model.roles = securityService.listRoles()
         return new ModelAndView("/system/users", model)
     }
 }

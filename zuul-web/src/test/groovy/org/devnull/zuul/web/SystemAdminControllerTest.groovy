@@ -5,6 +5,8 @@ import org.junit.Before
 import org.junit.Test
 
 import static org.mockito.Mockito.*
+import org.devnull.security.model.User
+import org.devnull.security.model.Role
 
 class SystemAdminControllerTest {
     SystemAdminController controller
@@ -16,11 +18,14 @@ class SystemAdminControllerTest {
 
     @Test
     void shouldListAllUsersWithCorrectModelAndView() {
-        def users = []
+        def users = [new User(id:1), new User(id: 2)]
+        def roles = [new Role(id:1), new Role(id: 2)]
         when(controller.securityService.listUsers()).thenReturn(users)
+        when(controller.securityService.listRoles()).thenReturn(roles)
         def mv = controller.listUsers()
         verify(controller.securityService).listUsers()
         assert mv.viewName == "/system/users"
         assert mv.model.users.is(users)
+        assert mv.model.roles.is(roles)
     }
 }
