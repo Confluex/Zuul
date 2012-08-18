@@ -33,4 +33,22 @@ class SystemAdminServicesControllerTest {
         controller.removeRoleFromUser(mock(HttpServletResponse), roleId, userId)
         verify(controller.securityService).removeRoleFromUser(roleId, userId)
     }
+
+    @Test
+    void addRoleToUserShouldInvokeService() {
+        def roleId = 1234
+        def userId = 5678
+        def response = new MockHttpServletResponse()
+        controller.addRoleRoleToUser(response, roleId, userId)
+        verify(controller.securityService).addRoleToUser(roleId, userId)
+        assert response.status == HttpServletResponse.SC_NO_CONTENT
+    }
+
+    @Test
+    void deleteUserShouldInvokeService() {
+        def response = new MockHttpServletResponse()
+        controller.deleteUser(response, 123)
+        verify(controller.securityService).deleteUser(123)
+        assert response.status == HttpServletResponse.SC_NO_CONTENT
+    }
 }

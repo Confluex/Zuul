@@ -45,7 +45,7 @@ $(function () {
         $.ajax({
             url:getContextPath() + "/admin/system/user/role",
             type:'POST',
-            data: { roleId: roleId, userId:userId},
+            data:{ roleId:roleId, userId:userId},
             success:updateUserRow,
             error:function (xhr, status, error) {
                 alert("An error has occurred while adding the role. Please check the log for more details.");
@@ -61,6 +61,23 @@ $(function () {
         addRoleDialog.modal('show');
     };
 
+    var deleteUser = function () {
+        var link = $(this);
+        var row = link.parents("tr");
+        var userId = row.data("user-id");
+        $.ajax({
+            url:getContextPath() + "/admin/system/user/" + userId,
+            type:'DELETE',
+            success:function (data, status, xhr) {
+                row.hide('slow', function () {
+                    row.remove();
+                })
+            },
+            error:function (xhr, status, error) {
+                alert("An error has occurred while removing the role. Please check the log for more details.");
+            }
+        });
+    };
 
 
     var addRoleDialog = $('#addRoleDialog').modal({show:false});
@@ -68,4 +85,5 @@ $(function () {
     $(".delete-role").click(deleteRole);
     $(".add-role").click(addRoleToUser);
     $(".add-role-action").click(showAddRoleDialog);
+    $(".delete-user-action").click(deleteUser);
 });
