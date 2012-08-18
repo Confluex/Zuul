@@ -6,9 +6,22 @@ body {
 .label {
     margin-right: 10px;
 }
+
 .label a {
     color: white;
     text-decoration: none;
+}
+
+.discoverable {
+    visibility: hidden;
+}
+
+tr:hover .discoverable {
+    visibility: visible;
+}
+
+tr .discoverable  {
+    visibility: hidden;
 }
 
 .sidebar-nav {

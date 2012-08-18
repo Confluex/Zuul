@@ -30,7 +30,13 @@
             <tbody>
             <c:forEach var="user" items="${users}">
                 <tr data-user-id="${user.id}">
-                    <td>${fn:escapeXml(user.lastName)}, ${fn:escapeXml(user.firstName)}</td>
+                    <td>
+                            ${fn:escapeXml(user.lastName)}, ${fn:escapeXml(user.firstName)}
+                        <a href="#" title="Delete User"
+                           class="btn btn-mini btn-danger pull-right descriptive discoverable delete-user-action">
+                            <i class="icon-trash icon-white"></i>
+                        </a>
+                    </td>
                     <td>${fn:escapeXml(user.email)}</td>
                     <td class="role-column">
                         <c:forEach var="role" items="${user.roles}">
@@ -39,7 +45,8 @@
                                 <a class="delete-role" data-role-id="${role.id}" href="#">&times;</a>
                             </span>
                         </c:forEach>
-                        <a href="#" class="btn btn-mini pull-right descriptive add-role-action" title="Add Role">
+                        <a href="#" class="btn btn-mini pull-right descriptive discoverable add-role-action"
+                           title="Add Role">
                             <i class="icon-plus"></i>
                         </a>
                     </td>
