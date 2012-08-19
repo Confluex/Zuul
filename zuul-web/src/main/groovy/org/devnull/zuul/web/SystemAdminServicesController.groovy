@@ -16,13 +16,13 @@ class SystemAdminServicesController {
     @Autowired
     SecurityService securityService
 
-    @RequestMapping(value = "/admin/system/user/role", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/system/user/role", method = RequestMethod.DELETE)
     void removeRoleFromUser(HttpServletResponse response, @RequestParam("roleId") Integer roleId, @RequestParam("userId") Integer userId) {
         securityService.removeRoleFromUser(roleId, userId)
         response.status = HttpServletResponse.SC_NO_CONTENT
     }
 
-    @RequestMapping(value = "/admin/system/user/role", method = RequestMethod.POST)
+    @RequestMapping(value = "/system/user/role", method = RequestMethod.POST)
     void addRoleRoleToUser(HttpServletResponse response, @RequestParam("roleId") Integer roleId, @RequestParam("userId") Integer userId) {
         securityService.addRoleToUser(roleId, userId)
         // this really should be a 302 redirect... I'm just not sure to what yet. There is no model for UserRole
@@ -30,7 +30,7 @@ class SystemAdminServicesController {
     }
 
 
-    @RequestMapping(value = "/admin/system/user/{userId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/system/user/{userId}", method = RequestMethod.DELETE)
     void deleteUser(HttpServletResponse response, @PathVariable("userId") Integer userId) {
         securityService.deleteUser(userId)
         response.status = HttpServletResponse.SC_NO_CONTENT

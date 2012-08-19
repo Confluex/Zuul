@@ -4,6 +4,7 @@ import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.springframework.security.access.prepost.PreAuthorize
+import org.devnull.zuul.data.model.EncryptionKey
 
 public interface ZuulService {
 
@@ -21,21 +22,14 @@ public interface ZuulService {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     void deleteSettingsGroup(Integer groupId)
 
-
     List<SettingsGroup> findSettingsGroupByName(String name)
 
-
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env)
-
 
     List<SettingsGroup> listSettingsGroups()
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     SettingsGroup save(SettingsGroup group)
-
-    /* Environments -------------------- */
-
-    List<Environment> listEnvironments()
 
     /* Settings Entry -------------------- */
 
@@ -52,6 +46,14 @@ public interface ZuulService {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     SettingsEntry save(SettingsEntry entry)
+
+    /* Environments -------------------- */
+
+    List<Environment> listEnvironments()
+
+    /* Encryption Keys -------------------- */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    List<EncryptionKey> listEncryptionKeys()
 
 
 }

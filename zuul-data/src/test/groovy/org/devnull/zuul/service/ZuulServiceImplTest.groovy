@@ -34,6 +34,14 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldListAllKeysAndSortByName() {
+        def expected = [new EncryptionKey(name:"foo")]
+        when(service.encryptionKeyDao.findAll(new Sort("name"))).thenReturn(expected)
+        def results = service.listEncryptionKeys()
+        assert results.is(expected)
+    }
+
+    @Test
     void shouldFindCorrectDefaultKey() {
         def mockKeys = [
                                new EncryptionKey(name:"a", defaultKey: false),

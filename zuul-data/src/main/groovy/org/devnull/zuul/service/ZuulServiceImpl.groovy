@@ -152,6 +152,10 @@ class ZuulServiceImpl implements ZuulService {
         return settingsGroupDao.save(group)
     }
 
+    List<EncryptionKey> listEncryptionKeys() {
+        return encryptionKeyDao.findAll(new Sort("name")) as List
+    }
+
     protected def doWithFlagLock = { closure ->
         try {
             log.debug("Obtaining toggleFlagLock")

@@ -7,7 +7,7 @@ $(function () {
         // note that something appears to be broken with .ajax delete with data. Hard coding
         // url parameters for now.
         $.ajax({
-            url:getContextPath() + "/admin/system/user/role?roleId=" + roleId + "&userId=" + userId,
+            url:getContextPath() + "/system/user/role?roleId=" + roleId + "&userId=" + userId,
             type:'DELETE',
             success:function (data, status, xhr) {
                 var span = link.parents("span");
@@ -43,7 +43,7 @@ $(function () {
             td.append(roleLabel).show('slow');
         };
         $.ajax({
-            url:getContextPath() + "/admin/system/user/role",
+            url:getContextPath() + "/system/user/role",
             type:'POST',
             data:{ roleId:roleId, userId:userId},
             success:updateUserRow,
@@ -66,7 +66,7 @@ $(function () {
         var row = link.parents("tr");
         var userId = row.data("user-id");
         $.ajax({
-            url:getContextPath() + "/admin/system/user/" + userId,
+            url:getContextPath() + "/system/user/" + userId,
             type:'DELETE',
             success:function (data, status, xhr) {
                 row.hide('slow', function () {

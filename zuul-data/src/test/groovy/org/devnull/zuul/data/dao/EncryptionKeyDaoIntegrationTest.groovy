@@ -4,7 +4,7 @@ import org.devnull.zuul.data.test.ZuulDataIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class EncryptionKeyDaoTest extends ZuulDataIntegrationTest {
+class EncryptionKeyDaoIntegrationTest extends ZuulDataIntegrationTest {
 
     @Autowired
     EncryptionKeyDao dao

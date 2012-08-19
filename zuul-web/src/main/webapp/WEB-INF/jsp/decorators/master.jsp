@@ -69,19 +69,19 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="${pageContext.request.contextPath}/admin/system/users">
+                                        <a href="${pageContext.request.contextPath}/system/users">
                                             <i class="icon-user"></i>
                                             Users &amp; Roles
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="${pageContext.request.contextPath}/system/config">
                                             <i class="icon-wrench"></i>
                                             Configuration
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="${pageContext.request.contextPath}/system/keys">
                                             <i class="icon-lock"></i>
                                             Key Management
                                         </a>
