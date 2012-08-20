@@ -1,13 +1,16 @@
 package org.devnull.zuul.web
 
+import org.devnull.security.service.SecurityService
+import org.devnull.zuul.data.model.EncryptionKey
+import org.devnull.zuul.service.ZuulService
 import org.junit.Before
 import org.junit.Test
+import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletResponse
 
 import javax.servlet.http.HttpServletResponse
 
 import static org.mockito.Mockito.*
-import org.devnull.security.service.SecurityService
 
 class SystemAdminServicesControllerTest {
 
@@ -15,7 +18,7 @@ class SystemAdminServicesControllerTest {
 
     @Before
     void createController() {
-        controller = new SystemAdminServicesController(securityService: mock(SecurityService))
+        controller = new SystemAdminServicesController(securityService: mock(SecurityService), zuulService: mock(ZuulService))
     }
 
 
@@ -50,5 +53,24 @@ class SystemAdminServicesControllerTest {
         controller.deleteUser(response, 123)
         verify(controller.securityService).deleteUser(123)
         assert response.status == HttpServletResponse.SC_NO_CONTENT
+    }
+
+    @Test
+    void shouldChangeDefaultKeyAndRedirectWithCorrectStatus() {
+        def view = controller.setDefaultKey(new MockHttpServletResponse(), new EncryptionKey(name: "test"))
+        verify(controller.zuulService).changeDefaultKey("test")
+        // TODO needs feedback message
+        assert view.statusCode == HttpStatus.SEE_OTHER
+        assert view.contextRelative
+        assert view.url == "/system/keys/default.json"
+    }
+
+
+    @Test
+    void shouldFindDefaultKey() {
+        def expected = new EncryptionKey(name: "test")
+        when(controller.zuulService.findDefaultKey()).thenReturn(expected)
+        def result = controller.getDefaultKey()
+        assert result.is(expected)
     }
 }

@@ -35,9 +35,4 @@ class SystemAdminController {
         return new ModelAndView("/system/keys", model)
     }
 
-    @RequestMapping(value = "/system/keys/default/{keyName}")
-    String setDefaultKey(HttpServletResponse response, @PathVariable("keyName") String keyName) {
-        zuulService.changeDefaultKey(keyName)
-        return "redirect:/system/keys"
-    }
 }

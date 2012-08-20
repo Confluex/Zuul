@@ -6,6 +6,7 @@ import groovy.transform.ToString
 import javax.persistence.Entity
 import javax.persistence.Id
 import org.devnull.zuul.data.config.ZuulDataConstants
+import org.codehaus.jackson.annotate.JsonIgnore
 
 @Entity
 @EqualsAndHashCode(includes = "name")
@@ -15,7 +16,11 @@ class EncryptionKey implements Serializable {
 
     @Id
     String name
+
     String description
+
+    @JsonIgnore
     String password
+
     Boolean defaultKey = false
 }
