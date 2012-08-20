@@ -9,6 +9,7 @@ import org.devnull.security.model.User
 import org.devnull.security.model.Role
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.service.ZuulService
+import org.springframework.mock.web.MockHttpServletResponse
 
 class SystemAdminControllerTest {
     SystemAdminController controller
@@ -38,5 +39,12 @@ class SystemAdminControllerTest {
         def mv = controller.listKeys()
         assert mv.model.keys == expected
         assert mv.viewName == "/system/keys"
+    }
+
+    @Test
+    void shouldChangeDefaultKeyAndRedirectToViewKeysView() {
+        def view = controller.setDefaultKey(new MockHttpServletResponse(), "test")
+        verify(controller.zuulService).changeDefaultKey("test")
+        assert view == "redirect:/system/keys"
     }
 }

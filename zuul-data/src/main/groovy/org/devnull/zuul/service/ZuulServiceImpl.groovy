@@ -75,7 +75,7 @@ class ZuulServiceImpl implements ZuulService {
         return settingsGroupDao.save(group)
     }
 
-    @Transactional(readOnly=false)
+    @Transactional(readOnly = false)
     void deleteSettingsGroup(Integer groupId) {
         log.info("Deleteing settings group: {} ", groupId)
         settingsGroupDao.delete(groupId)
@@ -156,9 +156,31 @@ class ZuulServiceImpl implements ZuulService {
         return encryptionKeyDao.findAll(new Sort("name")) as List
     }
 
+    @Transactional(readOnly = false)
+    EncryptionKey changeDefaultKey(String name) {
+        def newKey = encryptionKeyDao.findOne(name)
+        if (newKey.defaultKey) {
+            return newKey
+        }
+        def oldKey = findDefaultKey()
+        newKey.defaultKey = true
+        oldKey.defaultKey = false
+        encryptionKeyDao.save([newKey, oldKey])
+        return newKey
+    }
+
+    EncryptionKey findDefaultKey() {
+        def key = encryptionKeyDao.findAll().find { it.defaultKey }
+        log.info("Found default encryption key: {}", key)
+        //noinspection GroovyAssignabilityCheck
+        return key
+    }
+
+    /**
+     * Just because I don't trust database blocking transactions
+     */
     protected def doWithFlagLock = { closure ->
         try {
-            log.debug("Obtaining toggleFlagLock")
             log.debug("Obtaining toggleFlagLock")
             toggleFlagLock.lock()
             log.debug("toggleFlagLock obtained")
@@ -170,10 +192,5 @@ class ZuulServiceImpl implements ZuulService {
         }
     }
 
-    protected EncryptionKey findDefaultKey() {
-        def key = encryptionKeyDao.findAll().find { it.defaultKey }
-        log.info("Found default encryption key: {}", key)
-        //noinspection GroovyAssignabilityCheck
-        return key
-    }
+
 }

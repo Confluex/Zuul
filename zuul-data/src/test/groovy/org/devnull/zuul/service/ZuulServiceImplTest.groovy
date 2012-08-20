@@ -11,13 +11,13 @@ import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.error.ConflictingOperationException
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentCaptor
+import org.mockito.Matchers
 import org.springframework.data.domain.Sort
 
 import java.util.concurrent.locks.Lock
 
 import static org.mockito.Mockito.*
-import org.mockito.Matchers
-import org.mockito.ArgumentCaptor
 
 public class ZuulServiceImplTest {
 
@@ -34,8 +34,45 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldChangeDefaultKeyAndSetOldKeyToFalse() {
+        def keys = [
+                new EncryptionKey(name: "oldKey", defaultKey: true),
+                new EncryptionKey(name: "anotherKey", defaultKey: false),
+                new EncryptionKey(name: "newKey", defaultKey: false),
+        ]
+
+        when(service.encryptionKeyDao.findOne("newKey")).thenReturn(keys[2])
+        when(service.encryptionKeyDao.findAll()).thenReturn(keys)
+        def updatedKey = service.changeDefaultKey("newKey")
+        verify(service.encryptionKeyDao).save([keys[2], keys[0]])
+
+        assert updatedKey.defaultKey
+        assert updatedKey == keys[2]
+        assert !keys[0].defaultKey
+        assert !keys[1].defaultKey
+    }
+
+    @Test
+    void shouldNotDoAnythingIfTryingToChangeDefaultKeyWhichIsAlreadyTheDefault() {
+        def keys = [
+                new EncryptionKey(name: "oldKey", defaultKey: true),
+                new EncryptionKey(name: "anotherKey", defaultKey: false),
+                new EncryptionKey(name: "newKey", defaultKey: false),
+        ]
+
+        when(service.encryptionKeyDao.findOne("oldKey")).thenReturn(keys[0])
+        def oldKey = service.changeDefaultKey("oldKey")
+        verify(service.encryptionKeyDao, never()).save(anyList())
+        verify(service.encryptionKeyDao, never()).save(Matchers.any(Iterable))
+        assert oldKey == keys[0]
+        assert keys[0].defaultKey
+        assert !keys[1].defaultKey
+        assert !keys[2].defaultKey
+    }
+
+    @Test
     void shouldListAllKeysAndSortByName() {
-        def expected = [new EncryptionKey(name:"foo")]
+        def expected = [new EncryptionKey(name: "foo")]
         when(service.encryptionKeyDao.findAll(new Sort("name"))).thenReturn(expected)
         def results = service.listEncryptionKeys()
         assert results.is(expected)
@@ -44,11 +81,11 @@ public class ZuulServiceImplTest {
     @Test
     void shouldFindCorrectDefaultKey() {
         def mockKeys = [
-                               new EncryptionKey(name:"a", defaultKey: false),
-                               new EncryptionKey(name:"b", defaultKey: false),
-                               new EncryptionKey(name:"c", defaultKey: true),
-                               new EncryptionKey(name:"d", defaultKey: false)
-                       ]
+                new EncryptionKey(name: "a", defaultKey: false),
+                new EncryptionKey(name: "b", defaultKey: false),
+                new EncryptionKey(name: "c", defaultKey: true),
+                new EncryptionKey(name: "d", defaultKey: false)
+        ]
         when(service.encryptionKeyDao.findAll()).thenReturn(mockKeys)
         assert service.findDefaultKey().is(mockKeys[2])
     }
@@ -56,13 +93,13 @@ public class ZuulServiceImplTest {
     @Test
     void shouldCreateEmptySettingsGroupWithCorrectValues() {
         def mockKeys = [
-                        new EncryptionKey(name:"a", defaultKey: false),
-                        new EncryptionKey(name:"b", defaultKey: false),
-                        new EncryptionKey(name:"c", defaultKey: true),
-                        new EncryptionKey(name:"d", defaultKey: false)
-                ]
+                new EncryptionKey(name: "a", defaultKey: false),
+                new EncryptionKey(name: "b", defaultKey: false),
+                new EncryptionKey(name: "c", defaultKey: true),
+                new EncryptionKey(name: "d", defaultKey: false)
+        ]
         def mockEnvironment = new Environment(name: "testEnv")
-        def mockGroup = new SettingsGroup(id: 1, name: "testGroup", environment: mockEnvironment, key:  mockKeys[2])
+        def mockGroup = new SettingsGroup(id: 1, name: "testGroup", environment: mockEnvironment, key: mockKeys[2])
 
 
         when(service.environmentDao.findOne(mockEnvironment.name)).thenReturn(mockEnvironment)
@@ -82,12 +119,12 @@ public class ZuulServiceImplTest {
     @Test
     void shouldCopySettingsGroupFromExistingWithCorrectValues() {
         def groupToCopy = new SettingsGroup(
-                id:1, name: "test-config",
-                environment:  new Environment(name: "prod"),
+                id: 1, name: "test-config",
+                environment: new Environment(name: "prod"),
                 key: new EncryptionKey(name: "testKey")
         )
-        groupToCopy.addToEntries(new SettingsEntry(key: "username", value:"jdoe"))
-        groupToCopy.addToEntries(new SettingsEntry(key: "password", value:"3s+3_23s.zze3if", encrypted: true))
+        groupToCopy.addToEntries(new SettingsEntry(key: "username", value: "jdoe"))
+        groupToCopy.addToEntries(new SettingsEntry(key: "password", value: "3s+3_23s.zze3if", encrypted: true))
         def environment = new Environment(name: "dev")
 
 
@@ -232,12 +269,13 @@ public class ZuulServiceImplTest {
         def threads = []
         threads << Thread.start {
             completed << service.doWithFlagLock {
-                while(threads.size() < 2) {
-                    sleep(500)
+                while (threads.size() < 2) {
+                    sleep(100)
                 }
                 return 'a'
             }
         }
+        sleep(100)
         threads << Thread.start {
             completed << service.doWithFlagLock {
                 return 'b'
@@ -247,7 +285,7 @@ public class ZuulServiceImplTest {
         assert completed == ['a', 'b']
     }
 
-    @Test(expected=IllegalArgumentException)
+    @Test(expected = IllegalArgumentException)
     void doWithFlagLockShouldReleaseLockIfExceptionOccurs() {
         service.toggleFlagLock = mock(Lock)
         when(service.toggleFlagLock.tryLock()).thenReturn(true)

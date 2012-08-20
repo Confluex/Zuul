@@ -1,10 +1,10 @@
 package org.devnull.zuul.service
 
+import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.springframework.security.access.prepost.PreAuthorize
-import org.devnull.zuul.data.model.EncryptionKey
 
 public interface ZuulService {
 
@@ -52,8 +52,20 @@ public interface ZuulService {
     List<Environment> listEnvironments()
 
     /* Encryption Keys -------------------- */
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     List<EncryptionKey> listEncryptionKeys()
 
+    /**
+     * Update the new key to be the default and set all of the others to false.
+     * There can be only one!
+     */
+    @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
+    EncryptionKey changeDefaultKey(String name)
 
+    /**
+     * Find the key which is used to encrypt new settings groups by default.
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    EncryptionKey findDefaultKey()
 }

@@ -7,7 +7,6 @@
 <head>
     <title>Users</title>
     <meta name="tab" content="admin"/>
-    <script src="${pageContext.request.contextPath}/assets/js/system-users.js"></script>
 </head>
 <body>
 <div class="row">
@@ -30,12 +29,32 @@
             <tbody>
             <c:forEach var="key" items="${keys}">
                 <tr>
-                    <td>${key.name}</td>
-                    <td>${key.description}</td>
+                    <td>${fn:escapeXml(key.name)}</td>
+                    <td>${fn:escapeXml(key.description)}</td>
                     <td>
-                        <button class="btn btn-mini pull-right ${key.defaultKey ? 'btn-primary' : ''}">
-                            <i class="icon-check ${key.defaultKey ? 'icon-white' : '' }"></i>
-                        </button>
+                        <c:choose>
+                            <c:when test="${key.defaultKey}">
+                                <c:set var="buttonDescription">
+                                    This is the default key. It is automatically chosen for you when you create new
+                                    settings.
+                                </c:set>
+                                <a href="#" title="Default Key" data-content="${buttonDescription}"
+                                   class="btn btn-mini pull-right btn-primary descriptive">
+                                    <i class="icon-check icon-white"></i>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="buttonDescription">
+                                    Select this key to be the new default. This will not effect any settings
+                                    files which have already been created.
+                                </c:set>
+                                <c:url var="url" value="/system/keys/default/${key.name}"/>
+                                <a href="${url}" class="btn btn-mini pull-right descriptive"
+                                        title="Change Key" data-content="${fn:escapeXml(buttonDescription)}">
+                                    <i class="icon-ok"></i>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                 </tr>
             </c:forEach>
@@ -43,5 +62,10 @@
         </table>
     </div>
 </div>
-
+<script>
+    $(function() {
+       $(".descriptive").popover({placement:'left'});
+    });
+</script>
+</body>
 </html>

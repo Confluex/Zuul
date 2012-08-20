@@ -74,7 +74,7 @@ $(function () {
                 })
             },
             error:function (xhr, status, error) {
-                alert("An error has occurred while removing the role. Please check the log for more details.");
+                alert("An error has occurred while removing the user. Please check the log for more details.");
             }
         });
     };
