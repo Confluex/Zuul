@@ -45,6 +45,7 @@ class SystemAdminControllerTest {
     void shouldChangeDefaultKeyAndRedirectToViewKeysView() {
         def view = controller.setDefaultKey(new MockHttpServletResponse(), "test")
         verify(controller.zuulService).changeDefaultKey("test")
+        // TODO needs feedback message
         assert view == "redirect:/system/keys"
     }
 }
