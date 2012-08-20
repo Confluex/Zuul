@@ -37,22 +37,24 @@
                                     This is the default key. It is automatically chosen for you when you create new
                                     settings.
                                 </c:set>
-                                <a href="#" title="Default Key" data-content="${buttonDescription}"
-                                   class="btn btn-mini btn-primary descriptive select-key-action">
-                                    <i class="icon-check icon-white"></i>
-                                </a>
+                                <c:set var="buttonTitle" value="Default Key"/>
+                                <c:set var="buttonClass" value="btn-primary"/>
+                                <c:set var="iconClass" value="icon-check icon-white"/>
                             </c:when>
                             <c:otherwise>
                                 <c:set var="buttonDescription">
                                     Select this key to be the new default. This will not effect any settings
                                     files which have already been created.
                                 </c:set>
-                                <a href="#" class="btn btn-mini descriptive select-key-action"
-                                   title="Change Key" data-content="${fn:escapeXml(buttonDescription)}">
-                                    <i class="icon-ok"></i>
-                                </a>
+                                <c:set var="buttonTitle" value="Select as Default"/>
+                                <c:set var="buttonClass" value=""/>
+                                <c:set var="iconClass" value="icon-ok"/>
                             </c:otherwise>
                         </c:choose>
+                        <a href="#" title="${buttonTitle}" data-content="${buttonDescription}"
+                           class="btn btn-mini ${buttonClass} descriptive select-key-action">
+                            <i class="${iconClass}"></i>
+                        </a>
                     </td>
                     <td>${fn:escapeXml(key.name)}</td>
                     <td>${fn:escapeXml(key.description)}</td>
