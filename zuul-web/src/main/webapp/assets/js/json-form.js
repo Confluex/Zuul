@@ -21,7 +21,7 @@
         loadResourceById:function (id) {
             resourceId = id;
             $.ajax({
-                url:resourceUri + "/" + resourceId + ".json",
+                url:resourceUri + "/" + encodeURI(resourceId) + ".json",
                 type:'GET',
                 success:function (data, status, xhr) {
                     var binder = Binder.FormBinder.bind(form.get(0), data);
@@ -44,7 +44,7 @@
         var data = binder.serialize();
         delete data['']; // TODO weird empty key being generated for some reason. Figure out where it's coming from..
         $.ajax({
-            url:resourceUri + '/' + resourceId + ".json",
+            url:resourceUri + '/' + encodeURI(resourceId) + ".json",
             type:form.attr('method'),
             data:JSON.stringify(data),
             contentType:'application/json',
@@ -69,7 +69,7 @@
 
     function deleteRecord() {
         $.ajax({
-            url:resourceUri + '/' + resourceId + ".json",
+            url:resourceUri + '/' + encodeURI(resourceId) + ".json",
             type: 'DELETE',
             success:function (data, status, xhr) {
                 dialog.modal('hide');

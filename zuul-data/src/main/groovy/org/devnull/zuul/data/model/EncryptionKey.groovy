@@ -19,7 +19,6 @@ class EncryptionKey implements Serializable {
 
     String description
 
-    @JsonIgnore
     String password
 
     Boolean defaultKey = false

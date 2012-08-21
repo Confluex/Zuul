@@ -4,13 +4,13 @@ import org.devnull.security.service.SecurityService
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
+import org.springframework.web.servlet.view.RedirectView
 
 import javax.servlet.http.HttpServletResponse
 
 import org.springframework.web.bind.annotation.*
-import org.springframework.http.HttpStatus
-import org.springframework.web.servlet.view.RedirectView
 
 @Controller
 class SystemAdminServicesController {
@@ -53,5 +53,20 @@ class SystemAdminServicesController {
     @ResponseBody
     EncryptionKey getDefaultKey() {
         return zuulService.findDefaultKey()
+    }
+
+    @RequestMapping(value = "/system/keys/{name}.json", method = RequestMethod.GET)
+    @ResponseBody
+    EncryptionKey findKeyByName(@PathVariable String name) {
+        return zuulService.findKeyByName(name)
+    }
+
+    @RequestMapping(value = "/system/keys/{name}.json", method = RequestMethod.PUT)
+    @ResponseBody
+    EncryptionKey updateKeyByName(@PathVariable String name, @RequestBody EncryptionKey formKey) {
+        def key = findKeyByName(name)
+        key.description = formKey.description
+        key.password = formKey.password
+        return zuulService.save(key)
     }
 }

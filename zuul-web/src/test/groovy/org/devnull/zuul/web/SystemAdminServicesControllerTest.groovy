@@ -5,6 +5,8 @@ import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.service.ZuulService
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentCaptor
+import org.mockito.Matchers
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletResponse
 
@@ -73,4 +75,38 @@ class SystemAdminServicesControllerTest {
         def result = controller.getDefaultKey()
         assert result.is(expected)
     }
+
+    @Test
+    void shouldFindKeyByName() {
+        def expected = new EncryptionKey(name: "test")
+        when(controller.zuulService.findKeyByName("test")).thenReturn(expected)
+        def result = controller.findKeyByName("test")
+        assert result.is(expected)
+    }
+
+    @Test
+    void shouldUpdateKeyByNameWithoutChangingName() {
+        def formKey = new EncryptionKey(name: "new name", description: "new description", password: "new password")
+        def databaseKey = new EncryptionKey(name: "test", description: "test description", password: "test password")
+        when(controller.zuulService.findKeyByName("test")).thenReturn(databaseKey)
+        controller.updateKeyByName("test", formKey)
+
+        def arg = ArgumentCaptor.forClass(EncryptionKey)
+        verify(controller.zuulService).save(arg.capture())
+        assert arg.value.description == "new description"
+        assert arg.value.password == "new password"
+        assert arg.value.name == "test"
+    }
+
+    @Test
+    void shouldUpdateKeyAndReturnResultsFromService() {
+        def formKey = new EncryptionKey(name: "new name", description: "new description", password: "new password")
+        def databaseKey = new EncryptionKey(name: "test", description: "test description", password: "test password")
+        when(controller.zuulService.findKeyByName("test")).thenReturn(databaseKey)
+        when(controller.zuulService.save(Matchers.any(EncryptionKey))).thenReturn(databaseKey)
+        def result = controller.updateKeyByName("test", formKey)
+        assert result.is(databaseKey)
+    }
+
+
 }

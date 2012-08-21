@@ -1,5 +1,6 @@
 $(function () {
-    $(".descriptive").popover({placement:'right'});
+    var dialog = $('#editEntryDialog').modal({show:false});
+    var link = null;
 
     function swapPrimary(newKey) {
         var oldButton = $(".btn-group").find(".btn-primary");
@@ -32,5 +33,49 @@ $(function () {
         });
         return false;
     };
+
+    var onSaveHandler = function (entry) {
+        var row = link.parents("tr");
+        row.fadeOut('slow', function () {
+            row.children(".key-description").text(entry.description);
+            row.children(".key-name").text(entry.name);
+        });
+        row.fadeIn('slow');
+    };
+
+
+
+    var deleteEntry = function () {
+        link = $(this);
+        $.ajax({
+            url:getContextPath() + '/system/keys/' + link.data('id') + ".json",
+            type:'DELETE',
+            success:function (data, status, xhr) {
+                onDeleteHandler();
+            },
+            error:function (xhr, status, error) {
+                alert("An error has occurred while deleting the record. Please check the log for more details.");
+            }
+        });
+    };
+    var onDeleteHandler = function () {
+        var row = link.parents("tr");
+        row.fadeOut('slow', function () {
+            row.remove();
+        });
+    };
+
+    var showEditDialog = function () {
+        link = $(this);
+        var id = link.parents("tr").data("key-name");
+        $('#editEntryDialog').modal('show');
+        $('#editEntryForm').jsonForm('loadResourceById', id);
+    };
+
+
+
+    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
     $(".default-key-action").click(toggleDefaultKey);
+    $(".edit-key-action").click(showEditDialog);
+    $(".delete-key-action").click(deleteEntry);
 });

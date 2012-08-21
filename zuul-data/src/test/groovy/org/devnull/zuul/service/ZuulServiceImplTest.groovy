@@ -34,6 +34,23 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldSaveKey() {
+        def key = new EncryptionKey(name: "test")
+        when(service.encryptionKeyDao.save(key)).thenReturn(key)
+        def result = service.save(key)
+        verify(service.encryptionKeyDao).save(key)
+        assert result.is(key)
+    }
+
+    @Test
+    void shouldFindKeyByName() {
+        def expected = new EncryptionKey(name: "test")
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(expected)
+        def result = service.findKeyByName("test")
+        assert result.is(expected)
+    }
+
+    @Test
     void shouldChangeDefaultKeyAndSetOldKeyToFalse() {
         def keys = [
                 new EncryptionKey(name: "oldKey", defaultKey: true),

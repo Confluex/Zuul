@@ -176,6 +176,15 @@ class ZuulServiceImpl implements ZuulService {
         return key
     }
 
+    EncryptionKey findKeyByName(String name) {
+        return encryptionKeyDao.findOne(name)
+    }
+
+    @Transactional(readOnly=false)
+    EncryptionKey save(EncryptionKey key) {
+        return encryptionKeyDao.save(key)
+    }
+
     /**
      * Just because I don't trust database blocking transactions
      */

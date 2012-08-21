@@ -68,4 +68,10 @@ public interface ZuulService {
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     EncryptionKey findDefaultKey()
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    EncryptionKey findKeyByName(String name)
+
+    @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
+    EncryptionKey save(EncryptionKey key)
 }
