@@ -11,4 +11,4 @@ id, groupId, key, value, encrypted
 10, 3, jdbc.zuul.url, jdbc:h2:file:zuul-qa, false
 11, 3, jdbc.zuul.generate.ddl, none, false
 12, 3, jdbc.zuul.username, zuul, false
-13, 3, jdbc.zuul.password, supersecure, false
+13, 3, jdbc.zuul.password, o0giXuYvMdx0BXHh5L9ClAY8pxhqfQ7t, true
