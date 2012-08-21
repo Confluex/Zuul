@@ -1,23 +1,17 @@
 $(function () {
     $(".descriptive").popover({placement:'right'});
 
-    function swapButtons(oldKey, newKey) {
-        oldKey.removeClass("btn-primary");
-        oldKey.find("i").removeClass("icon-check icon-white");
-        oldKey.find("i").addClass("icon-ok");
+    function swapPrimary(newKey) {
+        var oldButton = $(".btn-group").find(".btn-primary");
+        oldButton.removeClass("btn-primary");
+        oldButton.find("i").removeClass("icon-check");
+        oldButton.find("i").removeClass("icon-white");
+        oldButton.find("i").addClass("icon-ok");
 
-        newKey.addClass("btn-primary");
-        newKey.find("i").removeClass("icon-ok");
-        newKey.find("i").addClass("icon-check icon-white");
-
-
-        //TODO update the popover title/description.. this isn't working
-//        var oldTitle = oldKey.data("original-title");
-//        var newTitle = newKey.data("original-title");
-//        var oldContent = oldKey.data("content");
-//        var newContent = newKey.data("content");
-//        $(oldKey).popover({content:newContent, title:newTitle});
-//        $(newKey).popover({content:oldContent, title:oldTitle});
+        var newButtons = $("[data-key-name='" + newKey + "']").find(".btn-group");
+        newButtons.find("button").addClass("btn-primary");
+        newButtons.find("i").removeClass("icon-ok");
+        newButtons.find("i").addClass("icon-check icon-white");
     }
 
     var toggleDefaultKey = function () {
@@ -30,8 +24,7 @@ $(function () {
             data:JSON.stringify({name:keyName}),
             contentType:'application/json',
             success:function (data, status, xhr) {
-                var oldKey = $(".select-key-action").filter(".btn-primary");
-                swapButtons(oldKey, link);
+                swapPrimary(data.name);
             },
             error:function (xhr, status, error) {
                 alert("An error has occurred while removing the role. Please check the log for more details.");
@@ -39,5 +32,5 @@ $(function () {
         });
         return false;
     };
-    $(".select-key-action").click(toggleDefaultKey);
+    $(".default-key-action").click(toggleDefaultKey);
 });
