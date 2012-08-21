@@ -13,6 +13,7 @@ import org.springframework.mock.web.MockHttpServletResponse
 import javax.servlet.http.HttpServletResponse
 
 import static org.mockito.Mockito.*
+import org.junit.Assert
 
 class SystemAdminServicesControllerTest {
 
@@ -106,6 +107,11 @@ class SystemAdminServicesControllerTest {
         when(controller.zuulService.saveKey(Matchers.any(EncryptionKey))).thenReturn(databaseKey)
         def result = controller.updateKeyByName("test", formKey)
         assert result.is(databaseKey)
+    }
+
+    @Test
+    void shouldReEncryptAllSettingsWhenKeyPasswordChanges() {
+        Assert.fail("Not implemented yet... For next session")
     }
 
 
