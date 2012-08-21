@@ -37,7 +37,7 @@ public class ZuulServiceImplTest {
     void shouldSaveKey() {
         def key = new EncryptionKey(name: "test")
         when(service.encryptionKeyDao.save(key)).thenReturn(key)
-        def result = service.save(key)
+        def result = service.saveKey(key)
         verify(service.encryptionKeyDao).save(key)
         assert result.is(key)
     }
@@ -292,7 +292,8 @@ public class ZuulServiceImplTest {
                 return 'a'
             }
         }
-        sleep(100)
+        // seems to be a delay getting the first thread into the collection
+        while (threads.size() <= 0) { wait(100)  }
         threads << Thread.start {
             completed << service.doWithFlagLock {
                 return 'b'

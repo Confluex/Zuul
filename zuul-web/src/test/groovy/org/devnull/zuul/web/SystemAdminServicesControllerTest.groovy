@@ -92,7 +92,7 @@ class SystemAdminServicesControllerTest {
         controller.updateKeyByName("test", formKey)
 
         def arg = ArgumentCaptor.forClass(EncryptionKey)
-        verify(controller.zuulService).save(arg.capture())
+        verify(controller.zuulService).saveKey(arg.capture())
         assert arg.value.description == "new description"
         assert arg.value.password == "new password"
         assert arg.value.name == "test"
@@ -103,7 +103,7 @@ class SystemAdminServicesControllerTest {
         def formKey = new EncryptionKey(name: "new name", description: "new description", password: "new password")
         def databaseKey = new EncryptionKey(name: "test", description: "test description", password: "test password")
         when(controller.zuulService.findKeyByName("test")).thenReturn(databaseKey)
-        when(controller.zuulService.save(Matchers.any(EncryptionKey))).thenReturn(databaseKey)
+        when(controller.zuulService.saveKey(Matchers.any(EncryptionKey))).thenReturn(databaseKey)
         def result = controller.updateKeyByName("test", formKey)
         assert result.is(databaseKey)
     }

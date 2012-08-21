@@ -67,6 +67,6 @@ class SystemAdminServicesController {
         def key = findKeyByName(name)
         key.description = formKey.description
         key.password = formKey.password
-        return zuulService.save(key)
+        return zuulService.saveKey(key)
     }
 }

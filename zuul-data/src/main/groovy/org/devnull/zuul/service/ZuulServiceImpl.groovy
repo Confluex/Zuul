@@ -181,7 +181,7 @@ class ZuulServiceImpl implements ZuulService {
     }
 
     @Transactional(readOnly=false)
-    EncryptionKey save(EncryptionKey key) {
+    EncryptionKey saveKey(EncryptionKey key) {
         return encryptionKeyDao.save(key)
     }
 

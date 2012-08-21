@@ -73,5 +73,5 @@ public interface ZuulService {
     EncryptionKey findKeyByName(String name)
 
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
-    EncryptionKey save(EncryptionKey key)
+    EncryptionKey saveKey(EncryptionKey key)
 }
