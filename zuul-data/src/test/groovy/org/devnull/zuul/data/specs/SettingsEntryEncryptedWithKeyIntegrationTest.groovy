@@ -22,8 +22,8 @@ class SettingsEntryEncryptedWithKeyIntegrationTest extends ZuulDataIntegrationTe
     }
 
     @Test
-        void shouldNotFindByEncryptedWithIncorrectKey() {
-            def results = dao.findAll(new SettingsEntryEncryptedWithKey(new EncryptionKey(name: "Fake Key")))
-            assert !results
-        }
+    void shouldNotFindByEncryptedWithIncorrectKey() {
+        def results = dao.findAll(new SettingsEntryEncryptedWithKey(new EncryptionKey(name: "Fake Key")))
+        assert !results
+    }
 }
