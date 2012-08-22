@@ -72,10 +72,23 @@ $(function () {
         $('#editEntryForm').jsonForm('loadResourceById', id);
     };
 
+    var toggleShowPassword = function () {
+        var link = $(this);
+        link.toggleClass("btn-danger");
+        link.find("i").toggleClass("icon-white");
+        var password = link.prev("input");
+        // do a little dance around browser security
+        var copy = password.clone();
+        copy.attr("type", password.attr("type") == "password" ? "text" : "password");
+        copy.insertBefore(password);
+        password.remove();
+        return false;
+    };
 
 
     $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
     $(".default-key-action").click(toggleDefaultKey);
     $(".edit-key-action").click(showEditDialog);
     $(".delete-key-action").click(deleteEntry);
+    $("#toggleShowPassword").tooltip().click(toggleShowPassword);
 });

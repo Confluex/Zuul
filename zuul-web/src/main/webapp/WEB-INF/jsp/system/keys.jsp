@@ -94,7 +94,12 @@
                     <label class="control-label" for="password">Password</label>
 
                     <div class="controls">
-                        <input id="password" name="password" class="span3" type="password">
+                        <div class="input-append">
+                            <input id="password" name="password" class="span3" type="password">
+                            <span id="toggleShowPassword" class="add-on" title="Toggle show password">
+                                <i class="icon-lock"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </fieldset>
