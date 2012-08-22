@@ -52,7 +52,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>oemInViewFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/settings/*</url-pattern>
     </filter-mapping>
 
     <servlet>

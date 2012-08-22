@@ -8,11 +8,13 @@ import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
+import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.service.error.ConflictingOperationException
 import org.jasypt.util.text.BasicTextEncryptor
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -36,6 +38,9 @@ class ZuulServiceImpl implements ZuulService {
 
     @Autowired
     EnvironmentDao environmentDao
+
+    @Autowired
+    EncryptionService encryptionService
 
 
     Lock toggleFlagLock = new ReentrantLock(true)
@@ -180,8 +185,18 @@ class ZuulServiceImpl implements ZuulService {
         return encryptionKeyDao.findOne(name)
     }
 
-    @Transactional(readOnly=false)
+    @Transactional(readOnly = false)
     EncryptionKey saveKey(EncryptionKey key) {
+        def existingKey = encryptionKeyDao.findOne(key.name)
+        log.debug("{} != {} : {}", existingKey.password, key.password, existingKey.password != key.password)
+        if (existingKey.password != key.password) {
+            settingsEntryDao.findAll(new SettingsEntryEncryptedWithKey(existingKey)).each { entry ->
+                log.info("re-encrypting entry:{}, oldKey:{}, newKey:{}", entry, existingKey, key)
+                def decrypted = encryptionService.decrypt(entry.value, existingKey)
+                entry.value = encryptionService.encrypt(decrypted, key)
+                settingsEntryDao.save(entry)
+            }
+        }
         return encryptionKeyDao.save(key)
     }
 

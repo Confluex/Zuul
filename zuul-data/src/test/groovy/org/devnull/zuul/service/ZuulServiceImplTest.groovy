@@ -17,7 +17,9 @@ import org.springframework.data.domain.Sort
 
 import java.util.concurrent.locks.Lock
 
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 
 public class ZuulServiceImplTest {
 
@@ -29,17 +31,38 @@ public class ZuulServiceImplTest {
                 settingsGroupDao: mock(SettingsGroupDao),
                 settingsEntryDao: mock(SettingsEntryDao),
                 environmentDao: mock(EnvironmentDao),
-                encryptionKeyDao: mock(EncryptionKeyDao)
+                encryptionKeyDao: mock(EncryptionKeyDao),
+                encryptionService: mock(EncryptionService)
         )
     }
 
     @Test
     void shouldSaveKey() {
-        def key = new EncryptionKey(name: "test")
+        def key = new EncryptionKey(name: "test", password: "abc")
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(key)
         when(service.encryptionKeyDao.save(key)).thenReturn(key)
         def result = service.saveKey(key)
         verify(service.encryptionKeyDao).save(key)
+        verify(service.settingsEntryDao, never()).save(Matchers.any(SettingsEntry))
         assert result.is(key)
+    }
+
+    @Test
+    void shouldReEncryptEntriesWhenSavingKeyWithNewPassword() {
+        def encryptedEntries = [new SettingsEntry(value: "encrypted 1"), new SettingsEntry(value: "encrypted 2")]
+        def existingKey = new EncryptionKey(name: "test", password: "abc")
+        def newKey = new EncryptionKey(name: "test", password: "def")
+
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(existingKey)
+        when(service.settingsEntryDao.findAll(new SettingsEntryEncryptedWithKey(existingKey))).thenReturn(encryptedEntries)
+        when(service.encryptionService.decrypt("encrypted 1", existingKey)).thenReturn("decrypted 1")
+        when(service.encryptionService.decrypt("encrypted 2", existingKey)).thenReturn("decrypted 2")
+        service.saveKey(newKey)
+        verify(service.encryptionService).decrypt("encrypted 1", existingKey)
+        verify(service.encryptionService).decrypt("encrypted 2", existingKey)
+        verify(service.encryptionService).encrypt("decrypted 1", newKey)
+        verify(service.encryptionService).encrypt("decrypted 2", newKey)
+        verify(service.settingsEntryDao, times(encryptedEntries.size())).save(Matchers.any(SettingsEntry))
     }
 
     @Test
@@ -293,7 +316,7 @@ public class ZuulServiceImplTest {
             }
         }
         // seems to be a delay getting the first thread into the collection
-        while (threads.size() <= 0) { wait(100)  }
+        while (threads.size() <= 0) { wait(100) }
         threads << Thread.start {
             completed << service.doWithFlagLock {
                 return 'b'

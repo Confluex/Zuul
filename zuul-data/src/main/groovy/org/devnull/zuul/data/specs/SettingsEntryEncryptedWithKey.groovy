@@ -5,7 +5,11 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.springframework.data.jpa.domain.Specification
 
 import javax.persistence.criteria.*
+import groovy.transform.ToString
+import groovy.transform.EqualsAndHashCode
 
+@ToString(includeNames=true)
+@EqualsAndHashCode
 class SettingsEntryEncryptedWithKey implements Specification<SettingsEntry> {
     EncryptionKey key
 
