@@ -1,12 +1,13 @@
 package org.devnull.zuul.data.dao
 
+import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.test.ZuulDataIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
+class SettingsGroupDaoIntegrationTest extends ZuulDataIntegrationTest {
 
     @Autowired
     SettingsGroupDao dao
@@ -74,5 +75,20 @@ class SettingsGroupIntegrationTest extends ZuulDataIntegrationTest {
         def decrementBy = group.entries.size()
         dao.delete(group.id)
         assert entryDao.count() == count - decrementBy
+    }
+
+    @Test
+    void shouldFindGroupsByKey() {
+        def results = dao.findByKey(new EncryptionKey(name: "Default Key"))
+        assert results.size() == 3
+        results.each {
+            assert it.key.name == "Default Key"
+        }
+    }
+
+    @Test
+    void shouldReturnNoResultsWhenFindingGroupsWithoutAMatchingKey() {
+        def results = dao.findByKey(new EncryptionKey(name: "Fake Key"))
+        assert !results
     }
 }
