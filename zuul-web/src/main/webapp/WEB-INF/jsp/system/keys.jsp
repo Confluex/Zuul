@@ -95,7 +95,8 @@
 
                     <div class="controls">
                         <div class="input-append">
-                            <input id="password" name="password" class="span3" type="password">
+                            <input id="password" name="password" class="span3" type="password" title="Change Password"
+                                   data-content="If you change the password, this will re-encrypt any existing entries with the new password.">
                             <span id="toggleShowPassword" class="add-on" title="Toggle show password">
                                 <i class="icon-lock"></i>
                             </span>

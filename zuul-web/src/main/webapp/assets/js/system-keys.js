@@ -91,4 +91,5 @@ $(function () {
     $(".edit-key-action").click(showEditDialog);
     $(".delete-key-action").click(deleteEntry);
     $("#toggleShowPassword").tooltip().click(toggleShowPassword);
+    $("#password").popover({placement:'bottom', trigger:'focus'})
 });
