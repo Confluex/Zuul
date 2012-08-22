@@ -14,11 +14,16 @@ class SettingsEntryEncryptedWithKeyIntegrationTest extends ZuulDataIntegrationTe
     @Test
     void shouldFindByEncryptedWithKey() {
         def results = dao.findAll(new SettingsEntryEncryptedWithKey(new EncryptionKey(name: "Default Key")))
-        // TODO create test-case/support issue for spring-jpa. Examining the SQL shows duplicate queries
         assert results
         results.each {
             assert it.encrypted
             assert it.group.key.name == "Default Key"
         }
     }
+
+    @Test
+        void shouldNotFindByEncryptedWithIncorrectKey() {
+            def results = dao.findAll(new SettingsEntryEncryptedWithKey(new EncryptionKey(name: "Fake Key")))
+            assert !results
+        }
 }
