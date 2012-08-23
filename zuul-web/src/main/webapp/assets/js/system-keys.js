@@ -47,8 +47,14 @@ $(function () {
 
     var deleteEntry = function () {
         link = $(this);
+        var button = link.parents("button");
+        if (button.hasClass("btn-primary")) {
+            alert("Cannot delete default key");
+            return false;
+        }
+        var id = link.parents("tr").data("key-name");
         $.ajax({
-            url:getContextPath() + '/system/keys/' + link.data('id') + ".json",
+            url:getContextPath() + '/system/keys/' + encodeURI(id) + ".json",
             type:'DELETE',
             success:function (data, status, xhr) {
                 onDeleteHandler();
@@ -58,6 +64,7 @@ $(function () {
             }
         });
     };
+
     var onDeleteHandler = function () {
         var row = link.parents("tr");
         row.fadeOut('slow', function () {
