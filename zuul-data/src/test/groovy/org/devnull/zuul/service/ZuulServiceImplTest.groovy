@@ -8,22 +8,22 @@ import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
+import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.service.error.ConflictingOperationException
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
 import org.springframework.data.domain.Sort
 
-import java.util.concurrent.locks.Lock
-
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
-import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 
 public class ZuulServiceImplTest {
 
     ZuulServiceImpl service
+    MetaClass serviceMetaClass
 
     @Before
     void createService() {
@@ -34,6 +34,19 @@ public class ZuulServiceImplTest {
                 encryptionKeyDao: mock(EncryptionKeyDao),
                 encryptionService: mock(EncryptionService)
         )
+    }
+
+    @Before
+    void registerMetaClass() {
+        serviceMetaClass = ZuulServiceImpl.metaClass
+        def emc = new ExpandoMetaClass(ZuulServiceImpl, true, true)
+        emc.initialize()
+        GroovySystem.metaClassRegistry.setMetaClass(ZuulServiceImpl, emc)
+    }
+
+    @After
+    void resetMetaClass() {
+        GroovySystem.metaClassRegistry.setMetaClass(ZuulServiceImpl, serviceMetaClass)
     }
 
     @Test
@@ -49,20 +62,93 @@ public class ZuulServiceImplTest {
 
     @Test
     void shouldReEncryptEntriesWhenSavingKeyWithNewPassword() {
+        def existingKey = new EncryptionKey(name: "test", password: "abc")
+        def newKey = new EncryptionKey(name: "test", password: "def")
+
+        def reEncryptCount = 0
+        service.metaClass.reEncryptEntriesWithMatchingKey = { EncryptionKey a, EncryptionKey b ->
+            assert a == existingKey
+            assert b == newKey
+            reEncryptCount++
+        }
+
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(existingKey)
+        service.saveKey(newKey)
+        assert reEncryptCount == 1
+    }
+
+    @Test
+    void shouldReEncryptAllMatchingEntriesWithNewKey() {
         def encryptedEntries = [new SettingsEntry(value: "encrypted 1"), new SettingsEntry(value: "encrypted 2")]
         def existingKey = new EncryptionKey(name: "test", password: "abc")
         def newKey = new EncryptionKey(name: "test", password: "def")
 
-        when(service.encryptionKeyDao.findOne("test")).thenReturn(existingKey)
         when(service.settingsEntryDao.findAll(new SettingsEntryEncryptedWithKey(existingKey))).thenReturn(encryptedEntries)
         when(service.encryptionService.decrypt("encrypted 1", existingKey)).thenReturn("decrypted 1")
         when(service.encryptionService.decrypt("encrypted 2", existingKey)).thenReturn("decrypted 2")
-        service.saveKey(newKey)
+        service.reEncryptEntriesWithMatchingKey(existingKey, newKey)
+        verify(service.settingsEntryDao).findAll(new SettingsEntryEncryptedWithKey(existingKey))
         verify(service.encryptionService).decrypt("encrypted 1", existingKey)
         verify(service.encryptionService).decrypt("encrypted 2", existingKey)
         verify(service.encryptionService).encrypt("decrypted 1", newKey)
         verify(service.encryptionService).encrypt("decrypted 2", newKey)
         verify(service.settingsEntryDao, times(encryptedEntries.size())).save(Matchers.any(SettingsEntry))
+    }
+
+    @Test
+    void shouldDeleteKeyByName() {
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(new EncryptionKey(defaultKey: false))
+        service.deleteKey("test")
+        verify(service.encryptionKeyDao).delete("test")
+    }
+
+    @Test(expected = ConflictingOperationException)
+    void shouldThrowExceptionWhenDeletingDefaultKey() {
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(new EncryptionKey(defaultKey: true))
+        service.deleteKey("test")
+    }
+
+
+    @Test
+    void shouldChangeEffectedGroupsToDefaultKeyWhenDeletingKey() {
+        def key = new EncryptionKey(name: "a", defaultKey: false)
+        def defaultKey = new EncryptionKey(name: "b", defaultKey: true)
+        def groups = [new SettingsGroup(id: 1), new SettingsGroup(id: 2)]
+
+        def changeKeyCount = 0
+
+        service.metaClass.changeKey = { SettingsGroup g, EncryptionKey k ->
+            assert groups.contains(g)
+            assert k == defaultKey
+            changeKeyCount++
+        }
+        when(service.encryptionKeyDao.findAll()).thenReturn([key, defaultKey])
+        when(service.encryptionKeyDao.findOne("a")).thenReturn(key)
+        when(service.settingsGroupDao.findByKey(key)).thenReturn(groups)
+        service.deleteKey("a")
+        verify(service.settingsGroupDao).findByKey(key)
+        verify(service.encryptionKeyDao).delete("a")
+        assert changeKeyCount == groups.size()
+    }
+
+    @Test
+    void shouldReEncryptEntriesWhenChangingKeys() {
+        def oldkey = new EncryptionKey(name: "test old")
+        def newKey = new EncryptionKey(name: "test new")
+        def group = new SettingsGroup(id: 1, key: oldkey)
+        group.addToEntries(new SettingsEntry(key: "a", value: "1"))
+        group.addToEntries(new SettingsEntry(key: "b", value: "2"))
+
+        when(service.encryptionService.decrypt("1", oldkey)).thenReturn("1-decrypted")
+        when(service.encryptionService.decrypt("2", oldkey)).thenReturn("2-decrypted")
+        service.changeKey(group, newKey)
+        verify(service.encryptionService).decrypt("1", oldkey)
+        verify(service.encryptionService).encrypt("1-decrypted", newKey)
+        verify(service.encryptionService).decrypt("2", oldkey)
+        verify(service.encryptionService).encrypt("2-decrypted", newKey)
+        verify(service.settingsGroupDao).save(group)
+
+        assert group.key == newKey
     }
 
     @Test
@@ -254,7 +340,6 @@ public class ZuulServiceImplTest {
         when(service.settingsEntryDao.save(entries[0])).thenReturn(entries[0])
 
         def encryptedEntry = service.encryptSettingsEntryValue(entries[0].id)
-        println encryptedEntry.value
         assert encryptedEntry.encrypted
         assert encryptedEntry.value != "foo"
         verify(service.settingsEntryDao).save(encryptedEntry)
@@ -301,38 +386,5 @@ public class ZuulServiceImplTest {
     void deleteSettingsGroupShouldInvokeDao() {
         service.deleteSettingsGroup(1)
         verify(service.settingsGroupDao).delete(1)
-    }
-
-    @Test
-    void doWithFlagLockShouldNotAllowConcurrentInvocations() {
-        def completed = []
-        def threads = []
-        threads << Thread.start {
-            completed << service.doWithFlagLock {
-                while (threads.size() < 2) {
-                    sleep(100)
-                }
-                return 'a'
-            }
-        }
-        // seems to be a delay getting the first thread into the collection
-        while (threads.size() <= 0) { wait(100) }
-        threads << Thread.start {
-            completed << service.doWithFlagLock {
-                return 'b'
-            }
-        }
-        threads*.join()
-        assert completed == ['a', 'b']
-    }
-
-    @Test(expected = IllegalArgumentException)
-    void doWithFlagLockShouldReleaseLockIfExceptionOccurs() {
-        service.toggleFlagLock = mock(Lock)
-        when(service.toggleFlagLock.tryLock()).thenReturn(true)
-        service.doWithFlagLock {
-            throw new IllegalArgumentException("test error")
-        }
-        verify(service.toggleFlagLock).unlock()
     }
 }

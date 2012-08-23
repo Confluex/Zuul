@@ -43,7 +43,6 @@ class SettingsServicesControllerTest {
 
         def content = mockResponse.contentAsString
         assert content
-        println content
         def properties = new Properties()
         properties.load(new StringReader(content))
         assert properties['jdbc.driver'] == "com.awesome.db.Driver"

@@ -14,7 +14,6 @@ import org.jasypt.util.text.BasicTextEncryptor
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
-import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -105,34 +104,30 @@ class ZuulServiceImpl implements ZuulService {
 
     @Transactional(readOnly = false)
     SettingsEntry encryptSettingsEntryValue(Integer entryId) {
-        doWithFlagLock {
-            def entry = settingsEntryDao.findOne(entryId)
-            if (entry.encrypted) {
-                throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entryId)
-            }
-            log.info("Encrypting entry: key={}", entry.key)
-            def encryptor = new BasicTextEncryptor();
-            encryptor.password = entry.group.key.password
-            entry.value = encryptor.encrypt(entry.value)
-            entry.encrypted = true
-            return settingsEntryDao.save(entry)
+        def entry = settingsEntryDao.findOne(entryId)
+        if (entry.encrypted) {
+            throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entryId)
         }
+        log.info("Encrypting entry: key={}", entry.key)
+        def encryptor = new BasicTextEncryptor();
+        encryptor.password = entry.group.key.password
+        entry.value = encryptor.encrypt(entry.value)
+        entry.encrypted = true
+        return settingsEntryDao.save(entry)
     }
 
     @Transactional(readOnly = false)
     SettingsEntry decryptSettingsEntryValue(Integer entryId) {
-        doWithFlagLock {
-            def entry = settingsEntryDao.findOne(entryId)
-            if (!entry.encrypted) {
-                throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entryId)
-            }
-            log.info("Decrypting entry: key={}", entry.key)
-            def encryptor = new BasicTextEncryptor();
-            encryptor.password = entry.group.key.password
-            entry.value = encryptor.decrypt(entry.value)
-            entry.encrypted = false
-            return settingsEntryDao.save(entry)
+        def entry = settingsEntryDao.findOne(entryId)
+        if (!entry.encrypted) {
+            throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entryId)
         }
+        log.info("Decrypting entry: key={}", entry.key)
+        def encryptor = new BasicTextEncryptor();
+        encryptor.password = entry.group.key.password
+        entry.value = encryptor.decrypt(entry.value)
+        entry.encrypted = false
+        return settingsEntryDao.save(entry)
     }
 
     SettingsEntry findSettingsEntry(Integer id) {
@@ -190,31 +185,43 @@ class ZuulServiceImpl implements ZuulService {
         def existingKey = encryptionKeyDao.findOne(key.name)
         log.debug("{} != {} : {}", existingKey.password, key.password, existingKey.password != key.password)
         if (existingKey.password != key.password) {
-            settingsEntryDao.findAll(new SettingsEntryEncryptedWithKey(existingKey)).each { entry ->
-                log.info("re-encrypting entry:{}, oldKey:{}, newKey:{}", entry, existingKey, key)
-                def decrypted = encryptionService.decrypt(entry.value, existingKey)
-                entry.value = encryptionService.encrypt(decrypted, key)
-                settingsEntryDao.save(entry)
-            }
+            reEncryptEntriesWithMatchingKey(existingKey, key)
         }
         return encryptionKeyDao.save(key)
     }
 
-    /**
-     * Just because I don't trust database blocking transactions
-     */
-    protected def doWithFlagLock = { closure ->
-        try {
-            log.debug("Obtaining toggleFlagLock")
-            toggleFlagLock.lock()
-            log.debug("toggleFlagLock obtained")
-            return closure()
-        } finally {
-            log.debug("Releasing toggleFlagLock")
-            toggleFlagLock.unlock()
-            log.debug("toggleFlagLock released")
+
+    void deleteKey(String name) {
+        def key = encryptionKeyDao.findOne(name)
+        if (key.defaultKey) {
+            throw new ConflictingOperationException("Cannot delete default key")
+        }
+        def existingGroups = settingsGroupDao.findByKey(key)
+        def defaultKey = findDefaultKey()
+        existingGroups.each { group ->
+            changeKey(group, defaultKey)
+        }
+        encryptionKeyDao.delete(name)
+    }
+
+
+    protected void reEncryptEntriesWithMatchingKey(EncryptionKey existingKey, EncryptionKey newKey) {
+        settingsEntryDao.findAll(new SettingsEntryEncryptedWithKey(existingKey)).each { entry ->
+            log.info("re-encrypting entry:{}, oldKey:{}, newKey:{}", entry, existingKey, newKey)
+            def decrypted = encryptionService.decrypt(entry.value, existingKey)
+            entry.value = encryptionService.encrypt(decrypted, newKey)
+            settingsEntryDao.save(entry)
         }
     }
 
 
+    protected void changeKey(SettingsGroup group, EncryptionKey newKey) {
+        def existingKey = group.key
+        group.entries.each {
+            def decrypted = encryptionService.decrypt(it.value, existingKey)
+            it.value = encryptionService.encrypt(decrypted, newKey)
+        }
+        group.key = newKey
+        settingsGroupDao.save(group)
+    }
 }

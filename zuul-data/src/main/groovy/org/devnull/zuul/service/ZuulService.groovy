@@ -74,4 +74,7 @@ public interface ZuulService {
 
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     EncryptionKey saveKey(EncryptionKey key)
+
+    @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
+    void deleteKey(String name)
 }
