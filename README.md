@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/mcantrell/Zuul.png?branch=master)](http://travis-ci.org/mcantrell/Zuul)
+
 # Zuul the Gatekeeper of Goze
 
 Web application for securely managing and accessing configuration for webapps.
