@@ -109,4 +109,12 @@ class SystemAdminServicesControllerTest {
         assert result.is(databaseKey)
     }
 
+    @Test
+    void shouldDeleteKeyByNameAndReturnCorrectResponseCode() {
+        def response = new MockHttpServletResponse()
+        controller.deleteKeyByName(response, "test")
+        verify(controller.zuulService).deleteKey("test")
+        assert response.status == HttpServletResponse.SC_NO_CONTENT
+    }
+
 }

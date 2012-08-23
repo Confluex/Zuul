@@ -101,8 +101,8 @@ public class SettingsControllerTest {
 
     @Test
     void createFromCopyShouldDisplayCorrectViewAndModel() {
-        def mv = controller.createFromUpload("foo", "dev")
-        assert mv.viewName == "/settings/upload"
+        def mv = controller.createFromCopy("foo", "dev")
+        assert mv.viewName == "/settings/copy"
         assert mv.model.environment == "dev"
         assert mv.model.groupName == "foo"
     }

@@ -69,4 +69,10 @@ class SystemAdminServicesController {
         key.password = formKey.password
         return zuulService.saveKey(key)
     }
+
+    @RequestMapping(value = "/system/keys/{name}.json", method = RequestMethod.DELETE)
+    void deleteKeyByName(HttpServletResponse response, @PathVariable String name) {
+        zuulService.deleteKey(name)
+        response.status = HttpServletResponse.SC_NO_CONTENT
+    }
 }
