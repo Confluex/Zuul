@@ -36,8 +36,8 @@ class SystemAdminServicesControllerIntegrationTest extends ZuulWebIntegrationTes
 
         controller.deleteKeyByName(new MockHttpServletResponse(), key.name)
         assert !zuulService.findKeyByName("Human Resources Key")
-        effectedGroups.each {
-            assert it.key == defaultKey
-        }
+
+        def defaultKeyGroups = settingsGroupDao.findByKey(defaultKey)
+        assert defaultKeyGroups.containsAll(effectedGroups)
     }
 }
