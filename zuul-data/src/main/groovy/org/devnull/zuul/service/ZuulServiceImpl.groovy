@@ -108,10 +108,7 @@ class ZuulServiceImpl implements ZuulService {
         if (entry.encrypted) {
             throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entryId)
         }
-        log.info("Encrypting entry: key={}", entry.key)
-        def encryptor = new BasicTextEncryptor();
-        encryptor.password = entry.group.key.password
-        entry.value = encryptor.encrypt(entry.value)
+        entry.value = encryptionService.encrypt(entry.value, entry.group.key)
         entry.encrypted = true
         return settingsEntryDao.save(entry)
     }
@@ -122,10 +119,7 @@ class ZuulServiceImpl implements ZuulService {
         if (!entry.encrypted) {
             throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entryId)
         }
-        log.info("Decrypting entry: key={}", entry.key)
-        def encryptor = new BasicTextEncryptor();
-        encryptor.password = entry.group.key.password
-        entry.value = encryptor.decrypt(entry.value)
+        entry.value = encryptionService.decrypt(entry.value, entry.group.key)
         entry.encrypted = false
         return settingsEntryDao.save(entry)
     }

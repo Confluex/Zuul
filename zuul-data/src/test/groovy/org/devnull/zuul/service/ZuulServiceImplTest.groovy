@@ -137,17 +137,13 @@ public class ZuulServiceImplTest {
         def newKey = new EncryptionKey(name: "test new")
         def group = new SettingsGroup(id: 1, key: oldkey)
         group.addToEntries(new SettingsEntry(key: "a", value: "1"))
-        group.addToEntries(new SettingsEntry(key: "b", value: "2"))
+        group.addToEntries(new SettingsEntry(key: "b", value: "2", encrypted: true))
+        group.addToEntries(new SettingsEntry(key: "c", value: "3"))
 
-        when(service.encryptionService.decrypt("1", oldkey)).thenReturn("1-decrypted")
         when(service.encryptionService.decrypt("2", oldkey)).thenReturn("2-decrypted")
         service.changeKey(group, newKey)
-        verify(service.encryptionService).decrypt("1", oldkey)
-        verify(service.encryptionService).encrypt("1-decrypted", newKey)
-        verify(service.encryptionService).decrypt("2", oldkey)
         verify(service.encryptionService).encrypt("2-decrypted", newKey)
         verify(service.settingsGroupDao).save(group)
-
         assert group.key == newKey
     }
 
@@ -332,22 +328,35 @@ public class ZuulServiceImplTest {
     }
 
     @Test
-    void shouldEncryptAndDecryptSettingsEntry() {
+    void shouldEncryptSettingsEntryWithItsGroupKey() {
         def group = new SettingsGroup(key: new EncryptionKey(password: "abc123"))
-        def entries = [new SettingsEntry(id: 1, key: "a", value: "foo", group: group)]
+        def entry = new SettingsEntry(id: 1, key: "a", value: "foo")
+        group.addToEntries(entry)
 
-        when(service.settingsEntryDao.findOne(entries[0].id)).thenReturn(entries[0])
-        when(service.settingsEntryDao.save(entries[0])).thenReturn(entries[0])
-
-        def encryptedEntry = service.encryptSettingsEntryValue(entries[0].id)
+        when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
+        when(service.settingsEntryDao.save(entry)).thenReturn(entry)
+        when(service.encryptionService.encrypt(entry.value, group.key)).thenReturn("encryptedValue")
+        def encryptedEntry = service.encryptSettingsEntryValue(entry.id)
+        verify(service.encryptionService).encrypt("foo", group.key)
+        verify(service.settingsEntryDao).save(entry)
         assert encryptedEntry.encrypted
-        assert encryptedEntry.value != "foo"
-        verify(service.settingsEntryDao).save(encryptedEntry)
+        assert encryptedEntry.value == "encryptedValue"
+    }
 
-        def decryptedEntry = service.decryptSettingsEntryValue(encryptedEntry.id)
-        assert !encryptedEntry.encrypted
-        assert decryptedEntry.value == "foo"
-        verify(service.settingsEntryDao, times(2)).save(decryptedEntry)
+    @Test
+    void shouldDecryptSettingsEntryWithItsGroupKey() {
+        def group = new SettingsGroup(key: new EncryptionKey(password: "abc123"))
+        def entry = new SettingsEntry(id: 1, key: "a", value: "encrypted", encrypted: true)
+        group.addToEntries(entry)
+
+        when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
+        when(service.settingsEntryDao.save(entry)).thenReturn(entry)
+        when(service.encryptionService.decrypt(entry.value, group.key)).thenReturn("decrypted")
+        def decrypted = service.decryptSettingsEntryValue(entry.id)
+        verify(service.encryptionService).decrypt("encrypted", group.key)
+        verify(service.settingsEntryDao).save(entry)
+        assert !decrypted.encrypted
+        assert decrypted.value == "decrypted"
     }
 
     @Test
