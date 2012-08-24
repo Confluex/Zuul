@@ -12,7 +12,7 @@
 
     <context:component-scan base-package="org.devnull.zuul.web"/>
     <mvc:annotation-driven/>
-    <mvc:resources mapping="/assets/**" location="/assets/" />
+    <mvc:resources mapping="/assets/**" location="/assets/"/>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
@@ -20,4 +20,5 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <bean class="org.devnull.zuul.web.error.ErrorResolver" />
 </beans>
