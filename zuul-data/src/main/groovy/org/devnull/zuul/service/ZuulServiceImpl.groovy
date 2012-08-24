@@ -10,7 +10,7 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.service.error.ConflictingOperationException
-import org.jasypt.util.text.BasicTextEncryptor
+
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
+import org.devnull.zuul.service.security.EncryptionStrategy
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -39,7 +40,7 @@ class ZuulServiceImpl implements ZuulService {
     EnvironmentDao environmentDao
 
     @Autowired
-    EncryptionService encryptionService
+    EncryptionStrategy encryptionStrategy
 
 
     Lock toggleFlagLock = new ReentrantLock(true)
@@ -108,7 +109,7 @@ class ZuulServiceImpl implements ZuulService {
         if (entry.encrypted) {
             throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entryId)
         }
-        entry.value = encryptionService.encrypt(entry.value, entry.group.key)
+        entry.value = encryptionStrategy.encrypt(entry.value, entry.group.key)
         entry.encrypted = true
         return settingsEntryDao.save(entry)
     }
@@ -119,7 +120,7 @@ class ZuulServiceImpl implements ZuulService {
         if (!entry.encrypted) {
             throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entryId)
         }
-        entry.value = encryptionService.decrypt(entry.value, entry.group.key)
+        entry.value = encryptionStrategy.decrypt(entry.value, entry.group.key)
         entry.encrypted = false
         return settingsEntryDao.save(entry)
     }
@@ -202,8 +203,8 @@ class ZuulServiceImpl implements ZuulService {
     protected void reEncryptEntriesWithMatchingKey(EncryptionKey existingKey, EncryptionKey newKey) {
         settingsEntryDao.findAll(new SettingsEntryEncryptedWithKey(existingKey)).each { entry ->
             log.info("re-encrypting entry:{}, oldKey:{}, newKey:{}", entry, existingKey, newKey)
-            def decrypted = encryptionService.decrypt(entry.value, existingKey)
-            entry.value = encryptionService.encrypt(decrypted, newKey)
+            def decrypted = encryptionStrategy.decrypt(entry.value, existingKey)
+            entry.value = encryptionStrategy.encrypt(decrypted, newKey)
             settingsEntryDao.save(entry)
         }
     }
@@ -213,8 +214,8 @@ class ZuulServiceImpl implements ZuulService {
         def existingKey = group.key
         group.entries.each {
             if (it.encrypted) {
-                def decrypted = encryptionService.decrypt(it.value, existingKey)
-                it.value = encryptionService.encrypt(decrypted, newKey)
+                def decrypted = encryptionStrategy.decrypt(it.value, existingKey)
+                it.value = encryptionStrategy.encrypt(decrypted, newKey)
             }
         }
         group.key = newKey

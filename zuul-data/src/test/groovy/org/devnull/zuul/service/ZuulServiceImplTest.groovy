@@ -17,8 +17,8 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
 import org.springframework.data.domain.Sort
 
-import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import org.devnull.zuul.service.security.EncryptionStrategy
 
 public class ZuulServiceImplTest {
 
@@ -32,7 +32,7 @@ public class ZuulServiceImplTest {
                 settingsEntryDao: mock(SettingsEntryDao),
                 environmentDao: mock(EnvironmentDao),
                 encryptionKeyDao: mock(EncryptionKeyDao),
-                encryptionService: mock(EncryptionService)
+                encryptionStrategy: mock(EncryptionStrategy)
         )
     }
 
@@ -84,14 +84,14 @@ public class ZuulServiceImplTest {
         def newKey = new EncryptionKey(name: "test", password: "def")
 
         when(service.settingsEntryDao.findAll(new SettingsEntryEncryptedWithKey(existingKey))).thenReturn(encryptedEntries)
-        when(service.encryptionService.decrypt("encrypted 1", existingKey)).thenReturn("decrypted 1")
-        when(service.encryptionService.decrypt("encrypted 2", existingKey)).thenReturn("decrypted 2")
+        when(service.encryptionStrategy.decrypt("encrypted 1", existingKey)).thenReturn("decrypted 1")
+        when(service.encryptionStrategy.decrypt("encrypted 2", existingKey)).thenReturn("decrypted 2")
         service.reEncryptEntriesWithMatchingKey(existingKey, newKey)
         verify(service.settingsEntryDao).findAll(new SettingsEntryEncryptedWithKey(existingKey))
-        verify(service.encryptionService).decrypt("encrypted 1", existingKey)
-        verify(service.encryptionService).decrypt("encrypted 2", existingKey)
-        verify(service.encryptionService).encrypt("decrypted 1", newKey)
-        verify(service.encryptionService).encrypt("decrypted 2", newKey)
+        verify(service.encryptionStrategy).decrypt("encrypted 1", existingKey)
+        verify(service.encryptionStrategy).decrypt("encrypted 2", existingKey)
+        verify(service.encryptionStrategy).encrypt("decrypted 1", newKey)
+        verify(service.encryptionStrategy).encrypt("decrypted 2", newKey)
         verify(service.settingsEntryDao, times(encryptedEntries.size())).save(Matchers.any(SettingsEntry))
     }
 
@@ -140,9 +140,9 @@ public class ZuulServiceImplTest {
         group.addToEntries(new SettingsEntry(key: "b", value: "2", encrypted: true))
         group.addToEntries(new SettingsEntry(key: "c", value: "3"))
 
-        when(service.encryptionService.decrypt("2", oldkey)).thenReturn("2-decrypted")
+        when(service.encryptionStrategy.decrypt("2", oldkey)).thenReturn("2-decrypted")
         service.changeKey(group, newKey)
-        verify(service.encryptionService).encrypt("2-decrypted", newKey)
+        verify(service.encryptionStrategy).encrypt("2-decrypted", newKey)
         verify(service.settingsGroupDao).save(group)
         assert group.key == newKey
     }
@@ -335,9 +335,9 @@ public class ZuulServiceImplTest {
 
         when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
         when(service.settingsEntryDao.save(entry)).thenReturn(entry)
-        when(service.encryptionService.encrypt(entry.value, group.key)).thenReturn("encryptedValue")
+        when(service.encryptionStrategy.encrypt(entry.value, group.key)).thenReturn("encryptedValue")
         def encryptedEntry = service.encryptSettingsEntryValue(entry.id)
-        verify(service.encryptionService).encrypt("foo", group.key)
+        verify(service.encryptionStrategy).encrypt("foo", group.key)
         verify(service.settingsEntryDao).save(entry)
         assert encryptedEntry.encrypted
         assert encryptedEntry.value == "encryptedValue"
@@ -351,9 +351,9 @@ public class ZuulServiceImplTest {
 
         when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
         when(service.settingsEntryDao.save(entry)).thenReturn(entry)
-        when(service.encryptionService.decrypt(entry.value, group.key)).thenReturn("decrypted")
+        when(service.encryptionStrategy.decrypt(entry.value, group.key)).thenReturn("decrypted")
         def decrypted = service.decryptSettingsEntryValue(entry.id)
-        verify(service.encryptionService).decrypt("encrypted", group.key)
+        verify(service.encryptionStrategy).decrypt("encrypted", group.key)
         verify(service.settingsEntryDao).save(entry)
         assert !decrypted.encrypted
         assert decrypted.value == "decrypted"

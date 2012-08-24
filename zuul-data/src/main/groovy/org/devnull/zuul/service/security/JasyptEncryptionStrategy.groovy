@@ -1,11 +1,11 @@
-package org.devnull.zuul.service
+package org.devnull.zuul.service.security
 
 import org.devnull.zuul.data.model.EncryptionKey
 import org.jasypt.util.text.BasicTextEncryptor
 import org.springframework.stereotype.Service
 
 @Service("jasyptEncryptionService")
-class JasyptEncryptionService implements EncryptionService {
+class JasyptEncryptionStrategy implements EncryptionStrategy {
 
     String encrypt(String value, EncryptionKey key) {
         def encryptor = new BasicTextEncryptor();
