@@ -1,17 +1,51 @@
 package org.devnull.zuul.web.test
 
-import org.springframework.transaction.annotation.Transactional
+import org.devnull.security.model.User
+import org.devnull.security.service.SecurityService
+import org.junit.Before
+import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.ProviderManager
+import org.springframework.security.authentication.TestingAuthenticationProvider
+import org.springframework.security.authentication.TestingAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import org.junit.runner.RunWith
-
+import org.springframework.transaction.annotation.Transactional
+import org.junit.After
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = [
-    'classpath:zuul-data-context.xml',
-    'classpath:application-context.xml',
-    'classpath:security-context.xml'
+'classpath:zuul-data-context.xml',
+'classpath:application-context.xml',
+'classpath:security-context.xml'
 ])
 @Transactional('transactionManager')
 abstract class ZuulWebIntegrationTest {
+
+    @Autowired
+    ProviderManager authenticationManager
+
+    @Autowired
+    SecurityService securityService
+
+    protected final def OPEN_ID_SYS_ADMIN = 'https://me.yahoo.com/a/mMz2C510uMjhwvHr.4K2aToLWzrPDJb.._M-#b431e'
+
+    @Before
+    void addTestAuthenticationProvider() {
+        authenticationManager.providers.add(new TestingAuthenticationProvider())
+    }
+
+    @After
+    void logout() {
+        SecurityContextHolder.clearContext()
+    }
+
+    protected void loginAsUser(String openId) {
+        def user = securityService.findUserByOpenId(openId)
+        def testUser = new TestingAuthenticationToken(new User(), "fake", user.authorities as List)
+        def response = authenticationManager.authenticate(testUser)
+        SecurityContextHolder.getContext().setAuthentication(response);
+    }
+
 }

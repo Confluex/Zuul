@@ -12,3 +12,6 @@ id, groupId, key, value, encrypted
 11, 3, jdbc.zuul.generate.ddl, none, false
 12, 3, jdbc.zuul.username, zuul, false
 13, 3, jdbc.zuul.password, o0giXuYvMdx0BXHh5L9ClAY8pxhqfQ7t, true
+14, 4, sftp.bank.url,sftp://devnull.org,false
+15, 4, sftp.bank.username,acme,false
+16, 4, sftp.bank.password,zzr06XUiNuVB4p7MesDWKA3Bd4+BBY4L,true

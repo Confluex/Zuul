@@ -218,8 +218,10 @@ class ZuulServiceImpl implements ZuulService {
     protected void changeKey(SettingsGroup group, EncryptionKey newKey) {
         def existingKey = group.key
         group.entries.each {
-            def decrypted = encryptionService.decrypt(it.value, existingKey)
-            it.value = encryptionService.encrypt(decrypted, newKey)
+            if (it.encrypted) {
+                def decrypted = encryptionService.decrypt(it.value, existingKey)
+                it.value = encryptionService.encrypt(decrypted, newKey)
+            }
         }
         group.key = newKey
         settingsGroupDao.save(group)
