@@ -42,9 +42,6 @@ class ZuulServiceImpl implements ZuulService {
     @Autowired
     EncryptionStrategy encryptionStrategy
 
-
-    Lock toggleFlagLock = new ReentrantLock(true)
-
     @Transactional(readOnly = false)
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName) {
         log.info("Creating empty group for name: {}, environment: {}", groupName, environmentName)
