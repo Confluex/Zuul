@@ -9,6 +9,10 @@ import org.junit.Test
 import org.mockito.ArgumentCaptor
 
 import static org.mockito.Mockito.*
+import org.devnull.zuul.data.model.EncryptionKey
+import org.springframework.mock.web.MockHttpServletResponse
+import javax.servlet.http.HttpServletResponse
+import org.springframework.security.access.AccessDeniedException
 
 public class SettingsControllerTest {
 
@@ -118,4 +122,16 @@ public class SettingsControllerTest {
     }
 
 
+    @Test
+    void shouldChangeGroupKeyAnAndRedirect() {
+        def group = new SettingsGroup(id: 1, environment: new Environment(name: "dev"))
+        def key = new EncryptionKey(name: "test-key")
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-app", "dev")).thenReturn(group)
+        when(controller.zuulService.findKeyByName("test-key")).thenReturn(key)
+        def view = controller.changeGroupKey("dev", "test-app", "test-key")
+        verify(controller.zuulService).findSettingsGroupByNameAndEnvironment("test-app", "dev")
+        verify(controller.zuulService).findKeyByName("test-key")
+        verify(controller.zuulService).changeKey(group, key)
+        assert view == "redirect:/settings/test-app#dev"
+    }
 }

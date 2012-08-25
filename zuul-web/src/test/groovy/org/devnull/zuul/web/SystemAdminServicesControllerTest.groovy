@@ -68,6 +68,13 @@ class SystemAdminServicesControllerTest {
         assert view.url == "/system/keys/default.json"
     }
 
+    @Test
+    void shouldListKeys() {
+        def expected = [new EncryptionKey(name:"a"), new EncryptionKey(name:"b")]
+        when(controller.zuulService.listEncryptionKeys()).thenReturn(expected)
+        def keys = controller.listKeys()
+        assert keys.is(expected)
+    }
 
     @Test
     void shouldFindDefaultKey() {

@@ -64,13 +64,6 @@ class SettingsServicesController {
         return deepFetch ? groups : groups.collect { it as Map } as List<SettingsGroup>
     }
 
-    @RequestMapping(value = "/settings/{environment}/{groupName}/key.json", method = RequestMethod.PUT)
-    void changeGroupKey(HttpServletResponse response, @PathVariable("environment") String environment, @PathVariable("groupName") String groupName, @RequestBody EncryptionKey formKey) {
-        def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, environment)
-        def key = zuulService.findKeyByName(formKey.name)
-        zuulService.changeKey(group, key)
-        response.status = HttpServletResponse.SC_NO_CONTENT
-    }
 
     /**
      * View a specific entry in JSON

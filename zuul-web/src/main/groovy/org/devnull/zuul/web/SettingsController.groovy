@@ -1,8 +1,11 @@
 package org.devnull.zuul.web
 
+import org.devnull.security.service.SecurityService
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.service.ZuulService
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView
 
 @Controller
 class SettingsController {
+    final def log = LoggerFactory.getLogger(this.class)
 
     @Autowired
     ZuulService zuulService
@@ -102,5 +106,14 @@ class SettingsController {
         return new ModelAndView("/settings/show", model)
     }
 
+
+    @RequestMapping(value = "/settings/{environment}/{groupName}/key/change", method = RequestMethod.GET)
+    String changeGroupKey(@PathVariable("environment") String environment, @PathVariable("groupName") String groupName,
+                          @RequestParam String keyName) {
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, environment)
+        def key = zuulService.findKeyByName(keyName)
+        zuulService.changeKey(group, key)
+        return "redirect:/settings/${groupName}#${environment}"
+    }
 
 }

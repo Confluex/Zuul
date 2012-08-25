@@ -61,6 +61,12 @@ class SystemAdminServicesController {
         return zuulService.findKeyByName(name)
     }
 
+    @RequestMapping(value = "/system/keys.json", method = RequestMethod.GET)
+    @ResponseBody
+    List<EncryptionKey> listKeys() {
+        return zuulService.listEncryptionKeys()
+    }
+
     @RequestMapping(value = "/system/keys/{name}.json", method = RequestMethod.PUT)
     @ResponseBody
     EncryptionKey updateKeyByName(@PathVariable String name, @RequestBody EncryptionKey formKey) {
