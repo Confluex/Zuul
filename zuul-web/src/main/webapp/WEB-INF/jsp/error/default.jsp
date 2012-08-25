@@ -22,13 +22,13 @@
     </div>
 </div>
 <div class="row">
-    <div class="span3">
-        An unhandled error has occurred. This sort of thing shouldn't happen. Please consider
-        <a href="https://github.com/mcantrell/Zuul/issues">opening a bug report</a> with as much detail
-        as possible and we'll take a closer look.
-    </div>
-    <div class="span9">
-
+    <div class="span12">
+        <div class="alert alert-error">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            An unhandled error has occurred. This sort of thing shouldn't happen. Please consider
+            <a href="https://github.com/mcantrell/Zuul/issues">opening a bug report</a> with as much detail
+            as possible and we'll take a closer look.
+        </div>
         <form class="form-horizontal">
             <fieldset>
                 <legend>Error Details</legend>
@@ -37,7 +37,7 @@
                     <label class="control-label">Date</label>
 
                     <div class="controls">
-                        <input type="text" value='<fmt:formatDate value="${date}" timeStyle="short"/>' readonly="readonly">
+                        <input type="text" value='<fmt:formatDate value="${date}" pattern="MM/dd/yy HH:mm:ss"/>' readonly="readonly">
                     </div>
                 </div>
                 <div class="control-group">
@@ -58,7 +58,7 @@
         </form>
         <strong>StackTrace:</strong>
 
-        <p class="pre-scrollable well">${stackTrace}</p>
+        <pre class="pre-scrollable well">${stackTrace}</pre>
     </div>
 </div>
 </body>
