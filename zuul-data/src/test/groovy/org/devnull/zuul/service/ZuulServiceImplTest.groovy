@@ -10,6 +10,7 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.service.error.ConflictingOperationException
+import org.devnull.zuul.service.security.EncryptionStrategy
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -17,13 +18,22 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
 import org.springframework.data.domain.Sort
 
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
-import org.devnull.zuul.service.security.EncryptionStrategy
 
 public class ZuulServiceImplTest {
 
     ZuulServiceImpl service
     MetaClass serviceMetaClass
+
+    @Before
+    void registerMetaClass() {
+        serviceMetaClass = ZuulServiceImpl.metaClass
+        def emc = new ExpandoMetaClass(ZuulServiceImpl, true, true)
+        emc.initialize()
+        GroovySystem.metaClassRegistry.setMetaClass(ZuulServiceImpl, emc)
+    }
+
 
     @Before
     void createService() {
@@ -36,13 +46,6 @@ public class ZuulServiceImplTest {
         )
     }
 
-    @Before
-    void registerMetaClass() {
-        serviceMetaClass = ZuulServiceImpl.metaClass
-        def emc = new ExpandoMetaClass(ZuulServiceImpl, true, true)
-        emc.initialize()
-        GroovySystem.metaClassRegistry.setMetaClass(ZuulServiceImpl, emc)
-    }
 
     @After
     void resetMetaClass() {
@@ -113,22 +116,17 @@ public class ZuulServiceImplTest {
     void shouldChangeEffectedGroupsToDefaultKeyWhenDeletingKey() {
         def key = new EncryptionKey(name: "a", defaultKey: false)
         def defaultKey = new EncryptionKey(name: "b", defaultKey: true)
-        def groups = [new SettingsGroup(id: 1), new SettingsGroup(id: 2)]
+        def groups = [new SettingsGroup(id: 1, key: key), new SettingsGroup(id: 2, key: key)]
 
-        def changeKeyCount = 0
-
-        service.metaClass.changeKey = { SettingsGroup g, EncryptionKey k ->
-            assert groups.contains(g)
-            assert k == defaultKey
-            changeKeyCount++
-        }
         when(service.encryptionKeyDao.findAll()).thenReturn([key, defaultKey])
         when(service.encryptionKeyDao.findOne("a")).thenReturn(key)
         when(service.settingsGroupDao.findByKey(key)).thenReturn(groups)
         service.deleteKey("a")
         verify(service.settingsGroupDao).findByKey(key)
         verify(service.encryptionKeyDao).delete("a")
-        assert changeKeyCount == groups.size()
+        groups.each {
+            assert it.key == defaultKey
+        }
     }
 
     @Test
