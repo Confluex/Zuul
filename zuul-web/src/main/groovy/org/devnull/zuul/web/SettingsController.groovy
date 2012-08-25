@@ -97,7 +97,6 @@ class SettingsController {
         def groupsByEnv = [:]
         environments.each { env ->
             groupsByEnv[env] = zuulService.findSettingsGroupByNameAndEnvironment(name, env.name)
-            throw new RuntimeException("test")
         }
         def model = [groupsByEnv: groupsByEnv, groupName: name, environments: environments]
         return new ModelAndView("/settings/show", model)
