@@ -5,20 +5,22 @@ import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletResponse
-
-import org.springframework.web.bind.annotation.*
+import org.devnull.zuul.data.model.EncryptionKey
 
 @Controller
 class SettingsServicesController {
 
     @Autowired
     ZuulService zuulService
-
-
 
     /**
      * Create a new settings group with entries from an uploaded properties file. Note that this must
@@ -52,16 +54,22 @@ class SettingsServicesController {
         response.status = HttpServletResponse.SC_NO_CONTENT
     }
 
-
-
     /**
      * View all of the settings groups as JSON
      */
     @RequestMapping(value = "/settings.json")
     @ResponseBody
-    List<SettingsGroup> listJson(@RequestParam(required=false, value="deepFetch", defaultValue="false") Boolean deepFetch) {
+    List<SettingsGroup> listJson(@RequestParam(required = false, value = "deepFetch", defaultValue = "false") Boolean deepFetch) {
         def groups = zuulService.listSettingsGroups()
         return deepFetch ? groups : groups.collect { it as Map } as List<SettingsGroup>
+    }
+
+    @RequestMapping(value = "/settings/{environment}/{groupName}/key.json", method = RequestMethod.PUT)
+    void changeGroupKey(HttpServletResponse response, @PathVariable("environment") String environment, @PathVariable("groupName") String groupName, @RequestBody EncryptionKey formKey) {
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, environment)
+        def key = zuulService.findKeyByName(formKey.name)
+        zuulService.changeKey(group, key)
+        response.status = HttpServletResponse.SC_NO_CONTENT
     }
 
     /**
@@ -111,4 +119,5 @@ class SettingsServicesController {
     SettingsEntry decrypt(@RequestParam("id") Integer id) {
         return zuulService.decryptSettingsEntryValue(id)
     }
+
 }

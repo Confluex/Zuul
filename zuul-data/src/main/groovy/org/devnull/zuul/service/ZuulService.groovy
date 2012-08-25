@@ -11,6 +11,9 @@ public interface ZuulService {
     /* Settings Groups -------------------- */
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    void changeKey(SettingsGroup group, EncryptionKey key)
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName)
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

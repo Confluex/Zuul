@@ -10,6 +10,8 @@ import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.web.multipart.MultipartFile
 
 import static org.mockito.Mockito.*
+import org.devnull.zuul.data.model.EncryptionKey
+import javax.servlet.http.HttpServletResponse
 
 class SettingsServicesControllerTest {
 
@@ -115,6 +117,20 @@ class SettingsServicesControllerTest {
         controller.deleteEntryJson(123, response)
         verify(controller.zuulService).deleteSettingsEntry(123)
         assert response.status == 204
+    }
+
+    @Test
+    void shouldChangeGroupKeyAndReturnCorrectResponseCode() {
+        def response = new MockHttpServletResponse()
+        def group = new SettingsGroup(id: 1, environment: new Environment(name: "dev"))
+        def key = new EncryptionKey(name: "test-key")
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-app", "dev")).thenReturn(group)
+        when(controller.zuulService.findKeyByName("test-key")).thenReturn(key)
+        controller.changeGroupKey(response, "dev", "test-app", key)
+        verify(controller.zuulService).findSettingsGroupByNameAndEnvironment("test-app", "dev")
+        verify(controller.zuulService).findKeyByName("test-key")
+        verify(controller.zuulService).changeKey(group, key)
+        assert response.status == HttpServletResponse.SC_NO_CONTENT
     }
 
 }

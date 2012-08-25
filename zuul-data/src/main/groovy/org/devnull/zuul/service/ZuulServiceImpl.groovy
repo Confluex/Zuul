@@ -10,16 +10,12 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.service.error.ConflictingOperationException
-
+import org.devnull.zuul.service.security.EncryptionStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
-import org.devnull.zuul.service.security.EncryptionStrategy
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -144,6 +140,19 @@ class ZuulServiceImpl implements ZuulService {
         return settingsGroupDao.save(group)
     }
 
+    @Transactional(readOnly = false)
+    void changeKey(SettingsGroup group, EncryptionKey newKey) {
+        def existingKey = group.key
+        group.entries.each {
+            if (it.encrypted) {
+                def decrypted = encryptionStrategy.decrypt(it.value, existingKey)
+                it.value = encryptionStrategy.encrypt(decrypted, newKey)
+            }
+        }
+        group.key = newKey
+        settingsGroupDao.save(group)
+    }
+
     List<EncryptionKey> listEncryptionKeys() {
         return encryptionKeyDao.findAll(new Sort("name")) as List
     }
@@ -207,15 +216,4 @@ class ZuulServiceImpl implements ZuulService {
     }
 
 
-    protected void changeKey(SettingsGroup group, EncryptionKey newKey) {
-        def existingKey = group.key
-        group.entries.each {
-            if (it.encrypted) {
-                def decrypted = encryptionStrategy.decrypt(it.value, existingKey)
-                it.value = encryptionStrategy.encrypt(decrypted, newKey)
-            }
-        }
-        group.key = newKey
-        settingsGroupDao.save(group)
-    }
 }
