@@ -11,14 +11,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="contextPath" content="${pageContext.request.contextPath}">
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/assets/images/favicon.ico">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/ext/bootstrap-2.0.4/css/bootstrap.min.css"
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/ext/bootstrap-2.1.0/css/bootstrap.min.css"
           type="text/css">
     <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/assets/ext/bootstrap-2.0.4/css/bootstrap-responsive.min.css"
+          href="${pageContext.request.contextPath}/assets/ext/bootstrap-2.1.0/css/bootstrap-responsive.min.css"
           type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css" type="text/css">
     <script src="${pageContext.request.contextPath}/assets/ext/jquery-1.7.2.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/ext/bootstrap-2.0.4/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/ext/bootstrap-2.1.0/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/main.js"></script>
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -92,9 +92,9 @@
                     </ul>
                     <security:authorize access="isAuthenticated()">
                         <ul class="nav pull-right">
-                            <li class="dropdown active">
+                            <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-user icon-white"></i>
+                                    <i class="icon-user"></i>
                                     <security:authentication property="principal.firstName"/>
                                     <security:authentication property="principal.lastName"/>
                                     <b class="caret"></b>
@@ -126,7 +126,7 @@
                     </security:authorize>
                     <security:authorize access="isAnonymous()">
                         <p class="navbar-text pull-right">
-                            <a href="${pageContext.request.contextPath}/login" class="btn btn-primary">
+                            <a href="${pageContext.request.contextPath}/login" class="btn btn-primary" style="margin-top: 0;">
                                 <i class="icon-user icon-white"></i>
                                 Login
                             </a>
