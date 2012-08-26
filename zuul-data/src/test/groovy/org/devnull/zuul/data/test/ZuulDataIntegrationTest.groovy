@@ -6,7 +6,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.junit.runner.RunWith
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = [ 'classpath:zuul-data-context.xml' ])
+@ContextConfiguration(locations = [ 'classpath:zuul-data-context.xml', 'classpath:test-security-context.xml' ])
 @Transactional('transactionManager')
 abstract class ZuulDataIntegrationTest {
 }
