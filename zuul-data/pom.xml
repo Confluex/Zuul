@@ -83,6 +83,12 @@
             <version>1.9.0</version>
         </dependency>
 
+        <!-- Testing -->
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail</artifactId>
+        </dependency>
+
 
     </dependencies>
 

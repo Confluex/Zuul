@@ -75,12 +75,6 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${pageContext.request.contextPath}/system/config">
-                                            <i class="icon-wrench"></i>
-                                            Configuration
-                                        </a>
-                                    </li>
-                                    <li>
                                         <a href="${pageContext.request.contextPath}/system/keys">
                                             <i class="icon-lock"></i>
                                             Key Management
