@@ -8,6 +8,12 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.slf4j.LoggerFactory
 
+/**
+ * Conditionally starts/stops an embedded SMTP server for unit and functional testing based
+ * upon application config.<br/><br/>
+ *
+ * To enable, configure smtp.port=3025 and smtp.host=localhost
+ */
 @Component("greenMailContext")
 class GreenMailContext implements DisposableBean, InitializingBean {
 
