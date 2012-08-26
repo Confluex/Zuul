@@ -81,4 +81,17 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
         <!--suppress SpringModelInspection -->
         <property name="enabled" value="#{'${jdbc.zuul.generate.ddl}' == 'create-drop'}"/>
     </bean>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+      <property name="host" value="${smtp.host}"/>
+      <property name="port" value="${smtp.port}"/>
+      <property name="username" value="${smtp.username}"/>
+      <property name="password" value="${smtp.password}"/>
+    </bean>
+
+    <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+      <property name="from" value="${smtp.from}"/>
+    </bean>
+
+
 </beans>

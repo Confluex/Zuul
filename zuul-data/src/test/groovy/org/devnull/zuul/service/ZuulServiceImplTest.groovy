@@ -20,6 +20,12 @@ import org.springframework.data.domain.Sort
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import org.devnull.security.model.User
+import org.devnull.security.model.Role
+import org.devnull.zuul.data.config.ZuulDataConstants
+import org.springframework.mail.SimpleMailMessage
+import org.springframework.mail.MailSender
+import org.devnull.security.service.SecurityService
 
 public class ZuulServiceImplTest {
 
@@ -37,12 +43,16 @@ public class ZuulServiceImplTest {
 
     @Before
     void createService() {
+        def templateMessage = new SimpleMailMessage()
+        templateMessage.from = "test@devnull.org"
         service = new ZuulServiceImpl(
                 settingsGroupDao: mock(SettingsGroupDao),
                 settingsEntryDao: mock(SettingsEntryDao),
                 environmentDao: mock(EnvironmentDao),
                 encryptionKeyDao: mock(EncryptionKeyDao),
-                encryptionStrategy: mock(EncryptionStrategy)
+                encryptionStrategy: mock(EncryptionStrategy),
+                securityService: mock(SecurityService),
+                templateMessage: templateMessage
         )
     }
 
@@ -50,6 +60,32 @@ public class ZuulServiceImplTest {
     @After
     void resetMetaClass() {
         GroovySystem.metaClassRegistry.setMetaClass(ZuulServiceImpl, serviceMetaClass)
+    }
+
+    @Test
+    void shouldEmailSysAdminsWithPermissionsRequests() {
+        def requester = new User(email: "user@devnull.org", firstName: "John", lastName: "Doe")
+        def sysAdmins = [
+                new User(email: "admin1@devnull.org", firstName: "Admin", lastName: "One"),
+                new User(email: "admin2@devnull.org", firstName: "Admin", lastName: "Two")
+        ]
+        def sysAdminRole = new Role(name: "ROLE_SYSTEM_ADMIN", users: sysAdmins)
+        def requestedRole = new Role(name: "test", description: "test role")
+
+        SimpleMailMessage sentMsg = null
+        service.mailSender = [
+                send: { SimpleMailMessage msg ->  sentMsg = msg }
+        ] as MailSender
+
+        when(service.securityService.currentUser).thenReturn(requester)
+        when(service.securityService.findRoleByName(ZuulDataConstants.ROLE_SYSTEM_ADMIN)).thenReturn(sysAdminRole)
+        service.notifyPermissionsRequest(requestedRole)
+
+        assert sentMsg.to == ['admin1@devnull.org', 'admin2@devnull.org']
+        assert sentMsg.cc == ['user@devnull.org']
+        assert sentMsg.from == "test@devnull.org"
+        assert sentMsg.text == "John Doe has requested access to role: test role"
+        assert sentMsg.subject == "Request for permissions: John Doe"
     }
 
     @Test

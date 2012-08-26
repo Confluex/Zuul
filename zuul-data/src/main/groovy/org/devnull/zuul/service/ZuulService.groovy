@@ -5,8 +5,19 @@ import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.springframework.security.access.prepost.PreAuthorize
+import org.devnull.security.model.Role
 
 public interface ZuulService {
+    /* Notifications ---------------------- */
+
+    /**
+     * Send a notification request to system administrators
+     * for permissions requests (usually initiated from access
+     * denied errors)
+     */
+    @PreAuthorize("hasRole('ROLE_USER'")
+    void notifyPermissionsRequest(Role requested)
+
 
     /* Settings Groups -------------------- */
 

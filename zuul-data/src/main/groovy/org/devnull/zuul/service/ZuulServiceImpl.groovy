@@ -16,6 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.mail.MailSender
+import org.devnull.security.service.SecurityService
+import org.devnull.zuul.data.config.ZuulDataConstants
+import org.springframework.mail.SimpleMailMessage
+import org.devnull.security.model.Role
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -37,6 +42,15 @@ class ZuulServiceImpl implements ZuulService {
 
     @Autowired
     EncryptionStrategy encryptionStrategy
+
+    @Autowired
+    MailSender mailSender
+
+    @Autowired
+    SimpleMailMessage templateMessage
+
+    @Autowired
+    SecurityService securityService
 
     @Transactional(readOnly = false)
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName) {
@@ -138,6 +152,20 @@ class ZuulServiceImpl implements ZuulService {
     SettingsGroup save(SettingsGroup group) {
         log.info("Saving group: {}", group)
         return settingsGroupDao.save(group)
+    }
+
+    void notifyPermissionsRequest(Role requested) {
+        def requester = securityService.currentUser
+        def sysAdmins = securityService.findRoleByName(ZuulDataConstants.ROLE_SYSTEM_ADMIN)
+        def emails = sysAdmins.users.collect { it.email } as String[]
+        if (emails) {
+            def message = new SimpleMailMessage(templateMessage);
+            message.to = emails
+            message.cc = [requester.email]
+            message.subject = "Request for permissions: ${requester.firstName} ${requester.lastName}"
+            message.text = "${requester.firstName} ${requester.lastName} has requested access to role: ${requested.description}"
+            mailSender.send(message)
+        }
     }
 
     @Transactional(readOnly = false)
