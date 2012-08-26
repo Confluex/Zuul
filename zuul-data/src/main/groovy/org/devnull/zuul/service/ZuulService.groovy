@@ -15,7 +15,7 @@ public interface ZuulService {
      * for permissions requests (usually initiated from access
      * denied errors)
      */
-    @PreAuthorize("hasRole('ROLE_USER'")
+    @PreAuthorize("hasRole('ROLE_USER')")
     void notifyPermissionsRequest(String roleName)
 
 
