@@ -19,10 +19,10 @@ class GreenMailContext implements DisposableBean, InitializingBean {
 
     final def log = LoggerFactory.getLogger(this.class)
 
-    @Value("\${smtp.port")
+    @Value("\${smtp.port}")
     Integer port
 
-    @Value("\${smtp.host")
+    @Value("\${smtp.host}")
     String host
 
     GreenMail greenMail = new GreenMail()
