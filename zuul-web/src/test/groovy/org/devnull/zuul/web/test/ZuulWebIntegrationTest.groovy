@@ -30,6 +30,7 @@ abstract class ZuulWebIntegrationTest {
     SecurityService securityService
 
     protected final def OPEN_ID_SYS_ADMIN = 'https://me.yahoo.com/a/mMz2C510uMjhwvHr.4K2aToLWzrPDJb.._M-#b431e'
+    protected final def OPEN_ID_USER = 'https://www.google.com/accounts/o8/id?id=AItOawnlnuHfoKGwMJSjRHxBROwqil0OE84Zscc'
 
     @Before
     void addTestAuthenticationProvider() {
