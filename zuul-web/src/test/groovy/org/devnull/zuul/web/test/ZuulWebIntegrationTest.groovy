@@ -43,7 +43,7 @@ abstract class ZuulWebIntegrationTest {
 
     protected void loginAsUser(String openId) {
         def user = securityService.findUserByOpenId(openId)
-        def testUser = new TestingAuthenticationToken(new User(), "fake", user.authorities as List)
+        def testUser = new TestingAuthenticationToken(user, "fake", user.authorities as List)
         def response = authenticationManager.authenticate(testUser)
         SecurityContextHolder.getContext().setAuthentication(response);
     }
