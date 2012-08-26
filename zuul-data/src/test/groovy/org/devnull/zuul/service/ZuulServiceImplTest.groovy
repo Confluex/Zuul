@@ -70,7 +70,7 @@ public class ZuulServiceImplTest {
                 new User(email: "admin2@devnull.org", firstName: "Admin", lastName: "Two")
         ]
         def sysAdminRole = new Role(name: "ROLE_SYSTEM_ADMIN", users: sysAdmins)
-        def requestedRole = new Role(name: "test", description: "test role")
+        def requestedRole = new Role(name: "ROLE_TEST", description: "test role")
 
         SimpleMailMessage sentMsg = null
         service.mailSender = [
@@ -79,7 +79,8 @@ public class ZuulServiceImplTest {
 
         when(service.securityService.currentUser).thenReturn(requester)
         when(service.securityService.findRoleByName(ZuulDataConstants.ROLE_SYSTEM_ADMIN)).thenReturn(sysAdminRole)
-        service.notifyPermissionsRequest(requestedRole)
+        when(service.securityService.findRoleByName("ROLE_TEST")).thenReturn(requestedRole)
+        service.notifyPermissionsRequest("ROLE_TEST")
 
         assert sentMsg.to == ['admin1@devnull.org', 'admin2@devnull.org']
         assert sentMsg.cc == ['user@devnull.org']

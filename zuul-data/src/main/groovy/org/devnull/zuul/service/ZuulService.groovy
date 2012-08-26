@@ -16,7 +16,7 @@ public interface ZuulService {
      * denied errors)
      */
     @PreAuthorize("hasRole('ROLE_USER'")
-    void notifyPermissionsRequest(Role requested)
+    void notifyPermissionsRequest(String roleName)
 
 
     /* Settings Groups -------------------- */

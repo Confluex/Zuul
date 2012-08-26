@@ -2,21 +2,26 @@ package org.devnull.zuul.web
 
 import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
+import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
 
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
-import org.springframework.web.bind.annotation.PathVariable
 
 @Controller
 class AccountController {
 
     @Autowired
     SecurityService securityService
+
+    @Autowired
+    ZuulService zuulService
+
 
     @ModelAttribute("user")
     User findAccountFromSecurityContext() {
@@ -61,7 +66,7 @@ class AccountController {
 
     @RequestMapping("/account/permissions/{roleName}")
     String submitPermissionsRequest(@PathVariable("roleName") String roleName) {
-        // TODO implement notifications system
+        zuulService.notifyPermissionsRequest(roleName)
         return "/account/requested"
     }
 }

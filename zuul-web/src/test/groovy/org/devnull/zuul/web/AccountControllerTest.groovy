@@ -8,13 +8,14 @@ import org.junit.Test
 
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
 import static org.mockito.Mockito.*
+import org.devnull.zuul.service.ZuulService
 
 public class AccountControllerTest {
     AccountController controller
 
     @Before
     void createController() {
-        controller = new AccountController(securityService: mock(SecurityService))
+        controller = new AccountController(securityService: mock(SecurityService), zuulService: mock(ZuulService))
     }
 
     @Test
@@ -69,6 +70,7 @@ public class AccountControllerTest {
     @Test
     void submitPermissionsRequestShouldReturnCorrectView() {
         def view = controller.submitPermissionsRequest("ROLE_TEST")
+        verify(controller.zuulService).notifyPermissionsRequest("ROLE_TEST")
         assert view == "/account/requested"
     }
 }

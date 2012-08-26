@@ -154,7 +154,8 @@ class ZuulServiceImpl implements ZuulService {
         return settingsGroupDao.save(group)
     }
 
-    void notifyPermissionsRequest(Role requested) {
+    void notifyPermissionsRequest(String roleName) {
+        def role = securityService.findRoleByName(roleName)
         def requester = securityService.currentUser
         def sysAdmins = securityService.findRoleByName(ZuulDataConstants.ROLE_SYSTEM_ADMIN)
         def emails = sysAdmins.users.collect { it.email } as String[]
@@ -163,7 +164,7 @@ class ZuulServiceImpl implements ZuulService {
             message.to = emails
             message.cc = [requester.email]
             message.subject = "Request for permissions: ${requester.firstName} ${requester.lastName}"
-            message.text = "${requester.firstName} ${requester.lastName} has requested access to role: ${requested.description}"
+            message.text = "${requester.firstName} ${requester.lastName} has requested access to role: ${role.description}"
             mailSender.send(message)
         }
     }
