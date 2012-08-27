@@ -9,7 +9,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:zuul-data-context.xml
-            classpath:application-context.xml
+            classpath:zuul-web-context.xml
             classpath:security-context.xml
         </param-value>
     </context-param>

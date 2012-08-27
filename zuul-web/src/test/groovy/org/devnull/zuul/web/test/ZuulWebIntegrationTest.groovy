@@ -17,7 +17,7 @@ import org.junit.After
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = [
 'classpath:zuul-data-context.xml',
-'classpath:application-context.xml',
+'classpath:zuul-web-context.xml',
 'classpath:security-context.xml'
 ])
 @Transactional('transactionManager')

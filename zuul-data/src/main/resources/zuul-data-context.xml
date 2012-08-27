@@ -13,7 +13,8 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
     <context:annotation-config/>
     <context:component-scan base-package="org.devnull.zuul.data"/>
     <context:component-scan base-package="org.devnull.zuul.service"/>
-    <context:property-placeholder location="classpath:zuul-data-config.properties"/>
+    <context:property-placeholder ignore-resource-not-found="true"
+            location="classpath:zuul-data-config.properties, file:${ZUUL_HOME}/conf/zuul-data-config.properties" />
 
 
     <!-- Database Configuration -->
@@ -79,7 +80,7 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
         </property>
         <property name="csvImportsPath" value="classpath:/data"/>
         <!--suppress SpringModelInspection -->
-        <property name="enabled" value="#{'${jdbc.zuul.generate.ddl}' == 'create-drop'}"/>
+        <property name="enabled" value="${jdbc.zuul.data.mock}"/>
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
