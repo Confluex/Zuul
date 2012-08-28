@@ -10,6 +10,7 @@ import static org.devnull.zuul.data.config.ZuulDataConstants.*
 import static org.mockito.Mockito.*
 import org.devnull.zuul.service.ZuulService
 import org.mockito.ArgumentCaptor
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 public class AccountControllerTest {
     AccountController controller
@@ -31,19 +32,22 @@ public class AccountControllerTest {
 
     @Test
     void shouldUpdateCurrentUsersProfileWithoutReAuthenticate() {
+        def redirectAttributes = mock(RedirectAttributes)
+        def formUser = new User(firstName: "newFirst", lastName: "newLast", email: "new@devnull.org")
         def currentUser = new User(id: 1, firstName: "oldFirst", lastName: "oldLast", email: "old@devnull.org")
         currentUser.addToRoles(new Role(name: "ROLE_USER"))
+
         when(controller.securityService.getCurrentUser()).thenReturn(currentUser)
-        def formUser = new User(firstName: "newFirst", lastName: "newLast", email: "new@devnull.org")
-        def view = controller.saveProfile(formUser)
+        def view = controller.saveProfile(redirectAttributes, formUser)
         verify(controller.securityService).updateCurrentUser(false)
+        verify(redirectAttributes).addFlashAttribute("info", "Updated Profile")
         assert currentUser.id == 1
         assert currentUser.firstName == "newFirst"
         assert currentUser.lastName == "newLast"
         assert currentUser.email == "new@devnull.org"
         assert currentUser.roles.size() == 1
         assert currentUser.roles.first().name == "ROLE_USER"
-        assert view == "/account/profile"
+        assert view == "redirect:/account/profile"
     }
 
     @Test

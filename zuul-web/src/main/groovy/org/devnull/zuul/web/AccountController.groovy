@@ -12,9 +12,15 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
 
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import org.springframework.web.servlet.support.RequestContextUtils
+import javax.servlet.http.HttpServletRequest
+import org.springframework.web.servlet.FlashMapManager
+import org.slf4j.LoggerFactory
 
 @Controller
 class AccountController {
+    final def log = LoggerFactory.getLogger(this.class)
 
     @Autowired
     SecurityService securityService
@@ -33,14 +39,16 @@ class AccountController {
         return "/account/profile"
     }
 
-    @RequestMapping(value="/account/profile", method=RequestMethod.PUT)
-    String saveProfile(@ModelAttribute("user") User formUser) {
+    @RequestMapping(value="/account/profile", method=RequestMethod.POST)
+    String saveProfile(RedirectAttributes redirectAttrs, @ModelAttribute("user") User formUser) {
+        log.info("Saving user profile: {}", formUser)
         def user = securityService.currentUser
         user.firstName = formUser.firstName
         user.lastName = formUser.lastName
         user.email  = formUser.email
         securityService.updateCurrentUser(false)
-        return "/account/profile"
+        redirectAttrs.addFlashAttribute("info", "Updated Profile")
+        return "redirect:/account/profile"
     }
 
     @RequestMapping(value = "/account/register", method = RequestMethod.GET)
