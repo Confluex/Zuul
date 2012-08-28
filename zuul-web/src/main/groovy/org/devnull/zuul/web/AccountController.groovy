@@ -28,8 +28,18 @@ class AccountController {
         return securityService.currentUser
     }
 
-    @RequestMapping("/account/profile")
+    @RequestMapping(value="/account/profile", method=RequestMethod.GET)
     String profile() {
+        return "/account/profile"
+    }
+
+    @RequestMapping(value="/account/profile", method=RequestMethod.PUT)
+    String saveProfile(@ModelAttribute("user") User formUser) {
+        def user = securityService.currentUser
+        user.firstName = formUser.firstName
+        user.lastName = formUser.lastName
+        user.email  = formUser.email
+        securityService.updateCurrentUser(false)
         return "/account/profile"
     }
 

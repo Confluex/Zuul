@@ -9,6 +9,7 @@ import org.junit.Test
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
 import static org.mockito.Mockito.*
 import org.devnull.zuul.service.ZuulService
+import org.mockito.ArgumentCaptor
 
 public class AccountControllerTest {
     AccountController controller
@@ -26,6 +27,23 @@ public class AccountControllerTest {
     @Test
     void profileShouldReturnCorrectView() {
         assert controller.profile() == "/account/profile"
+    }
+
+    @Test
+    void shouldUpdateCurrentUsersProfileWithoutReAuthenticate() {
+        def currentUser = new User(id: 1, firstName: "oldFirst", lastName: "oldLast", email: "old@devnull.org")
+        currentUser.addToRoles(new Role(name: "ROLE_USER"))
+        when(controller.securityService.getCurrentUser()).thenReturn(currentUser)
+        def formUser = new User(firstName: "newFirst", lastName: "newLast", email: "new@devnull.org")
+        def view = controller.saveProfile(formUser)
+        verify(controller.securityService).updateCurrentUser(false)
+        assert currentUser.id == 1
+        assert currentUser.firstName == "newFirst"
+        assert currentUser.lastName == "newLast"
+        assert currentUser.email == "new@devnull.org"
+        assert currentUser.roles.size() == 1
+        assert currentUser.roles.first().name == "ROLE_USER"
+        assert view == "/account/profile"
     }
 
     @Test
