@@ -1,10 +1,9 @@
 <%--@elvariable id="principal" type="java.security.Principal"--%>
-<%--@elvariable id="redirectAttributes" type="Map"--%>
-
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -22,29 +21,27 @@
 </div>
 <div class="row">
     <div class="span12">
-        <c:if test="${info}">
-            <div class="alert alert-info">${fn:escapeXml(info)}</div>
-        </c:if>
+        <bootstrap:alert message="${alert}" type="${alertType}"/>
         <form class="form-horizontal" action="${pageContext.request.contextPath}/account/profile" method="POST">
             <div class="control-group">
                 <label class="control-label" for="firstName">First Name</label>
 
                 <div class="controls">
-                    <input type="text" id="firstName" value="${fn:escapeXml(user.firstName)}">
+                    <input type="text" id="firstName" name="firstName" value="${fn:escapeXml(user.firstName)}">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="lastName">Last Name</label>
 
                 <div class="controls">
-                    <input type="text" id="lastName" value="${fn:escapeXml(user.lastName)}">
+                    <input type="text" id="lastName" name="lastName" value="${fn:escapeXml(user.lastName)}">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="email">Email</label>
 
                 <div class="controls">
-                    <input type="email" id="email" value="${fn:escapeXml(user.email)}">
+                    <input type="email" id="email" name="email" value="${fn:escapeXml(user.email)}">
                 </div>
             </div>
             <div class="form-actions">

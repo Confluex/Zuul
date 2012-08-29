@@ -3,14 +3,13 @@ package org.devnull.zuul.web
 import org.devnull.security.model.Role
 import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
+import org.devnull.zuul.service.ZuulService
 import org.junit.Before
 import org.junit.Test
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
 import static org.mockito.Mockito.*
-import org.devnull.zuul.service.ZuulService
-import org.mockito.ArgumentCaptor
-import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 public class AccountControllerTest {
     AccountController controller
@@ -38,9 +37,10 @@ public class AccountControllerTest {
         currentUser.addToRoles(new Role(name: "ROLE_USER"))
 
         when(controller.securityService.getCurrentUser()).thenReturn(currentUser)
-        def view = controller.saveProfile(redirectAttributes, formUser)
+        def view = controller.saveProfile(formUser, redirectAttributes)
         verify(controller.securityService).updateCurrentUser(false)
-        verify(redirectAttributes).addFlashAttribute("info", "Updated Profile")
+        verify(redirectAttributes).addFlashAttribute("alert", "Updated Profile")
+        verify(redirectAttributes).addFlashAttribute("alertType", "success")
         assert currentUser.id == 1
         assert currentUser.firstName == "newFirst"
         assert currentUser.lastName == "newLast"

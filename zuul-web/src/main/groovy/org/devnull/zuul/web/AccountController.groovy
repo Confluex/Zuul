@@ -40,14 +40,15 @@ class AccountController {
     }
 
     @RequestMapping(value="/account/profile", method=RequestMethod.POST)
-    String saveProfile(RedirectAttributes redirectAttrs, @ModelAttribute("user") User formUser) {
+    String saveProfile(@ModelAttribute("user") User formUser, RedirectAttributes redirectAttrs) {
         log.info("Saving user profile: {}", formUser)
         def user = securityService.currentUser
         user.firstName = formUser.firstName
         user.lastName = formUser.lastName
         user.email  = formUser.email
         securityService.updateCurrentUser(false)
-        redirectAttrs.addFlashAttribute("info", "Updated Profile")
+        redirectAttrs.addFlashAttribute("alert", "Updated Profile")
+        redirectAttrs.addFlashAttribute("alertType", "success")
         return "redirect:/account/profile"
     }
 
