@@ -14,15 +14,18 @@
         <div class="page-header">
             <h1>Hello!</h1>
         </div>
-        <p>
-        I see that you are a new user. We need to collect just a bit more information in order
-        to complete your account. Please complete the <em>Registration Form</em> and we'll finish
-        up the rest.
-        </p>
-        <p>
-            Once you are done, you will have basic access to the site. An administrator can grant you
-            more privileges.
-        </p>
+        <div class="alert alert-info">
+            <p>
+                I see that you are a new user. We need to collect just a bit more information in order
+                to complete your account. Please complete the <em>Registration Form</em> and we'll finish
+                up the rest.
+            </p>
+
+            <p>
+                Once you are done, you will have basic access to the site. An administrator can grant you
+                more privileges.
+            </p>
+        </div>
     </div>
     <div class="span8">
         <div class="page-header">

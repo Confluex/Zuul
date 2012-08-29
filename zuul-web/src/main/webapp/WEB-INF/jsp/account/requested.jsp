@@ -13,9 +13,12 @@
         <div class="page-header">
             <h1>Request Submitted</h1>
         </div>
-        <div>
-            Your request has been submitted to the site administrators. Once you have been granted acccess, you
-            will be notified via email.
+    </div>
+</div>
+<div class="row">
+    <div class="span12">
+        <div class="alert alert-success">
+            The system administrators have been notified and will review your request.
         </div>
     </div>
 </div>
