@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,6 +131,7 @@
             </div>
         </div>
     </div>
+    <bootstrap:flashAlert/>
     <decorator:body/>
     <hr>
 
