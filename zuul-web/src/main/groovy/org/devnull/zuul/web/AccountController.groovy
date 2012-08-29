@@ -3,6 +3,7 @@ package org.devnull.zuul.web
 import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.devnull.zuul.service.ZuulService
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -10,13 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
-import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import org.springframework.web.servlet.support.RequestContextUtils
-import javax.servlet.http.HttpServletRequest
-import org.springframework.web.servlet.FlashMapManager
-import org.slf4j.LoggerFactory
+import static org.devnull.zuul.web.config.ZuulWebConstants.*
 
 @Controller
 class AccountController {
@@ -34,21 +32,21 @@ class AccountController {
         return securityService.currentUser
     }
 
-    @RequestMapping(value="/account/profile", method=RequestMethod.GET)
+    @RequestMapping(value = "/account/profile", method = RequestMethod.GET)
     String profile() {
         return "/account/profile"
     }
 
-    @RequestMapping(value="/account/profile", method=RequestMethod.POST)
+    @RequestMapping(value = "/account/profile", method = RequestMethod.POST)
     String saveProfile(@ModelAttribute("user") User formUser, RedirectAttributes redirectAttrs) {
         log.info("Saving user profile: {}", formUser)
         def user = securityService.currentUser
         user.firstName = formUser.firstName
         user.lastName = formUser.lastName
-        user.email  = formUser.email
+        user.email = formUser.email
         securityService.updateCurrentUser(false)
-        redirectAttrs.addFlashAttribute("alert", "Updated Profile")
-        redirectAttrs.addFlashAttribute("alertType", "success")
+        redirectAttrs.addFlashAttribute(FLASH_ALERT_MESSAGE, "Updated Profile")
+        redirectAttrs.addFlashAttribute(FLASH_ALERT_TYPE, "success")
         return "redirect:/account/profile"
     }
 
