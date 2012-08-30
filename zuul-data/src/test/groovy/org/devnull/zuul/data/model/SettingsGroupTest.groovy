@@ -1,8 +1,8 @@
 package org.devnull.zuul.data.model
 
+import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 import org.junit.Before
 import org.junit.Test
-import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 
 public class SettingsGroupTest {
     SettingsGroup group
@@ -13,7 +13,7 @@ public class SettingsGroupTest {
                 id: 1,
                 name: "testGroup",
                 environment: new Environment(name: "testEnv"),
-                key:  new EncryptionKey(name:"testKey")
+                key: new EncryptionKey(name: "testKey")
         )
         group.entries.add(new SettingsEntry(key: 'a.b.c', value: 'foo'))
         group.entries.add(new SettingsEntry(key: 'd.e.f', value: 'bar'))
@@ -28,14 +28,23 @@ public class SettingsGroupTest {
     }
 
     @Test
+    void shouldFormatEncryptedValuesWhenConvertingToProperties() {
+        group.entries.each {it.encrypted = true }
+        def props = group as Properties
+        assert props.size() == 2
+        assert props['a.b.c'] == 'ENC(foo)'
+        assert props['d.e.f'] == 'ENC(bar)'
+    }
+
+    @Test
     void shouldSetBiDirectionalRelationshipWhenAddingEntries() {
         def entry = new SettingsEntry(key: "testkey", value: "testval")
         group.addToEntries(entry)
         assert entry.group == group
         assert group.entries.contains(entry)
     }
-    
-    @Test(expected=GroovyCastException)
+
+    @Test(expected = GroovyCastException)
     void shouldThrowExceptionWhenCastToInvalidType() {
         group as List
     }
@@ -44,7 +53,7 @@ public class SettingsGroupTest {
     void shouldConvertAsMapWithoutCollections() {
         def map = group as Map
         assert map.name == "testGroup"
-        assert map.key.name  == "testKey"
+        assert map.key.name == "testKey"
         assert map.environment.name == "testEnv"
         assert map.id == 1
         assert !map.entries

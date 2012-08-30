@@ -54,6 +54,7 @@
     <http use-expressions="true" access-decision-manager-ref="accessDecisionManager">
         <intercept-url pattern="/account/**" access="hasRole('ROLE_GUEST')"/>
         <intercept-url pattern="/settings/create**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/settings/**/*.properties" access="permitAll"/>
         <intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>

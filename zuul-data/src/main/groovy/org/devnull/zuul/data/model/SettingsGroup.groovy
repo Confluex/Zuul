@@ -47,7 +47,7 @@ class SettingsGroup implements Serializable {
             case Properties:
                 def properties = new Properties()
                 entries.each {
-                    properties.put(it.key, it.value)
+                    properties.put(it.key, it.encrypted ? "ENC(${it.value})".toString()  : it.value)
                 }
                 return properties
             case Map:
