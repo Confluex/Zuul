@@ -14,7 +14,7 @@ class EncryptionKeyDaoIntegrationTest extends ZuulDataIntegrationTest {
         def result = dao.findOne("Default Key")
         assert result.name == "Default Key"
         assert result.description == "Default key which can be used for evaluation purposes.."
-        assert result.password == "k(2jsd&01m_.u<"
+        assert result.password == "badpassword1"
         assert result.defaultKey
     }
 
