@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 class ResourceRequestHandler extends AbstractHandler {
-    Resource resource
+    Map<String, Resource> resources
 
     void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) {
         response.status = HttpServletResponse.SC_OK
-        response.outputStream << resource.inputStream
+        response.outputStream << resources[target].inputStream
 
     }
 }
