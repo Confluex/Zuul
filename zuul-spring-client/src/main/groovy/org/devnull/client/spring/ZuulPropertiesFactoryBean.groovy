@@ -12,21 +12,23 @@ import org.jasypt.properties.EncryptableProperties
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.InitializingBean
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.FactoryBean
 
-class ZuulHttpClient implements InitializingBean, DisposableBean {
+class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, FactoryBean<Properties> {
 
     final def log = LoggerFactory.getLogger(this.class)
     static final String DEFAULT_PASSWORD_VARIABLE = "ZUUL_PASSWORD"
+    static final List<String> OPTIONAL_ATTRIBUTES = ["host", "port", "context", "environment"]
 
     HttpClient httpClient
     String host = "localhost"
     Integer port = 80
     String context = "/zuul"
     String environment = "dev"
-    String configName
+    String config
 
-    ZuulHttpClient(String configName) {
-        this.configName = configName
+    ZuulPropertiesFactoryBean(String config) {
+        this.config = config
     }
 
     Properties fetchProperties() {
@@ -48,7 +50,7 @@ class ZuulHttpClient implements InitializingBean, DisposableBean {
     }
 
     URI getUri() {
-        return new URI("${httpProtocol}://${host}:${port}${context}/settings/${environment}/${configName}.properties")
+        return new URI("${httpProtocol}://${host}:${port}${context}/settings/${environment}/${config}.properties")
     }
 
     String getHttpProtocol() {
@@ -67,5 +69,17 @@ class ZuulHttpClient implements InitializingBean, DisposableBean {
 
     void destroy() {
         httpClient.connectionManager.shutdown()
+    }
+
+    Properties getObject() {
+        return decrypt(fetchProperties())
+    }
+
+    Class<?> getObjectType() {
+        return Properties
+    }
+
+    boolean isSingleton() {
+        return false
     }
 }

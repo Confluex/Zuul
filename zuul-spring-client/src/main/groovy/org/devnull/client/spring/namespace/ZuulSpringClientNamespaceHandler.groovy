@@ -1,4 +1,4 @@
-package org.devnull.client.spring
+package org.devnull.client.spring.namespace
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport
 
