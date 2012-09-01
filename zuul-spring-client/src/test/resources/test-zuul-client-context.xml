@@ -10,5 +10,5 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
 
     <context:property-placeholder properties-ref="appDataConfig"/>
-    <zuul:properties id="appDataConfig" config="app-data-config" port="8080" environment="prod"/>
+    <zuul:properties id="appDataConfig" config="app-data-config" port="8081" environment="prod"/>
 </beans>

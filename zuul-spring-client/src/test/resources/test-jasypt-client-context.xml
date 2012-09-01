@@ -8,7 +8,7 @@ http://www.jasypt.org/schema/encryption http://www.jasypt.org/schema/encryption/
 
     <encryption:string-encryptor id="encryptor" password="badpassword1"/>
     <encryption:encryptable-property-placeholder
-            location="http://localhost:8080/zuul/settings/prod/app-data-config.properties"
+            location="http://localhost:8081/zuul/settings/prod/app-data-config.properties"
             encryptor="encryptor"/>
 
 </beans>

@@ -1,24 +1,26 @@
 package org.devnull.client.spring
 
+import org.devnull.client.spring.test.BaseHttpServerIntegrationTest
+import org.junit.BeforeClass
+import org.junit.Test
 import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import org.junit.Test
-import javax.annotation.Resource
-import org.junit.Before
-import org.springframework.beans.factory.annotation.Value
-import org.junit.Ignore
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = ['classpath:test-zuul-client-context.xml'])
-class ZuulClientIntegrationTest {
+class ZuulClientIntegrationTest extends BaseHttpServerIntegrationTest {
+
+    @BeforeClass
+    static void setEnv() {
+        System.setProperty(ZuulPropertiesFactoryBean.DEFAULT_PASSWORD_VARIABLE, "badpassword1")
+    }
 
     @Value("\${jdbc.zuul.password}")
     String password
 
     @Test
-    @Ignore("Manual test only.. zuul webapp needs to be running on localhost")
     void shouldInjectDecryptedValue() {
         assert password == "supersecure"
     }
