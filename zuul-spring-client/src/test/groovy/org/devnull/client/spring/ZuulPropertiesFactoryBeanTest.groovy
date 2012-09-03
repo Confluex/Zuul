@@ -2,6 +2,7 @@ package org.devnull.client.spring
 
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
+import org.apache.http.conn.ClientConnectionManager
 import org.apache.http.impl.client.BasicResponseHandler
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException
 import org.junit.Before
@@ -10,7 +11,7 @@ import org.mockito.Matchers
 import org.springframework.core.io.ClassPathResource
 
 import static org.mockito.Mockito.*
-import org.apache.http.conn.ClientConnectionManager
+import org.devnull.client.spring.cache.PropertiesObjectStore
 
 class ZuulPropertiesFactoryBeanTest {
 
@@ -29,10 +30,7 @@ class ZuulPropertiesFactoryBeanTest {
 
     @Test
     void shouldFetchAndDecryptPropertiesFile() {
-        def mockResponse = new ClassPathResource("/mock-server-response.properties").inputStream.text
-        def httpGet = Matchers.any(HttpGet)
-        def handler = Matchers.any(BasicResponseHandler)
-        when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenReturn(mockResponse)
+        mockResponseFromFile()
         def properties = factory.fetchProperties()
         assert properties
         assert properties.getProperty("jdbc.zuul.password").startsWith("ENC(")
@@ -118,6 +116,22 @@ class ZuulPropertiesFactoryBeanTest {
     @Test
     void shouldHaveCorrectBeanType() {
         assert factory.objectType == Properties
+    }
+
+
+    @Test
+    void shouldStorePropertiesIfConfigured() {
+        mockResponseFromFile()
+        factory.propertiesStore = mock(PropertiesObjectStore)
+        def properties = factory.fetchProperties()
+        verify(factory.propertiesStore).put(factory.environment, factory.config, properties)
+    }
+
+    protected void mockResponseFromFile() {
+        def mockResponse = new ClassPathResource("/mock-server-response.properties").inputStream.text
+        def httpGet = Matchers.any(HttpGet)
+        def handler = Matchers.any(BasicResponseHandler)
+        when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenReturn(mockResponse)
     }
 
 }

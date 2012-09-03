@@ -4,15 +4,14 @@ import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.BasicResponseHandler
 import org.apache.http.impl.client.DefaultHttpClient
-import org.apache.http.impl.client.cache.CacheConfig
-import org.apache.http.impl.client.cache.CachingHttpClient
+import org.devnull.client.spring.cache.PropertiesObjectStore
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor
 import org.jasypt.encryption.pbe.config.EnvironmentPBEConfig
 import org.jasypt.properties.EncryptableProperties
-import org.springframework.beans.factory.DisposableBean
-import org.springframework.beans.factory.InitializingBean
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.FactoryBean
+import org.springframework.beans.factory.InitializingBean
 
 class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, FactoryBean<Properties> {
 
@@ -26,6 +25,7 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
     String context = "/zuul"
     String environment = "dev"
     String config
+    PropertiesObjectStore propertiesStore
 
     ZuulPropertiesFactoryBean(String config) {
         this.config = config
@@ -39,6 +39,9 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
         def properties = new Properties()
         properties.load(new StringReader(responseBody))
         log.debug("Loading properties: {}", properties)
+        if (propertiesStore) {
+            propertiesStore.put(environment, config, properties)
+        }
         return properties
     }
 
@@ -60,10 +63,7 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
 
     void afterPropertiesSet() {
         if (!httpClient) {
-            def cache = new CacheConfig();
-            cache.maxCacheEntries = 100
-            cache.maxObjectSizeBytes = 1024 * 1024
-            httpClient = new CachingHttpClient(new DefaultHttpClient(), cache);
+            httpClient = new DefaultHttpClient();
         }
     }
 
