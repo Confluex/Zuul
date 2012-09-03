@@ -4,6 +4,8 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser
 import org.w3c.dom.Element
 import org.devnull.client.spring.ZuulPropertiesFactoryBean
+import org.springframework.util.xml.DomUtils
+import org.devnull.client.spring.cache.PropertiesObjectFileSystemStore
 
 class ZuulPropertiesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
@@ -23,6 +25,15 @@ class ZuulPropertiesBeanDefinitionParser extends AbstractSingleBeanDefinitionPar
             if (option) {
                 bean.addPropertyValue(it, option)
             }
+        }
+        def fileStore = DomUtils.getChildElementByTagName(element, "file-store")
+        if (fileStore) {
+            def fileStoreFactory = BeanDefinitionBuilder.rootBeanDefinition(PropertiesObjectFileSystemStore);
+            def path = fileStore.getAttribute("path")
+            if (path) {
+                fileStoreFactory.addConstructorArg(path)
+            }
+            bean.addPropertyValue("propertiesStore", fileStoreFactory.beanDefinition)
         }
     }
 }

@@ -1,11 +1,17 @@
 package org.devnull.client.spring.cache
 
+import org.springframework.core.io.Resource
+
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 class PropertiesObjectFileSystemStore implements PropertiesObjectStore {
     File parent
     Lock lock = new ReentrantLock()
+
+    PropertiesObjectFileSystemStore() {
+        this.parent = new File(System.getProperty("java.io.tmpdir"))
+    }
 
     PropertiesObjectFileSystemStore(File parent) {
         this.parent = parent

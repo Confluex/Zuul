@@ -71,6 +71,15 @@ class PropertiesObjectFileSystemStoreTest {
         verify(store.lock).unlock()
     }
 
+    @Test
+    void shouldUseTmpDirAsParentByDefault() {
+        def expected = new File(System.getProperty("java.io.tmpdir"))
+        assert expected.exists()
+        assert expected.canWrite()
+        def store = new PropertiesObjectFileSystemStore()
+        assert store.parent == expected
+    }
+
     protected Properties getStoredProperties(String name) {
         def files = parent.listFiles()
         assert files.size() == 1
