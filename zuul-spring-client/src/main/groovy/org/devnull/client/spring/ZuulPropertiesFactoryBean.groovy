@@ -35,14 +35,24 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
         def handler = new BasicResponseHandler();
         def get = new HttpGet(uri)
         log.info("Fetching properties from {}", get)
-        def responseBody = httpClient.execute(get, handler);
-        def properties = new Properties()
-        properties.load(new StringReader(responseBody))
-        log.debug("Loading properties: {}", properties)
-        if (propertiesStore) {
-            propertiesStore.put(environment, config, properties)
+        try {
+            def responseBody = httpClient.execute(get, handler);
+            def properties = new Properties()
+            properties.load(new StringReader(responseBody))
+            log.debug("Loading properties: {}", properties)
+            if (propertiesStore) {
+                propertiesStore.put(environment, config, properties)
+            }
+            return properties
+        } catch (Exception e) {
+            log.error("Unable to fetch remote properties file from: {}, error:{}. Attempting to find cached copy..", get, e.message)
+            if (!propertiesStore) {
+                log.error("Cache not configured. Giving up...")
+                log.error("Hint: use zuul:file-store to configure locally cached copies as a fail-safe.")
+                throw e
+            }
+            return propertiesStore.get(environment, config)
         }
-        return properties
     }
 
 

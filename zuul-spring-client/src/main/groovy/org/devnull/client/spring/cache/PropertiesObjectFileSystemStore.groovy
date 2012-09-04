@@ -33,6 +33,9 @@ class PropertiesObjectFileSystemStore implements PropertiesObjectStore {
         doWhileLocked {
             def props = new Properties()
             def file = new File(parent, "${environment}-${name}.properties")
+            if (!file.exists()) {
+                throw new FileNotFoundException("Unable to find locally cached copy: ${file.absolutePath}")
+            }
             def stream = new FileInputStream(file)
             try {
                 props.load(stream)

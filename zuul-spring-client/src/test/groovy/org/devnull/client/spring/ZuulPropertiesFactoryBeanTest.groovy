@@ -1,9 +1,11 @@
 package org.devnull.client.spring
 
 import org.apache.http.client.HttpClient
+import org.apache.http.client.HttpResponseException
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.conn.ClientConnectionManager
 import org.apache.http.impl.client.BasicResponseHandler
+import org.devnull.client.spring.cache.PropertiesObjectStore
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +13,6 @@ import org.mockito.Matchers
 import org.springframework.core.io.ClassPathResource
 
 import static org.mockito.Mockito.*
-import org.devnull.client.spring.cache.PropertiesObjectStore
 
 class ZuulPropertiesFactoryBeanTest {
 
@@ -127,11 +128,36 @@ class ZuulPropertiesFactoryBeanTest {
         verify(factory.propertiesStore).put(factory.environment, factory.config, properties)
     }
 
+    @Test
+    void shouldRetrieveFileFromPropertyStoreIfServiceErrors() {
+        mockServerErrorResponse()
+        def expected = new Properties()
+        factory.propertiesStore = mock(PropertiesObjectStore)
+        when(factory.propertiesStore.get(factory.environment, factory.config)).thenReturn(expected)
+        def results = factory.fetchProperties()
+        verify(factory.propertiesStore).get(factory.environment, factory.config)
+        assert results.is(expected)
+    }
+
+    @Test(expected=HttpResponseException)
+    void shouldErrorIfServiceErrorsAndNoPropertyStoreConfigured() {
+        mockServerErrorResponse()
+        factory.fetchProperties()
+    }
+
+
     protected void mockResponseFromFile() {
         def mockResponse = new ClassPathResource("/mock-server-response.properties").inputStream.text
         def httpGet = Matchers.any(HttpGet)
         def handler = Matchers.any(BasicResponseHandler)
         when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenReturn(mockResponse)
+    }
+
+    protected void mockServerErrorResponse() {
+        def httpGet = Matchers.any(HttpGet)
+        def handler = Matchers.any(BasicResponseHandler)
+        def exception = new HttpResponseException(500, "test error")
+        when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenThrow(exception)
     }
 
 }

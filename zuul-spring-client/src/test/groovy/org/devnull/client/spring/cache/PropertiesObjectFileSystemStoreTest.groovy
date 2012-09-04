@@ -80,6 +80,11 @@ class PropertiesObjectFileSystemStoreTest {
         assert store.parent == expected
     }
 
+    @Test(expected=FileNotFoundException)
+    void shouldErrorIfGetForFileDoesNotExist() {
+        store.get("dev", "should-not-exist")
+    }
+
     protected Properties getStoredProperties(String name) {
         def files = parent.listFiles()
         assert files.size() == 1
