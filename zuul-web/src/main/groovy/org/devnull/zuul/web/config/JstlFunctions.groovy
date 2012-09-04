@@ -1,9 +1,8 @@
 package org.devnull.zuul.web.config
 
 import org.springframework.web.context.support.ServletContextResource
+
 import javax.servlet.ServletContext
-import javax.servlet.ServletConfig
-import javax.servlet.Servlet
 
 class JstlFunctions {
     static String getApplicationVersion(ServletContext context) {
