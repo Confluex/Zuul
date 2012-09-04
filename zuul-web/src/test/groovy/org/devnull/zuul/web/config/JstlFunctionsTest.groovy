@@ -21,7 +21,7 @@ class JstlFunctionsTest {
 
     @Test
     void shouldFindDevelopmentProjectVersionWhenNotBuiltByMaven() {
-        def resource = new MockFor(ClassPathResource)
+        def resource = new MockFor(ServletContextResource)
         resource.demand.exists { return false }
         resource.use {
             assert JstlFunctions.getApplicationVersion(mock(ServletContext)) == "development"
