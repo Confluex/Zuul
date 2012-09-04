@@ -3,6 +3,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
+<%@ taglib prefix="zfn" uri="/WEB-INF/tags/functions.tld" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -140,7 +141,7 @@
             <li><a href="https://github.com/mcantrell/Zuul/wiki">View the Documentation</a></li>
             <li><a href="https://github.com/mcantrell/Zuul/issues">Request Support &amp; New Features</a></li>
         </ul>
-        <span class="label label-warning">Version: 1.0.0-SNAPSHOT</span>
+        <span class="label label-warning">Version: ${zfn:applicationVersion(pageContext.servletContext)}</span>
     </footer>
 </div>
 <security:authorize access="hasRole('ROLE_USER')">
