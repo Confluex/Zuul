@@ -20,6 +20,14 @@
     </div>
 </div>
 <div class="row">
+    <div class="span12" style="margin-bottom: 1em;">
+        <a href="${pageContext.request.contextPath}/system/keys/create" class="btn btn-primary">
+            <i class="icon-white icon-plus"></i>
+            New Key
+        </a>
+    </div>
+</div>
+<div class="row">
     <div class="span12">
         <table id="keysTable" class="table table-bordered table-condensed">
             <thead>

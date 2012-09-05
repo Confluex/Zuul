@@ -5,11 +5,13 @@ import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.servlet.view.RedirectView
-import javax.servlet.http.HttpServletResponse
-import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.servlet.ModelAndView
+import org.devnull.zuul.data.model.EncryptionKey
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
+
+import static org.devnull.zuul.web.config.ZuulWebConstants.FLASH_ALERT_MESSAGE
+import static org.devnull.zuul.web.config.ZuulWebConstants.FLASH_ALERT_TYPE
 
 @Controller
 class SystemAdminController {
@@ -33,6 +35,19 @@ class SystemAdminController {
         def model = [:]
         model.keys = zuulService.listEncryptionKeys()
         return new ModelAndView("/system/keys", model)
+    }
+
+    @RequestMapping(value = "/system/keys/create", method = RequestMethod.GET)
+    String displayCreateKeyForm() {
+        return "/system/createKey"
+    }
+
+    @RequestMapping(value = "/system/keys/create", method = RequestMethod.POST)
+    String createKey(EncryptionKey key, RedirectAttributes redirectAttrs) {
+        zuulService.saveKey(key)
+        redirectAttrs.addFlashAttribute(FLASH_ALERT_MESSAGE, "Key ${key.name} Created")
+        redirectAttrs.addFlashAttribute(FLASH_ALERT_TYPE, "success")
+        return "redirect:/system/keys"
     }
 
 }
