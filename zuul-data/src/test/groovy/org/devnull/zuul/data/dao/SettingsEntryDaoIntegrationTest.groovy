@@ -18,6 +18,5 @@ class SettingsEntryDaoIntegrationTest extends ZuulDataIntegrationTest {
         assert entry.group.name == "app-data-config"
         assert entry.group.environment.name == "dev"
         assert entry.group.key.name == "Default Key"
-
     }
 }

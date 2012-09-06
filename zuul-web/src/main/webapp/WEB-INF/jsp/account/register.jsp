@@ -37,7 +37,7 @@
                     <label class="control-label" for="email">Email</label>
 
                     <div class="controls">
-                        <input id="email" name="email" class="span3" type="text" value="${user.email}">
+                        <input id="email" name="email" class="span3" type="email" value="${user.email}">
                     </div>
                 </div>
                 <div class="control-group">

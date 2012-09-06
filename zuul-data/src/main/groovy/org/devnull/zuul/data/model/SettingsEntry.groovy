@@ -6,6 +6,7 @@ import org.codehaus.jackson.annotate.JsonBackReference
 import org.devnull.zuul.data.config.ZuulDataConstants
 
 import javax.persistence.*
+import javax.validation.constraints.Size
 
 @Entity
 @EqualsAndHashCode()
@@ -22,8 +23,12 @@ class SettingsEntry implements Serializable {
     @JsonBackReference
     SettingsGroup group
 
+    @Size(min=1, message= "Key must be at least 1 character long")
+    @Column(nullable=false)
     String key
+
     String value
 
+    @Column(nullable=false)
     Boolean encrypted = false
 }

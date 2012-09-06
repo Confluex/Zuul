@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.devnull.security.service.SecurityService
+import javax.validation.ConstraintViolationException
 
 class ErrorResolver implements HandlerExceptionResolver {
 
@@ -30,6 +31,12 @@ class ErrorResolver implements HandlerExceptionResolver {
                 user: securityService.currentUser
         ]
         switch (ex) {
+            case ConstraintViolationException:
+                def cve = ex as ConstraintViolationException
+                log.warn("Constraint violation: {}", ex.message)
+                view = "/error/invalid"
+                model.violations = cve.constraintViolations.collect { it.message }
+                break;
             case ConflictingOperationException:
                 log.warn("Conflicing operation: {}", ex.message)
                 view = "/error/conflict"
