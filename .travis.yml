@@ -1,1 +1,2 @@
-script: "mvn -U help:effective-pom"
+language: java
+script: "mvn -U test"
