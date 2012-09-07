@@ -2,6 +2,9 @@
 <%--@elvariable id="groupName" type="java.lang.String"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="validate" uri="http://devnull.org/tags/validate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -30,5 +33,21 @@
         </form>
     </div>
 </div>
+
+<spring:hasBindErrors name="formEntry">
+    <script>
+        $(function () {
+            <c:forEach var="error" items="${errors.fieldErrors}">
+                $("input[name=${error.field}]").addClass("error").popover({
+                    title:'Validation Errors',
+                    content: '${error.defaultMessage}',
+                    placement: 'top',
+                    trigger: 'hover'
+                });
+            </c:forEach>
+        });
+    </script>
+
+</spring:hasBindErrors>
 </body>
 </html>

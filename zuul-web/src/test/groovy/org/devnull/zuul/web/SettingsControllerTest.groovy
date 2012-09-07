@@ -1,19 +1,19 @@
 package org.devnull.zuul.web
 
+import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
+import org.devnull.zuul.web.test.ControllerTestMixin
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
+import org.mockito.Matchers
 
 import static org.mockito.Mockito.*
-import org.devnull.zuul.data.model.EncryptionKey
-import org.springframework.mock.web.MockHttpServletResponse
-import javax.servlet.http.HttpServletResponse
-import org.springframework.security.access.AccessDeniedException
 
+@Mixin(ControllerTestMixin)
 public class SettingsControllerTest {
 
     SettingsController controller
@@ -76,7 +76,7 @@ public class SettingsControllerTest {
         def entry = new SettingsEntry(key: 'a', value: 'b')
 
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment(groupName, environmentName)).thenReturn(group)
-        def view = controller.addEntrySubmit(groupName, environmentName, entry)
+        def view = controller.addEntrySubmit(groupName, environmentName, entry, mockSuccessfulBindingResult())
         def args = ArgumentCaptor.forClass(SettingsEntry)
         verify(controller.zuulService).save(args.capture())
 
@@ -84,6 +84,14 @@ public class SettingsControllerTest {
         assert args.value.key == entry.key
         assert args.value.value == entry.value
         assert view == "redirect:/settings/testGroup#testEnvironment"
+    }
+
+    @Test
+    void addEntrySubmitShouldReturnFormViewWhenValidationErrorsExist() {
+        def entry = mock(SettingsEntry)
+        def view = controller.addEntrySubmit("group", "env", entry, mockFailureBindingResult())
+        verify(controller.zuulService, never()).save(Matchers.any(SettingsEntry))
+        assert view == "/settings/entry"
     }
 
     @Test
@@ -113,7 +121,7 @@ public class SettingsControllerTest {
 
     @Test
     void createFromCopySubmitShouldFindCorrectEntryToCopyAndSave() {
-        def groupToCopy = new SettingsGroup(id:1, name:"some-config", environment: new Environment(name: "qa"))
+        def groupToCopy = new SettingsGroup(id: 1, name: "some-config", environment: new Environment(name: "qa"))
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("some-config", "qa")).thenReturn(groupToCopy)
         def view = controller.createFromCopySubmit("foo", "dev", "/qa/some-config.properties")
         verify(controller.zuulService).findSettingsGroupByNameAndEnvironment("some-config", "qa")
@@ -134,4 +142,6 @@ public class SettingsControllerTest {
         verify(controller.zuulService).changeKey(group, key)
         assert view == "redirect:/settings/test-app#dev"
     }
+
+
 }
