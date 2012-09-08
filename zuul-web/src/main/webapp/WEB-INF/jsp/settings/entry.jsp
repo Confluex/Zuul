@@ -1,6 +1,7 @@
 <%--@elvariable id="environment" type="java.lang.String"--%>
 <%--@elvariable id="groupName" type="java.lang.String"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="zfn" uri="/WEB-INF/tags/functions.tld" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -36,10 +37,11 @@
 <spring:hasBindErrors name="formEntry">
     <script>
         $(function () {
-            <c:forEach var="error" items="${errors.fieldErrors}">
-                $("input[name=${error.field}]").addClass("error").popover({
+            <c:set var="errorsByField" value="${zfn:errorsByField(errors)}"/>
+            <c:forEach var="error" items="${errorsByField}">
+                $("input[name=${error.key}]").addClass("error").popover({
                     title:'Validation Errors',
-                    content: '${error.defaultMessage}',
+                    content: '${error.value}',
                     placement: 'top',
                     trigger: 'hover'
                 });

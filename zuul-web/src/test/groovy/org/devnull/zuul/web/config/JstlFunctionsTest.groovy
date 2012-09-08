@@ -1,12 +1,14 @@
 package org.devnull.zuul.web.config
 
 import groovy.mock.interceptor.MockFor
+import org.devnull.security.model.User
 import org.junit.Test
-import org.springframework.core.io.ClassPathResource
+import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.web.context.support.ServletContextResource
+
 import javax.servlet.ServletContext
 
-import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.*
 
 class JstlFunctionsTest {
     @Test
@@ -27,4 +29,25 @@ class JstlFunctionsTest {
             assert JstlFunctions.getApplicationVersion(mock(ServletContext)) == "development"
         }
     }
+
+    @Test
+    void shouldGroupSpringErrorsByField() {
+        def user = new User()
+        def errors = new BeanPropertyBindingResult(user, "user")
+        errors.rejectValue("firstName", null, "Must have at least 2 characters")
+        errors.rejectValue("password", null, "Must have upper and lower case characters")
+        errors.rejectValue("password", null, "Must have have at least 8 characters")
+        errors.rejectValue("password", null, "Cannot contain your user name")
+        def errorsByField = JstlFunctions.groupErrorsByField(errors)
+        assert errorsByField.size() == 2
+        assert errorsByField["firstName"].size() == 1
+        assert errorsByField["firstName"].first() == "Must have at least 2 characters"
+        assert errorsByField["password"].size() == 3
+        assert errorsByField["password"][0] == "Must have upper and lower case characters"
+        assert errorsByField["password"][1] == "Must have have at least 8 characters"
+        assert errorsByField["password"][2] == "Cannot contain your user name"
+
+    }
+
+
 }

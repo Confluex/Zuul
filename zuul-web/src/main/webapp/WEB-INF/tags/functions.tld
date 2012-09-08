@@ -11,4 +11,11 @@
             java.lang.String getApplicationVersion(javax.servlet.ServletContext)
         </function-signature>
     </function>
+    <function>
+        <name>errorsByField</name>
+        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-signature>
+            java.util.Map groupErrorsByField(org.springframework.validation.Errors)
+        </function-signature>
+    </function>
 </taglib>
