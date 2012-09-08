@@ -56,5 +56,6 @@
         </form>
     </div>
 </div>
+<bootstrap:validate modelName="createKeyForm" formId="createKeyForm"/>
 </body>
 </html>

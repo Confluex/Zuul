@@ -5,14 +5,15 @@ import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.service.ZuulService
+import org.devnull.zuul.web.test.ControllerTestMixin
 import org.junit.Before
 import org.junit.Test
-
-import static org.mockito.Mockito.*
-import static org.devnull.zuul.web.config.ZuulWebConstants.FLASH_ALERT_MESSAGE
-import static org.devnull.zuul.web.config.ZuulWebConstants.FLASH_ALERT_TYPE
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
+import static org.devnull.zuul.web.config.ZuulWebConstants.*
+import static org.mockito.Mockito.*
+
+@Mixin(ControllerTestMixin)
 class SystemAdminControllerTest {
     SystemAdminController controller
 
@@ -52,10 +53,17 @@ class SystemAdminControllerTest {
     void shouldCreateNewKey() {
         def redirectAttributes = mock(RedirectAttributes)
         def key = new EncryptionKey(name: "test")
-        assert controller.createKey(key, redirectAttributes) == "redirect:/system/keys"
+        assert controller.createKey(key, mockSuccessfulBindingResult(), redirectAttributes) == "redirect:/system/keys"
         verify(controller.zuulService).saveKey(key)
         verify(redirectAttributes).addFlashAttribute(FLASH_ALERT_MESSAGE, "Key ${key.name} Created")
         verify(redirectAttributes).addFlashAttribute(FLASH_ALERT_TYPE, "success")
+    }
+
+    @Test
+    void shouldDisplayErrorFormWhenCreatingInvalidKey() {
+        def redirectAttributes = mock(RedirectAttributes)
+        def key = new EncryptionKey(name: "test")
+        assert controller.createKey(key, mockFailureBindingResult(), redirectAttributes) == "/system/createKey"
     }
 
 }
