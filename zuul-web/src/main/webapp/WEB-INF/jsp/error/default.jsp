@@ -16,7 +16,7 @@
     <div class="span12">
         <div class="page-header">
             <h1>Yikes!
-                <small>This is unexpected</small>
+                <small>Someone crossed the streams..</small>
             </h1>
         </div>
     </div>

@@ -11,7 +11,7 @@
         $(function () {
             var alert = $(document.createElement('div'));
             alert.addClass('alert alert-error');
-            alert.html("<b>Invalid Input</b>: Please correct the errors below:");
+            alert.html("<strong>Uh oh..</strong> <p>Looks like we have invalid input. Please correct the errors below:</p>");
             $("#${formId}").prepend(alert);
             <%--@elvariable id="errors" type="org.springframework.validation.Errors"--%>
             <c:set var="errorsByField" value="${zfn:errorsByField(errors)}"/>
