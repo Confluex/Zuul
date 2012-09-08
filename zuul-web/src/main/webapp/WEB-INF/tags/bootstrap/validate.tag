@@ -9,6 +9,10 @@
 <spring:hasBindErrors name="${modelName}">
     <script>
         $(function () {
+            var alert = $(document.createElement('div'));
+            alert.addClass('alert alert-error');
+            alert.html("<b>Invalid Input</b>: Please correct the errors below:");
+            $("#${formId}").prepend(alert);
             <%--@elvariable id="errors" type="org.springframework.validation.Errors"--%>
             <c:set var="errorsByField" value="${zfn:errorsByField(errors)}"/>
             <c:forEach var="error" items="${errorsByField}">
