@@ -26,14 +26,16 @@
                     <label class="control-label" for="keyName">Name</label>
 
                     <div class="controls">
-                        <input id="keyName" name="name" class="span3" type="text" placeholder="Enter a unique name..">
+                        <input value="${fn:escapeXml(createKeyForm.name)}" id="keyName" name="name" class="span3"
+                               type="text" placeholder="Enter a unique name..">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="description">Description</label>
 
                     <div class="controls">
-                        <input id="description" name="description" class="span3" type="text">
+                        <input value="${fn:escapeXml(createKeyForm.description)}" id="description" name="description"
+                               class="span3" type="text">
                     </div>
                 </div>
                 <div class="control-group">
@@ -41,7 +43,8 @@
 
                     <div class="controls">
                         <div class="input-append">
-                            <input id="password" name="password" class="span3" type="password" placeholder="Shhh.." autocomplete="off">
+                            <input value="${fn:escapeXml(createKeyForm.password)}" id="password" name="password"
+                                   class="span3" type="password" placeholder="Shhh.." autocomplete="off">
                         </div>
                     </div>
                 </div>

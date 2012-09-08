@@ -23,9 +23,9 @@
         <c:url var="actionUrl" value="/settings/${environment}/${groupName}/create/entry"/>
         <form id="formEntry" action="${actionUrl}" method="POST" class="form-inline">
             <div class="input-append">
-                <input id="key" name="key" class="span3" type="text" placeholder="Key..">
+                <input value="${fn:escapeXml(formEntry.key)}" id="key" name="key" class="span3" type="text" placeholder="Key..">
                 <span class="add-on">=</span>
-                <input id="value" name="value" class="span3" type="text" placeholder="Value..">
+                <input value="${fn:escapeXml(formEntry.value)}" id="value" name="value" class="span3" type="text" placeholder="Value..">
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>
         </form>
