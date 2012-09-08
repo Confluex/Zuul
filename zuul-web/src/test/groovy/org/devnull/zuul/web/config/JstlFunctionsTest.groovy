@@ -46,8 +46,20 @@ class JstlFunctionsTest {
         assert errorsByField["password"][0] == "Must have upper and lower case characters"
         assert errorsByField["password"][1] == "Must have have at least 8 characters"
         assert errorsByField["password"][2] == "Cannot contain your user name"
-
     }
 
+    @Test
+    void shouldJoinListsWithDefaultToken() {
+        def list = ["abc", "def"]
+        def join = JstlFunctions.join(list)
+        assert join == "abc<br/>def"
+    }
+
+    @Test
+    void shouldJoinListsWithProvidedToken() {
+        def list = ["abc", "def"]
+        def join = JstlFunctions.join(list, " - ")
+        assert join == "abc - def"
+    }
 
 }

@@ -41,7 +41,7 @@
             <c:forEach var="error" items="${errorsByField}">
                 $("input[name=${error.key}]").addClass("error").popover({
                     title:'Validation Errors',
-                    content: '${error.value}',
+                    content: '${zfn:join(error.value)}',
                     placement: 'top',
                     trigger: 'hover'
                 });

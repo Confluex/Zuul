@@ -28,5 +28,9 @@ class JstlFunctions {
         return byField
     }
 
+    static String join(List list, String token = "<br/>") {
+        return list.join(token)
+    }
+
 
 }

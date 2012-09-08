@@ -18,4 +18,18 @@
             java.util.Map groupErrorsByField(org.springframework.validation.Errors)
         </function-signature>
     </function>
+    <function>
+        <name>join</name>
+        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-signature>
+            java.lang.String join(java.util.List)
+        </function-signature>
+    </function>
+    <function>
+        <name>joinWithToken</name>
+        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-signature>
+            java.lang.String join(java.util.List,java.lang.String)
+        </function-signature>
+    </function>
 </taglib>
