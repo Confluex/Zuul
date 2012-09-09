@@ -55,7 +55,7 @@ class AccountController {
         def userCount = securityService.countUsers()
         if (userCount == 1) {
             registerCurrentUser(ROLE_SYSTEM_ADMIN)
-            attributes.addFlashAttribute(FLASH_ALERT_MESSAGE, "Congradulations! You're the first user so I've made you a system admin.")
+            attributes.addFlashAttribute(FLASH_ALERT_MESSAGE, "<h3>Congratulations!</h3> You're the first user so I've made you a system admin :-)")
             attributes.addFlashAttribute(FLASH_ALERT_TYPE, "success")
             return "redirect:/account/profile"
         }

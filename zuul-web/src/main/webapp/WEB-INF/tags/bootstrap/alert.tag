@@ -6,6 +6,6 @@
     <c:set var="alertClass" value="alert-${type == null ? 'info' : type}"/>
     <div class="alert ${alertClass}">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-            ${fn:escapeXml(message)}
+            ${message}
     </div>
 </c:if>
