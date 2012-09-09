@@ -13,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.transaction.annotation.Transactional
 import org.junit.After
+import org.junit.BeforeClass
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = [
@@ -31,6 +32,11 @@ abstract class ZuulWebIntegrationTest {
 
     protected final def OPEN_ID_SYS_ADMIN = 'https://me.yahoo.com/a/mMz2C510uMjhwvHr.4K2aToLWzrPDJb.._M-#b431e'
     protected final def OPEN_ID_USER = 'https://www.google.com/accounts/o8/id?id=AItOawnlnuHfoKGwMJSjRHxBROwqil0OE84Zscc'
+
+    @BeforeClass
+    static void setDataConfigLocation() {
+        System.setProperty('zuul.data.config', 'classpath:sample-data-config.properties')
+    }
 
     @Before
     void addTestAuthenticationProvider() {

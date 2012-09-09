@@ -13,9 +13,11 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
     <context:annotation-config/>
     <context:component-scan base-package="org.devnull.zuul.data"/>
     <context:component-scan base-package="org.devnull.zuul.service"/>
-    <context:property-placeholder ignore-resource-not-found="true"
-            location="classpath:zuul-data-config.properties, file:${ZUUL_HOME}/conf/zuul-data-config.properties" />
+    <context:property-placeholder properties-ref="dataConfig"/>
 
+    <bean id="dataConfig" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="#{systemProperties['zuul.data.config'] ?: 'file:${ZUUL_HOME}/conf/zuul-data-config.properties'}"/>
+    </bean>
 
     <!-- Database Configuration -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
