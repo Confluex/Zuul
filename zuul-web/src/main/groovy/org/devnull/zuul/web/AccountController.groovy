@@ -51,23 +51,24 @@ class AccountController {
     }
 
     @RequestMapping(value = "/account/register", method = RequestMethod.GET)
-    String register() {
+    String register(RedirectAttributes attributes) {
+        def userCount = securityService.countUsers()
+        if (userCount == 1) {
+            registerCurrentUser(ROLE_SYSTEM_ADMIN)
+            attributes.addFlashAttribute(FLASH_ALERT_MESSAGE, "Congradulations! You're the first user so I've made you a system admin.")
+            attributes.addFlashAttribute(FLASH_ALERT_TYPE, "success")
+            return "redirect:/account/profile"
+        }
         return "/account/register"
     }
 
     @RequestMapping(value = "/account/register", method = RequestMethod.POST)
     String registerSubmit(@ModelAttribute User user) {
         def currentUser = securityService.currentUser
-
         currentUser.firstName = user.firstName
         currentUser.lastName = user.lastName
         currentUser.email = user.email
-        currentUser.addToRoles(securityService.findRoleByName(ROLE_USER))
-        currentUser.roles.removeAll {
-            it.name == ROLE_GUEST
-        }
-
-        securityService.updateCurrentUser(true)
+        registerCurrentUser(ROLE_USER)
         return "redirect:/account/welcome"
     }
 
@@ -85,5 +86,14 @@ class AccountController {
     String submitPermissionsRequest(@PathVariable("roleName") String roleName) {
         zuulService.notifyPermissionsRequest(roleName)
         return "/account/requested"
+    }
+
+    protected void registerCurrentUser(String role) {
+        def currentUser = securityService.currentUser
+        currentUser.addToRoles(securityService.findRoleByName(role))
+        currentUser.roles.removeAll {
+            it.name == ROLE_GUEST
+        }
+        securityService.updateCurrentUser(true)
     }
 }

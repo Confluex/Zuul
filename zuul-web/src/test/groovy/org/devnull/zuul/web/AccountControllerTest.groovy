@@ -4,7 +4,6 @@ import org.devnull.security.model.Role
 import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.devnull.zuul.service.ZuulService
-import org.devnull.zuul.web.config.ZuulWebConstants
 import org.junit.Before
 import org.junit.Test
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
@@ -96,5 +95,40 @@ public class AccountControllerTest {
         def view = controller.submitPermissionsRequest("ROLE_TEST")
         verify(controller.zuulService).notifyPermissionsRequest("ROLE_TEST")
         assert view == "/account/requested"
+    }
+
+    @Test
+    void shouldAutoEnrollFirstUser() {
+        def sysAdminRole = new Role(name: "ROLE_SYSTEM_ADMIN")
+        def guestRole = new Role(name: "ROLE_GUEST")
+        def user = new User(roles: [guestRole])
+        def attributes = mock(RedirectAttributes)
+
+        when(controller.securityService.countUsers()).thenReturn(1L)
+        when(controller.securityService.getCurrentUser()).thenReturn(user)
+        when(controller.securityService.findRoleByName("ROLE_SYSTEM_ADMIN")).thenReturn(sysAdminRole)
+        def view = controller.register(attributes)
+        verify(controller.securityService).updateCurrentUser(true)
+
+        assert view == "redirect:/account/profile"
+        assert !user.roles.contains(guestRole)
+        assert user.roles.contains(sysAdminRole)
+    }
+
+    @Test
+    void shouldNotAutoEnrollIfNotFirstUser() {
+        def sysAdminRole = new Role(name: "ROLE_SYSTEM_ADMIN")
+        def guestRole = new Role(name: "ROLE_GUEST")
+        def user = new User(roles: [guestRole])
+        def attributes = mock(RedirectAttributes)
+
+        when(controller.securityService.countUsers()).thenReturn(2L)
+        when(controller.securityService.getCurrentUser()).thenReturn(user)
+        def view = controller.register(attributes)
+        verify(controller.securityService, never()).updateCurrentUser(true)
+
+        assert view == "/account/register"
+        assert user.roles.contains(guestRole)
+        assert !user.roles.contains(sysAdminRole)
     }
 }
