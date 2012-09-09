@@ -78,9 +78,9 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
                 <constructor-arg ref="dataSource"/>
             </bean>
         </property>
-        <property name="csvImportsPath" value="classpath:/data"/>
+        <property name="csvImportsPath" value="${dbunit.cvs.path}"/>
         <!--suppress SpringModelInspection -->
-        <property name="enabled" value="${jdbc.zuul.data.mock}"/>
+        <property name="enabled" value="${dbunit.enabled}"/>
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
