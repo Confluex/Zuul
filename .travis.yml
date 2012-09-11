@@ -1,3 +1,4 @@
 language: java
+env: ZUUL_HOME=/dev/null
 install: "mvn install -U --quiet -DskipTests=true"
 script: "mvn -U test"
