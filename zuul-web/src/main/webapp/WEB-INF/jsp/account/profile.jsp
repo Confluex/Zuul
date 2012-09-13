@@ -14,7 +14,7 @@
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>${user.firstName} ${user.lastName}'s Profile</h1>
+            <h1>${user.firstName} ${user.lastName}</h1>
         </div>
     </div>
 </div>

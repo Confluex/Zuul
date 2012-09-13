@@ -30,15 +30,15 @@ class ErrorResolver implements HandlerExceptionResolver {
                 date: new Date(),
                 user: securityService.currentUser
         ]
-        switch (ex) {
+        switch (root) {
             case ConstraintViolationException:
-                def cve = ex as ConstraintViolationException
-                log.warn("Constraint violation: {}", ex.message)
+                def cve = root as ConstraintViolationException
+                log.warn("Constraint violation: {}", root.message)
                 view = "/error/invalid"
                 model.violations = cve.constraintViolations.collect { it.message }
                 break;
             case ConflictingOperationException:
-                log.warn("Conflicing operation: {}", ex.message)
+                log.warn("Conflicing operation: {}", root.message)
                 view = "/error/conflict"
                 break;
             case AccessDeniedException:
@@ -48,7 +48,7 @@ class ErrorResolver implements HandlerExceptionResolver {
                 view = "/error/denied"
                 break;
             default:
-                log.error("Unhandled exception", ex)
+                log.error("Unhandled exception", root)
         }
 
         return new ModelAndView(view, model)

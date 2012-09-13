@@ -13,8 +13,6 @@ import org.springframework.security.access.AccessDeniedException
 import javax.validation.ConstraintViolationException
 
 import static org.mockito.Mockito.*
-import javax.validation.ConstraintViolation
-import org.devnull.zuul.data.model.SettingsEntry
 
 class ErrorResolverTest {
 
@@ -81,5 +79,13 @@ class ErrorResolverTest {
         assert mv.viewName == "/error/invalid"
         assert mv.model.error == ex
         assert mv.model.violations == ["Blah must be unique", "Blah does not exist"]
+    }
+
+    @Test
+    void shouldEvaluateRootCauseException() {
+        def ex = new RuntimeException(new AccessDeniedException("test"))
+        def mv = resolver.resolveException(request, response, null, ex)
+        assert mv.viewName == "/error/denied"
+        assert mv.model.error == ex.cause
     }
 }
