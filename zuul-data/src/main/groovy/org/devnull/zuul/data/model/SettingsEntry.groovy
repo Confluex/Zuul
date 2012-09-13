@@ -7,6 +7,7 @@ import org.devnull.zuul.data.config.ZuulDataConstants
 
 import javax.persistence.*
 import javax.validation.constraints.Size
+import org.hibernate.annotations.Index
 
 @Entity
 @EqualsAndHashCode()
@@ -21,9 +22,10 @@ class SettingsEntry implements Serializable {
     @ManyToOne
     @JoinColumn(name = "groupId")
     @JsonBackReference
+    @Index(name="IdxSettingsEntryGroup")
     SettingsGroup group
 
-    @Size(min=1, message= "Key must be at least 1 character long")
+    @Size(min=1, message= "Key cannot be empty")
     @Column(nullable=false)
     String key
 

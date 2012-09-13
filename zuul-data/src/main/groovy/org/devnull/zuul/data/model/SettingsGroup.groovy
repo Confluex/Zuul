@@ -8,6 +8,10 @@ import org.codehaus.jackson.annotate.JsonIgnore
 import org.devnull.zuul.data.config.ZuulDataConstants
 
 import javax.persistence.*
+import org.hibernate.validator.constraints.NotEmpty
+import javax.validation.constraints.Size
+import javax.validation.constraints.NotNull
+import org.hibernate.annotations.Index
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -23,16 +27,22 @@ class SettingsGroup implements Serializable {
     @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL])
     List<SettingsEntry> entries = []
 
-    @ManyToOne
+    @ManyToOne(optional=false)
     @JoinColumn(name = "environment")
     @JsonBackReference
+    @NotNull
+    @Index(name="IdxSettingsGroupEnvironment")
     Environment environment
 
-    @ManyToOne
+    @ManyToOne(optional=false)
     @JoinColumn(name = "key")
     @JsonIgnore
+    @NotNull
     EncryptionKey key
 
+    @Size(min=1, message="Name cannot by empty")
+    @Column(nullable=false)
+    @Index(name="IdxSettingsEntryName")
     String name
 
     void addToEntries(SettingsEntry entry) {
