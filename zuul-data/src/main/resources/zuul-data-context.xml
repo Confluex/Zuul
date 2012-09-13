@@ -57,8 +57,9 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
                 <prop key="hibernate.jdbc.batch_versioned_data">true</prop>
                 <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
                 <prop key="hibernate.max_fetch_depth">1</prop>
-                <prop key="hibernate.cache.use_query_cache">false</prop>
-                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
             </props>
         </property>
         <property name="persistenceUnitPostProcessors">
