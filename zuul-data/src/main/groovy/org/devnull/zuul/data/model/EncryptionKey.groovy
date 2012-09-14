@@ -8,10 +8,14 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.validation.constraints.Size
+import javax.persistence.Cacheable
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 
 @Entity
 @EqualsAndHashCode(includes = "name")
 @ToString(includeNames = true, excludes = "password")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 class EncryptionKey implements Serializable {
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 

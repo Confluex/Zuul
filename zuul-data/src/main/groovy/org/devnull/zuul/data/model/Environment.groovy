@@ -12,10 +12,13 @@ import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 import javax.persistence.Id
 import org.devnull.zuul.data.config.ZuulDataConstants
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 
 @Entity
 @EqualsAndHashCode(includes="name")
 @ToString(includeNames = true, excludes="groups")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 class Environment implements Serializable {
 
     static final long serialVersionUID = ZuulDataConstants.API_VERSION

@@ -12,10 +12,13 @@ import org.hibernate.validator.constraints.NotEmpty
 import javax.validation.constraints.Size
 import javax.validation.constraints.NotNull
 import org.hibernate.annotations.Index
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
 @ToString(includeNames = true, excludes = 'entries')
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 class SettingsGroup implements Serializable {
 
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
