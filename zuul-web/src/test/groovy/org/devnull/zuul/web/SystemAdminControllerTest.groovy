@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 import static org.devnull.zuul.web.config.ZuulWebConstants.*
 import static org.mockito.Mockito.*
+import org.devnull.zuul.data.model.Environment
 
 @Mixin(ControllerTestMixin)
 class SystemAdminControllerTest {
@@ -64,6 +65,15 @@ class SystemAdminControllerTest {
         def redirectAttributes = mock(RedirectAttributes)
         def key = new EncryptionKey(name: "test")
         assert controller.createKey(key, mockFailureBindingResult(), redirectAttributes) == "/system/createKey"
+    }
+
+    @Test
+    void shouldDisplayEnvironmentsPageWithCorrectModel() {
+        def environments = [new Environment(name: "a"), new Environment(name: "b")]
+        when(controller.zuulService.listEnvironments()).thenReturn(environments)
+        def mv = controller.displayEnvironments()
+        assert mv.model.environments == environments
+        assert mv.viewName == "/system/environments"
     }
 
 }

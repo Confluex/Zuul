@@ -82,6 +82,12 @@
                                             Key Management
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="${pageContext.request.contextPath}/system/environments">
+                                            <i class="icon-folder-open"></i>
+                                            Environments
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         </security:authorize>
@@ -122,7 +128,8 @@
                     </security:authorize>
                     <security:authorize access="isAnonymous()">
                         <p class="navbar-text pull-right">
-                            <a href="${pageContext.request.contextPath}/login" class="btn btn-primary" style="margin-top: 0;">
+                            <a href="${pageContext.request.contextPath}/login" class="btn btn-primary"
+                               style="margin-top: 0;">
                                 <i class="icon-user icon-white"></i>
                                 Login
                             </a>

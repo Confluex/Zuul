@@ -57,4 +57,12 @@ class SystemAdminController {
         return "redirect:/system/keys"
     }
 
+    @RequestMapping(value="/system/environments", method=RequestMethod.GET)
+    ModelAndView displayEnvironments() {
+        def model = [
+                environments: zuulService.listEnvironments()
+        ]
+        return new ModelAndView("/system/environments", model)
+    }
+
 }
