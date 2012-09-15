@@ -7,6 +7,7 @@
 <head>
     <title>Environments</title>
     <meta name="tab" content="admin"/>
+    <script src="${pageContext.request.contextPath}/assets/js/system-environments.js"></script>
 </head>
 <body>
 <div class="row">
@@ -17,23 +18,24 @@
     </div>
 </div>
 <div class="row">
-    <div class="span3">
-        <div class="alert alert-warning" style="margin-top: 1em;">
-            <strong>Caution:</strong> Deleting an environment will also delete any associated settings.
-        </div>
-    </div>
     <div class="span9">
         <a href="#addEnvironmentDialog" data-toggle="modal" class="btn btn-primary">
             <i class="icon-plus icon-white"></i> New
         </a>
+
         <p style="margin-top: 1em;">
             <c:forEach var="env" items="${environments}">
                 <span class="label label-warning">
                     ${fn:escapeXml(env.name)}
-                    <a class="delete-env" data-role-id="${fn:escapeXml(env.name)}" href="#">&times;</a>
+                    <a class="delete-env" data-env-id="${fn:escapeXml(env.name)}" href="#">&times;</a>
                 </span>
             </c:forEach>
         </p>
+    </div>
+    <div class="span3">
+        <div class="alert alert-warning" style="margin-top: 1em;">
+            <h3>Caution</h3> Deleting an environment will also delete any associated settings.
+        </div>
     </div>
 </div>
 <div class="modal hide" id="addEnvironmentDialog">
