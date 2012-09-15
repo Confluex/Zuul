@@ -7,6 +7,7 @@ import org.devnull.zuul.web.test.ZuulWebIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpServletResponse
+import org.devnull.zuul.data.dao.EnvironmentDao
 
 class SystemAdminServicesControllerIntegrationTest extends ZuulWebIntegrationTest {
     @Autowired
@@ -20,6 +21,9 @@ class SystemAdminServicesControllerIntegrationTest extends ZuulWebIntegrationTes
 
     @Autowired
     EncryptionKeyDao encryptionKeyDao
+
+    @Autowired
+    EnvironmentDao environmentDao
 
     @Test
     void shouldDeleteKeyAndChangeEffectedGroupsToDefaultKeyAndReEncrypt() {
@@ -39,5 +43,18 @@ class SystemAdminServicesControllerIntegrationTest extends ZuulWebIntegrationTes
 
         def defaultKeyGroups = settingsGroupDao.findByKey(defaultKey)
         assert defaultKeyGroups.containsAll(effectedGroups)
+    }
+
+    @Test
+    void shouldCascadeDeleteEnvironmentSettings() {
+        loginAsUser(OPEN_ID_SYS_ADMIN)
+        def env = environmentDao.findOne("prod")
+        def groups = env.groups
+        assert groups
+        controller.deleteEnvironment(new MockHttpServletResponse(), "prod")
+        assert !environmentDao.findOne("prod")
+        groups.each {
+            assert !settingsGroupDao.findOne(it.id)
+        }
     }
 }

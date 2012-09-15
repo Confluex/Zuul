@@ -13,7 +13,6 @@ import org.springframework.mock.web.MockHttpServletResponse
 import javax.servlet.http.HttpServletResponse
 
 import static org.mockito.Mockito.*
-import org.junit.Assert
 
 class SystemAdminServicesControllerTest {
 
@@ -70,7 +69,7 @@ class SystemAdminServicesControllerTest {
 
     @Test
     void shouldListKeys() {
-        def expected = [new EncryptionKey(name:"a"), new EncryptionKey(name:"b")]
+        def expected = [new EncryptionKey(name: "a"), new EncryptionKey(name: "b")]
         when(controller.zuulService.listEncryptionKeys()).thenReturn(expected)
         def keys = controller.listKeys()
         assert keys.is(expected)
@@ -124,4 +123,11 @@ class SystemAdminServicesControllerTest {
         assert response.status == HttpServletResponse.SC_NO_CONTENT
     }
 
+    @Test
+    void shouldDeleteEnvironmentByNameWithCorrectResponseCode() {
+        def response = new MockHttpServletResponse()
+        controller.deleteEnvironment(response, "test")
+        verify(controller.zuulService).deleteEnvironment("test")
+        assert response.status == HttpServletResponse.SC_NO_CONTENT
+    }
 }

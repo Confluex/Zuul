@@ -63,6 +63,12 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldDeleteEnvironmentWithGivenName() {
+        service.deleteEnvironment("test")
+        verify(service.environmentDao).delete("test")
+    }
+
+    @Test
     void shouldEmailSysAdminsWithPermissionsRequests() {
         def requester = new User(email: "user@devnull.org", firstName: "John", lastName: "Doe")
         def sysAdmins = [

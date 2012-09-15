@@ -65,6 +65,8 @@ public interface ZuulService {
 
     List<Environment> listEnvironments()
 
+    void deleteEnvironment(String name)
+
     /* Encryption Keys -------------------- */
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

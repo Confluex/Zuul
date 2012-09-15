@@ -106,6 +106,11 @@ class ZuulServiceImpl implements ZuulService {
         return environmentDao.findAll() as List<Environment>
     }
 
+    @Transactional(readOnly=false)
+    void deleteEnvironment(String name) {
+        environmentDao.delete(name)
+    }
+
     List<SettingsGroup> listSettingsGroups() {
         return settingsGroupDao.findAll(new Sort("name")) as List<SettingsGroup>
     }

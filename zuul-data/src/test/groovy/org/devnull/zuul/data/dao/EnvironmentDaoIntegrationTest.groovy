@@ -1,8 +1,8 @@
 package org.devnull.zuul.data.dao
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.junit.Test
 import org.devnull.zuul.data.test.ZuulDataIntegrationTest
+import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
 
 class EnvironmentDaoIntegrationTest extends ZuulDataIntegrationTest {
     @Autowired
