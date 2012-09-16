@@ -12,42 +12,32 @@
 <body>
 <div class="row">
     <div class="span12">
+        <div class="alert alert-warning" style="margin-top: 1em;">
+            <strong>Caution</strong> Deleting an environment will also delete any associated settings.
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="span12">
         <div class="page-header">
             <h1>Environments</h1>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="span9">
-        <a href="#addEnvironmentDialog" data-toggle="modal" class="btn btn-primary">
-            <i class="icon-plus icon-white"></i> New
-        </a>
-
-        <p style="margin-top: 1em;">
-            <c:forEach var="env" items="${environments}">
+    <div class="span3">
+        <div class="input-append">
+            <input id="environmentName" type="text" maxlength="12" class="input-small" placeholder="Name.."/>
+            <button class="btn add-env" type="button">New</button>
+        </div>
+    </div>
+    <div id="environments" class="span9">
+        <c:forEach var="env" items="${environments}">
                 <span class="label label-warning">
                     ${fn:escapeXml(env.name)}
                     <a class="delete-env" data-env-id="${fn:escapeXml(env.name)}" href="#">&times;</a>
                 </span>
-            </c:forEach>
-        </p>
-    </div>
-    <div class="span3">
-        <div class="alert alert-warning" style="margin-top: 1em;">
-            <h3>Caution</h3> Deleting an environment will also delete any associated settings.
-        </div>
-    </div>
-</div>
-<div class="modal hide" id="addEnvironmentDialog">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3>Add Environment</h3>
-    </div>
-    <div class="modal-body" style="text-align: center;">
-        TODO: FORM
-    </div>
-    <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        </c:forEach>
     </div>
 </div>
 </body>

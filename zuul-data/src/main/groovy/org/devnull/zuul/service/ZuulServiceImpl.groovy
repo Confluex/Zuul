@@ -1,5 +1,7 @@
 package org.devnull.zuul.service
 
+import org.devnull.security.service.SecurityService
+import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
@@ -14,13 +16,10 @@ import org.devnull.zuul.service.security.EncryptionStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
+import org.springframework.mail.MailSender
+import org.springframework.mail.SimpleMailMessage
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.mail.MailSender
-import org.devnull.security.service.SecurityService
-import org.devnull.zuul.data.config.ZuulDataConstants
-import org.springframework.mail.SimpleMailMessage
-import org.devnull.security.model.Role
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -106,9 +105,15 @@ class ZuulServiceImpl implements ZuulService {
         return environmentDao.findAll() as List<Environment>
     }
 
-    @Transactional(readOnly=false)
+    @Transactional(readOnly = false)
     void deleteEnvironment(String name) {
         environmentDao.delete(name)
+    }
+
+    @Transactional(readOnly = false)
+    Environment createEnvironment(String name) {
+        def environment = new Environment(name: name)
+        return environmentDao.save(environment)
     }
 
     List<SettingsGroup> listSettingsGroups() {

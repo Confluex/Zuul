@@ -11,6 +11,7 @@ import org.springframework.web.servlet.view.RedirectView
 import javax.servlet.http.HttpServletResponse
 
 import org.springframework.web.bind.annotation.*
+import org.devnull.zuul.data.model.Environment
 
 @Controller
 class SystemAdminServicesController {
@@ -89,8 +90,9 @@ class SystemAdminServicesController {
     }
 
     @RequestMapping(value = "/system/environments/{name}.json", method = RequestMethod.POST)
-    void addEnvironment(HttpServletResponse response, @PathVariable("name") String name) {
-
+    @ResponseBody
+    Environment addEnvironment(HttpServletResponse response, @PathVariable("name") String name) {
+        return zuulService.createEnvironment(name)
     }
 
 }

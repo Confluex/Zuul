@@ -65,7 +65,21 @@ public interface ZuulService {
 
     List<Environment> listEnvironments()
 
+    /**
+     * Delete an environment along with any associated settings groups.
+     *
+     * @param name environment to delete
+     */
+    @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     void deleteEnvironment(String name)
+
+    /**
+     * Creates a new environment to scope settings groups.
+     * @param name unique value
+     * @return created entity
+     */
+    @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
+    Environment createEnvironment(String name)
 
     /* Encryption Keys -------------------- */
 
@@ -93,4 +107,5 @@ public interface ZuulService {
 
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     void deleteKey(String name)
+
 }

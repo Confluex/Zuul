@@ -13,6 +13,7 @@ import org.springframework.mock.web.MockHttpServletResponse
 import javax.servlet.http.HttpServletResponse
 
 import static org.mockito.Mockito.*
+import org.devnull.zuul.data.model.Environment
 
 class SystemAdminServicesControllerTest {
 
@@ -129,5 +130,16 @@ class SystemAdminServicesControllerTest {
         controller.deleteEnvironment(response, "test")
         verify(controller.zuulService).deleteEnvironment("test")
         assert response.status == HttpServletResponse.SC_NO_CONTENT
+    }
+
+    @Test
+    void shouldCreateEnvironment() {
+        def response = new MockHttpServletResponse()
+        def expected = new Environment(name: "test")
+        when(controller.zuulService.createEnvironment("test")).thenReturn(expected)
+        def result = controller.addEnvironment(response, "test")
+        verify(controller.zuulService).createEnvironment("test")
+        assert response.status == HttpServletResponse.SC_OK
+        assert result.is(expected)
     }
 }

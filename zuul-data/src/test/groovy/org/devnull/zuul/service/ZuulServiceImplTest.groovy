@@ -63,6 +63,12 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldCreateEnvironmentWithGivenName() {
+        service.createEnvironment("test")
+        verify(service.environmentDao).save(new Environment(name:"test"))
+    }
+
+    @Test
     void shouldDeleteEnvironmentWithGivenName() {
         service.deleteEnvironment("test")
         verify(service.environmentDao).delete("test")
