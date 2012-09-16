@@ -36,19 +36,23 @@ class ErrorResolver implements HandlerExceptionResolver {
                 log.warn("Constraint violation: {}", root.message)
                 view = "/error/invalid"
                 model.violations = cve.constraintViolations.collect { it.message }
+                response.status = HttpServletResponse.SC_NOT_ACCEPTABLE
                 break;
             case ConflictingOperationException:
                 log.warn("Conflicing operation: {}", root.message)
                 view = "/error/conflict"
+                response.status = HttpServletResponse.SC_CONFLICT
                 break;
             case AccessDeniedException:
                 // the /403.jsp in web.xml is still needed for errors which occur outside of the spring security
                 // I'm unsure how this is still happening but it does from time to time. I neeed to figur out why.
                 log.info("User {} was denied access to {}", model.user, model.requestUri)
                 view = "/error/denied"
+                response.status = HttpServletResponse.SC_FORBIDDEN
                 break;
             default:
                 log.error("Unhandled exception", root)
+                response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
         }
 
         return new ModelAndView(view, model)

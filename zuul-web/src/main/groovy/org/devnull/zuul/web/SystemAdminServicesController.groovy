@@ -82,10 +82,15 @@ class SystemAdminServicesController {
         response.status = HttpServletResponse.SC_NO_CONTENT
     }
 
-    @RequestMapping(value="/system/environments/{name}.json", method= RequestMethod.DELETE)
+    @RequestMapping(value = "/system/environments/{name}.json", method = RequestMethod.DELETE)
     void deleteEnvironment(HttpServletResponse response, @PathVariable("name") String name) {
         zuulService.deleteEnvironment(name)
         response.status = HttpServletResponse.SC_NO_CONTENT
+    }
+
+    @RequestMapping(value = "/system/environments/{name}.json", method = RequestMethod.POST)
+    void addEnvironment(HttpServletResponse response, @PathVariable("name") String name) {
+
     }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.security.access.AccessDeniedException
 import javax.validation.ConstraintViolationException
 
 import static org.mockito.Mockito.*
+import javax.servlet.http.HttpServletResponse
 
 class ErrorResolverTest {
 
@@ -42,6 +43,7 @@ class ErrorResolverTest {
         def ex = new RuntimeException("outter", new RuntimeException("middle", new RuntimeException("root")))
         def mv = resolver.resolveException(request, response, null, ex)
         assert mv.model.error.message == "root"
+        assert response.status == HttpServletResponse.SC_INTERNAL_SERVER_ERROR
     }
 
     @Test
@@ -50,6 +52,7 @@ class ErrorResolverTest {
         def mv = resolver.resolveException(request, response, null, ex)
         assert mv.viewName == "/error/conflict"
         assert mv.model.error == ex
+        assert response.status == HttpServletResponse.SC_CONFLICT
     }
 
     @Test
@@ -58,6 +61,7 @@ class ErrorResolverTest {
         def mv = resolver.resolveException(request, response, null, ex)
         assert mv.viewName == "/error/default"
         assert mv.model.error == ex
+        assert response.status == HttpServletResponse.SC_INTERNAL_SERVER_ERROR
     }
 
     @Test
@@ -66,6 +70,7 @@ class ErrorResolverTest {
         def mv = resolver.resolveException(request, response, null, ex)
         assert mv.viewName == "/error/denied"
         assert mv.model.error == ex
+        assert response.status == HttpServletResponse.SC_FORBIDDEN
     }
 
     @Test
@@ -79,6 +84,7 @@ class ErrorResolverTest {
         assert mv.viewName == "/error/invalid"
         assert mv.model.error == ex
         assert mv.model.violations == ["Blah must be unique", "Blah does not exist"]
+        assert response.status == HttpServletResponse.SC_NOT_ACCEPTABLE
     }
 
     @Test
