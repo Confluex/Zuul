@@ -10,10 +10,11 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.access.AccessDeniedException
 
+import javax.servlet.http.HttpServletResponse
 import javax.validation.ConstraintViolationException
 
 import static org.mockito.Mockito.*
-import javax.servlet.http.HttpServletResponse
+import org.springframework.dao.EmptyResultDataAccessException
 
 class ErrorResolverTest {
 
@@ -36,6 +37,14 @@ class ErrorResolverTest {
         def ex = new RuntimeException("test")
         def mv = resolver.resolveException(request, response, null, ex)
         assert mv.model.user == user
+    }
+
+    @Test
+    void shouldHaveCorrectViewForEmptyResultDataAccessException() {
+        def ex = new EmptyResultDataAccessException(1)
+        def mv = resolver.resolveException(request, response, null, ex)
+        assert mv.viewName == "/error/notFound"
+        assert response.status == HttpServletResponse.SC_NOT_FOUND
     }
 
     @Test

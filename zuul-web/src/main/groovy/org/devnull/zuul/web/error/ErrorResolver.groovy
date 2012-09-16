@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.devnull.security.service.SecurityService
 import javax.validation.ConstraintViolationException
+import org.springframework.dao.EmptyResultDataAccessException
 
 class ErrorResolver implements HandlerExceptionResolver {
 
@@ -49,6 +50,11 @@ class ErrorResolver implements HandlerExceptionResolver {
                 log.info("User {} was denied access to {}", model.user, model.requestUri)
                 view = "/error/denied"
                 response.status = HttpServletResponse.SC_FORBIDDEN
+                break;
+            case EmptyResultDataAccessException:
+                log.info("Unable to find data", root.message)
+                view = "/error/notFound"
+                response.status = HttpServletResponse.SC_NOT_FOUND
                 break;
             default:
                 log.error("Unhandled exception", root)
