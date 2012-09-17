@@ -2,6 +2,7 @@ package org.devnull.zuul.web
 
 import org.devnull.security.service.SecurityService
 import org.devnull.zuul.data.model.EncryptionKey
+import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -9,9 +10,10 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.servlet.view.RedirectView
 
 import javax.servlet.http.HttpServletResponse
+import javax.validation.ConstraintViolationException
 
 import org.springframework.web.bind.annotation.*
-import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.web.config.JstlFunctions
 
 @Controller
 class SystemAdminServicesController {
@@ -95,4 +97,9 @@ class SystemAdminServicesController {
         return zuulService.createEnvironment(name)
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    Object renderConstraintErrors(ConstraintViolationException cve) {
+        return cve.constraintViolations.collect { it.message }
+    }
 }

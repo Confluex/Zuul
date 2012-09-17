@@ -20,5 +20,17 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <bean class="org.devnull.zuul.web.error.ErrorResolver" />
+    <bean class="org.devnull.zuul.web.error.MediaTypeErrorResolver">
+        <property name="mappings">
+            <map>
+                <entry key="application/json">
+                    <bean class="org.devnull.zuul.web.error.JsonErrorResolver"/>
+                </entry>
+            </map>
+        </property>
+        <property name="defaultResolver">
+            <bean class="org.devnull.zuul.web.error.ErrorResolver"/>
+        </property>
+    </bean>
+
 </beans>

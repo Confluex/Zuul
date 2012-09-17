@@ -30,6 +30,7 @@ $(function () {
             $.ajax({
                 url:getContextPath() + "/system/environments/" + encodeURI(input.val()) + ".json",
                 type:'POST',
+                contentType: "application/json",
                 success:function (data, status, xhr) {
                     var environments = $("#environments");
                     var span = $(document.createElement("span"));
@@ -45,10 +46,15 @@ $(function () {
                     input.val("");
                 },
                 error:function (xhr, status, error) {
-                    alert("An error has occurred while removing the environment. Please check the log for more details.");
+                    switch (xhr.status) {
+                        case 406:
+                            alert("Invalid data: " + error);
+                            break;
+                        default:
+                            alert("An error has occurred while creating the environment. Please check the log for more details.");
+                    }
                 }
             });
-
         }
     };
 
