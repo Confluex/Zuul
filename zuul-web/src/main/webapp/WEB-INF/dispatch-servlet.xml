@@ -29,7 +29,7 @@
             </map>
         </property>
         <property name="defaultResolver">
-            <bean class="org.devnull.zuul.web.error.ErrorResolver"/>
+            <bean class="org.devnull.zuul.web.error.DefaultErrorResolver"/>
         </property>
     </bean>
 

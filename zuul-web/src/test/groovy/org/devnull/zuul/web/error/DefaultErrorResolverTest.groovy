@@ -6,6 +6,7 @@ import org.devnull.zuul.service.error.ConflictingOperationException
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl
 import org.junit.Before
 import org.junit.Test
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.access.AccessDeniedException
@@ -14,18 +15,17 @@ import javax.servlet.http.HttpServletResponse
 import javax.validation.ConstraintViolationException
 
 import static org.mockito.Mockito.*
-import org.springframework.dao.EmptyResultDataAccessException
 
-class ErrorResolverTest {
+class DefaultErrorResolverTest {
 
-    ErrorResolver resolver
+    DefaultErrorResolver resolver
     MockHttpServletRequest request
     MockHttpServletResponse response
     User user
 
     @Before
     void createResolver() {
-        resolver = new ErrorResolver(securityService: mock(SecurityService))
+        resolver = new DefaultErrorResolver(securityService: mock(SecurityService))
         request = new MockHttpServletRequest()
         response = new MockHttpServletResponse()
         user = new User(email: "test@devnull.org")
@@ -92,7 +92,7 @@ class ErrorResolverTest {
         def mv = resolver.resolveException(request, response, null, ex)
         assert mv.viewName == "/error/invalid"
         assert mv.model.error == ex
-        assert mv.model.violations == ["Blah must be unique", "Blah does not exist"]
+        assert mv.model.violations == ["Blah does not exist", "Blah must be unique"]
         assert response.status == HttpServletResponse.SC_NOT_ACCEPTABLE
     }
 

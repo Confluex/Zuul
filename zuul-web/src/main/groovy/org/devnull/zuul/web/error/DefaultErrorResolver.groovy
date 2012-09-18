@@ -14,7 +14,7 @@ import org.devnull.security.service.SecurityService
 import javax.validation.ConstraintViolationException
 import org.springframework.dao.EmptyResultDataAccessException
 
-class ErrorResolver implements HandlerExceptionResolver {
+class DefaultErrorResolver implements HandlerExceptionResolver {
 
     @Autowired
     SecurityService securityService

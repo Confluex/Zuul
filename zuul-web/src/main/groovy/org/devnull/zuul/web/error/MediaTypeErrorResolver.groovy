@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse
 class MediaTypeErrorResolver implements HandlerExceptionResolver {
     Map<String, HandlerExceptionResolver> mappings = [:]
 
-    HandlerExceptionResolver defaultResolver = new ErrorResolver()
+    HandlerExceptionResolver defaultResolver = new DefaultErrorResolver()
     @Override
     ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         def resolver = mappings[request.contentType] ?: defaultResolver
