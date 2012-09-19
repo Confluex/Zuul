@@ -1,4 +1,4 @@
-<%--@elvariable id="error" type="java.lang.Exception"--%>
+<%--@elvariable id="errorMessage" type="org.devnull.zuul.web.error.HttpErrorMessage"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -14,7 +14,7 @@
             <h1>Not Found</h1>
         </div>
         <div class="alert alert-error">
-            Sorry, I was not able to find the content you requested: ${error.message}
+            Sorry, I was not able to find the content you requested: ${errorMessage.messages}
         </div>
     </div>
 </div>

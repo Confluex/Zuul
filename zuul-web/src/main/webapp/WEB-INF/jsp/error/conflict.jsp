@@ -1,4 +1,4 @@
-<%--@elvariable id="error" type="java.lang.Exception"--%>
+<%--@elvariable id="errorMessage" type="org.devnull.zuul.web.error.HttpErrorMessage"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -22,7 +22,7 @@
         <div class="alert alert-error">
             You performed a conflicting operation: <br/>
             <br/>
-            <strong>${error.message}</strong>
+            <strong>${errorMessage.messages}</strong>
         </div>
     </div>
 

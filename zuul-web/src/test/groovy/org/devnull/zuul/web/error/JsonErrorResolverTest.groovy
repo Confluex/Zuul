@@ -61,5 +61,6 @@ class JsonErrorResolverTest {
         assert json.user
         assert json.date
         assert json.stackTrace
+        assert json.statusCode
     }
 }

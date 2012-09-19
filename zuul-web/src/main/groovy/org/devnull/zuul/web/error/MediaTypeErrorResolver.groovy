@@ -5,6 +5,9 @@ import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * Delegates to the ErrorResolver configured for a given media type.
+ */
 class MediaTypeErrorResolver implements HandlerExceptionResolver {
     Map<String, HandlerExceptionResolver> mappings = [:]
 

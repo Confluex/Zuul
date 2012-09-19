@@ -1,8 +1,4 @@
-<%--@elvariable id="stackTrace" type="java.lang.String"--%>
-<%--@elvariable id="error" type="java.lang.Exception"--%>
-<%--@elvariable id="requestUri" type="java.lang.String"--%>
-<%--@elvariable id="date" type="java.util.Date"--%>
-<%--@elvariable id="violations" type="java.util.List<java.lang.String>"--%>
+<%--@elvariable id="errorMessage" type="org.devnull.zuul.web.error.HttpErrorMessage"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -34,7 +30,7 @@
         </div>
         <h3>Errors</h3>
         <ul>
-            <c:forEach var="message" items="${violations}">
+            <c:forEach var="message" items="${errorMessage.messages}">
                 <li><c:out value="${message}"/></li>
             </c:forEach>
         </ul>

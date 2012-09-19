@@ -12,44 +12,20 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.validation.ConstraintViolationException
 
+/**
+ * Renders HttpErrorMessages as JSON to HTTP Clients
+ */
 class JsonErrorResolver implements HandlerExceptionResolver {
 
     final def log = LoggerFactory.getLogger(this.class)
 
     ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        def root = ExceptionUtils.getRootCause(ex) ?: ex
-        switch (root) {
-            case ConstraintViolationException:
-                def cve = root as ConstraintViolationException
-                log.warn("Constraint violation: {}", root.message)
-                def errorMsg = new HttpErrorMessage(
-                        requestUri: request.requestURI,
-                        user: request.userPrincipal.toString(),
-                        stackTrace: ExceptionUtils.getStackTrace(root),
-                        messages: cve.constraintViolations.collect { it.message }
-                )
-                response.status = HttpServletResponse.SC_NOT_ACCEPTABLE
-                renderJsonObject(errorMsg, response)
-                break;
-            default:
-                log.error("Unhandled exception", root)
-                def errorMsg = new HttpErrorMessage(
-                        requestUri: request.requestURI,
-                        user: request.userPrincipal.toString(),
-                        stackTrace: ExceptionUtils.getStackTrace(root),
-                        messages: [ root.message ]
-                )
-                response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-                renderJsonObject(errorMsg, response)
-        }
-
-        return new ModelAndView()
-    }
-
-    protected void renderJsonObject(Object content, HttpServletResponse response) {
+        def error = new HttpErrorMessage(ExceptionUtils.getRootCause(ex) ?: ex, request)
+        response.status = error.statusCode
         def writer = new OutputStreamWriter(response.outputStream)
-        new JsonBuilder(content).writeTo(writer)
+        new JsonBuilder(error).writeTo(writer)
         writer.close()
+        return new ModelAndView()
     }
 
 }

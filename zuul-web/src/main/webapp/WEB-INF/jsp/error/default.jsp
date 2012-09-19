@@ -1,7 +1,4 @@
-<%--@elvariable id="stackTrace" type="java.lang.String"--%>
-<%--@elvariable id="error" type="java.lang.Exception"--%>
-<%--@elvariable id="requestUri" type="java.lang.String"--%>
-<%--@elvariable id="date" type="java.util.Date"--%>
+<%--@elvariable id="errorMessage" type="org.devnull.zuul.web.error.HttpErrorMessage"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -37,28 +34,28 @@
                     <label class="control-label">Date</label>
 
                     <div class="controls">
-                        <input type="text" value='<fmt:formatDate value="${date}" pattern="MM/dd/yy HH:mm:ss"/>' readonly="readonly">
+                        <input type="text" value='<fmt:formatDate value="${errorMessage.date}" pattern="MM/dd/yy HH:mm:ss"/>' readonly="readonly">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Request URI</label>
 
                     <div class="controls">
-                        <input type="text" class="disabled" value=' ${fn:escapeXml(requestUri)}' readonly="readonly">
+                        <input type="text" class="disabled" value=' ${fn:escapeXml(errorMessage.requestUri)}' readonly="readonly">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Message</label>
 
                     <div class="controls">
-                        <input type="text" class="disabled" value=' ${fn:escapeXml(error.message)}' readonly="readonly">
+                        <input type="text" class="disabled" value=' ${fn:escapeXml(errorMessage.messages)}' readonly="readonly">
                     </div>
                 </div>
             </fieldset>
         </form>
         <strong>StackTrace:</strong>
 
-        <pre class="pre-scrollable well">${stackTrace}</pre>
+        <pre class="pre-scrollable well">${errorMessage.stackTrace}</pre>
     </div>
 </div>
 </body>
