@@ -4,6 +4,7 @@ import org.springframework.validation.Errors
 import org.springframework.web.context.support.ServletContextResource
 
 import javax.servlet.ServletContext
+import org.devnull.zuul.service.error.ValidationException
 
 class JstlFunctions {
     static String getApplicationVersion(ServletContext context) {
@@ -21,11 +22,7 @@ class JstlFunctions {
     }
 
     static Map<String, List<String>> groupErrorsByField(Errors errors) {
-        def byField = errors.fieldErrors.groupBy { it.field }
-        byField.each { k, v ->
-            byField[k] = v.flatten().collect { it.defaultMessage }
-        }
-        return byField
+        new ValidationException(errors).fieldErrors
     }
 
     static String join(List list, String token = "<br/>") {
