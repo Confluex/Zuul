@@ -97,9 +97,4 @@ class SystemAdminServicesController {
         return zuulService.createEnvironment(name)
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseBody
-    Object renderConstraintErrors(ConstraintViolationException cve) {
-        return cve.constraintViolations.collect { it.message }
-    }
 }

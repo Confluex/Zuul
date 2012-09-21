@@ -2,19 +2,18 @@ package org.devnull.zuul.web.error
 
 import groovy.json.JsonSlurper
 import org.devnull.security.model.User
-import org.devnull.security.service.SecurityService
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl
 import org.junit.Before
 import org.junit.Test
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 
 import javax.servlet.http.HttpServletResponse
 import javax.validation.ConstraintViolationException
-
-import static org.mockito.Mockito.*
-import java.security.Principal
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.devnull.zuul.data.model.SettingsEntry
+import org.springframework.validation.BeanPropertyBindingResult
+import org.devnull.zuul.service.error.ValidationException
 
 class JsonErrorResolverTest {
     JsonErrorResolver resolver
@@ -44,6 +43,24 @@ class JsonErrorResolverTest {
         assert response.status == HttpServletResponse.SC_NOT_ACCEPTABLE
         def json = new JsonSlurper().parseText(response.contentAsString)
         assert json.messages == ["Blah does not exist", "Blah must be unique"]
+        assertCommonValuesAreNotEmpty(json)
+    }
+
+    @Test
+    void shouldRenderValidationExceptions() {
+        def entry = new SettingsEntry()
+        def errors = new BeanPropertyBindingResult(entry, "testEntry")
+        errors.reject(null, "Entry is invalid")
+        errors.rejectValue("key", null, "key must be unique")
+        errors.rejectValue("key", null, "key must not contain special characters")
+        def ex = new ValidationException(errors)
+        def mv = resolver.resolveException(request, response, null, ex)
+        assert mv.isEmpty()
+        assert response.status == HttpServletResponse.SC_NOT_ACCEPTABLE
+        def json = new JsonSlurper().parseText(response.contentAsString)
+        assert json.fieldMessages["key"][0] == "key must be unique"
+        assert json.fieldMessages["key"][1] == "key must not contain special characters"
+        assert json.messages == ["Entry is invalid"]
         assertCommonValuesAreNotEmpty(json)
     }
 

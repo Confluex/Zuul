@@ -5,6 +5,7 @@ import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.devnull.zuul.service.error.ConflictingOperationException
+import org.devnull.zuul.service.error.ValidationException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.security.access.AccessDeniedException
 
@@ -22,6 +23,7 @@ class HttpErrorMessage {
 
     String stackTrace
     List<String> messages = []
+    Map<String, List<String>> fieldMessages = [:]
     String requestUri
     Date date = new Date()
     String user
@@ -64,15 +66,24 @@ class HttpErrorMessage {
         this.stackTrace = ExceptionUtils.getStackTrace(ex)
     }
 
+    HttpErrorMessage(ValidationException ex, HttpServletRequest request) {
+        log.warn("Validation errors", ex.errors)
+        this.messages = ex.globalErrors
+        this.fieldMessages = ex.fieldErrors
+        this.statusCode = HttpServletResponse.SC_NOT_ACCEPTABLE
+        this.user = request.userPrincipal?.toString()
+        this.requestUri = request.requestURI
+        this.stackTrace = ExceptionUtils.getStackTrace(ex)
+    }
+
     HttpErrorMessage(Throwable ex, HttpServletRequest request) {
-        log.warn("Unhandled error", ex.message)
+        log.warn("Unhandled error", ex)
         this.messages = [ex.message]
         this.stackTrace = ExceptionUtils.getStackTrace(ex)
         this.statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
         this.user = request.userPrincipal?.toString()
         this.requestUri = request.requestURI
     }
-
 
 
 }
