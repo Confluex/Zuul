@@ -1,5 +1,10 @@
 package org.devnull.zuul.service
 
+import groovy.mock.interceptor.MockFor
+import org.devnull.security.model.Role
+import org.devnull.security.model.User
+import org.devnull.security.service.SecurityService
+import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
@@ -10,6 +15,7 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.service.error.ConflictingOperationException
+import org.devnull.zuul.service.error.ValidationException
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.junit.After
 import org.junit.Before
@@ -17,15 +23,13 @@ import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
 import org.springframework.data.domain.Sort
+import org.springframework.mail.MailSender
+import org.springframework.mail.SimpleMailMessage
+import org.springframework.validation.BeanPropertyBindingResult
+import org.springframework.validation.Validator
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
-import org.devnull.security.model.User
-import org.devnull.security.model.Role
-import org.devnull.zuul.data.config.ZuulDataConstants
-import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.MailSender
-import org.devnull.security.service.SecurityService
 
 public class ZuulServiceImplTest {
 
@@ -52,7 +56,8 @@ public class ZuulServiceImplTest {
                 encryptionKeyDao: mock(EncryptionKeyDao),
                 encryptionStrategy: mock(EncryptionStrategy),
                 securityService: mock(SecurityService),
-                templateMessage: templateMessage
+                templateMessage: templateMessage,
+                validator: mock(Validator)
         )
     }
 
@@ -62,10 +67,20 @@ public class ZuulServiceImplTest {
         GroovySystem.metaClassRegistry.setMetaClass(ZuulServiceImpl, serviceMetaClass)
     }
 
+    @Test(expected = ValidationException)
+    void shouldThrowValidationExceptionIfBeanIsInvalid() {
+        def entry = new SettingsEntry()
+        def mockErrors = new MockFor(BeanPropertyBindingResult)
+        mockErrors.demand.hasErrors { return true }
+        mockErrors.use {
+            service.errorIfInvalid(entry, "testEntry")
+        }
+    }
+
     @Test
     void shouldCreateEnvironmentWithGivenName() {
         service.createEnvironment("test")
-        verify(service.environmentDao).save(new Environment(name:"test"))
+        verify(service.environmentDao).save(new Environment(name: "test"))
     }
 
     @Test

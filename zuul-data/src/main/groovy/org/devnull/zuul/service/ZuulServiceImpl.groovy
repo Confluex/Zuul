@@ -12,6 +12,7 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.service.error.ConflictingOperationException
+import org.devnull.zuul.service.error.ValidationException
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +21,8 @@ import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.validation.BeanPropertyBindingResult
+import org.springframework.validation.Validator
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -50,6 +53,9 @@ class ZuulServiceImpl implements ZuulService {
 
     @Autowired
     SecurityService securityService
+
+    @Autowired
+    Validator validator
 
     @Transactional(readOnly = false)
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName) {
@@ -113,6 +119,7 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     Environment createEnvironment(String name) {
         def environment = new Environment(name: name)
+        errorIfInvalid(environment, "environment")
         return environmentDao.save(environment)
     }
 
@@ -254,4 +261,11 @@ class ZuulServiceImpl implements ZuulService {
     }
 
 
+    protected void errorIfInvalid(Object bean, String name) {
+        def errors = new BeanPropertyBindingResult(bean, name)
+        validator.validate(bean, errors)
+        if (errors.hasErrors()) {
+            throw new ValidationException(errors)
+        }
+    }
 }
