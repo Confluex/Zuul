@@ -67,7 +67,7 @@ class HttpErrorMessage {
     }
 
     HttpErrorMessage(ValidationException ex, HttpServletRequest request) {
-        log.warn("Validation errors", ex.errors)
+        log.warn("Validation errors: {}", ex.toString())
         this.messages = ex.globalErrors
         this.fieldMessages = ex.fieldErrors
         this.statusCode = HttpServletResponse.SC_NOT_ACCEPTABLE

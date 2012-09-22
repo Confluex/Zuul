@@ -13,7 +13,9 @@ class ValidationExceptionTest {
         errors.rejectValue("password", null, "Must have upper and lower case characters")
         errors.rejectValue("password", null, "Must have have at least 8 characters")
         errors.rejectValue("password", null, "Cannot contain your user name")
-        def errorsByField = new ValidationException(errors).fieldErrors
+        def ex = new ValidationException(errors)
+        println ex
+        def errorsByField = ex.fieldErrors
         assert errorsByField.size() == 2
         assert errorsByField["firstName"].size() == 1
         assert errorsByField["firstName"].first() == "Must have at least 2 characters"
@@ -21,15 +23,23 @@ class ValidationExceptionTest {
         assert errorsByField["password"][0] == "Must have upper and lower case characters"
         assert errorsByField["password"][1] == "Must have have at least 8 characters"
         assert errorsByField["password"][2] == "Cannot contain your user name"
+        assert !ex.globalErrors
     }
 
     @Test
-    void shouldFindGlobalErrors() {
+    void shouldFindGlobalErrorsAndFieldErrors() {
         def user = new User()
         def errors = new BeanPropertyBindingResult(user, "user")
         errors.reject(null, "Duplicate user")
-        def globalErrors = new ValidationException(errors).globalErrors
+        errors.rejectValue("email", null, "Email cannot be empty")
+        def ex = new ValidationException(errors)
+        println ex
+        def globalErrors = ex.globalErrors
         assert globalErrors.size() == 1
         assert globalErrors.first() == "Duplicate user"
+        def fieldErrors = ex.fieldErrors
+        assert fieldErrors.size() == 1
+        assert fieldErrors.email.size() == 1
+        assert fieldErrors.email.first() == "Email cannot be empty"
     }
 }

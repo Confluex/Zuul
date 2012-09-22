@@ -23,7 +23,7 @@ class Environment implements Serializable {
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
-    @Pattern(regexp="^[a-zA-Z0-9]+\$/", message="Name can only contain letters and numbers")
+    @Pattern(regexp="^[a-zA-Z0-9]+\$", message="Name can only contain letters and numbers")
     @Size(min=1, max=12, message="Name must be 1-12 characters long")
     @Column(length=12)
     String name

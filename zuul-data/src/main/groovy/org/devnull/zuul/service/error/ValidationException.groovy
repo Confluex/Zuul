@@ -21,4 +21,8 @@ class ValidationException extends ZuulServiceException {
     List<String> getGlobalErrors() {
         return errors.globalErrors.collect { it.defaultMessage }
     }
+
+    String toString() {
+        return "ValidationException{globalErrors: ${globalErrors}, fieldErrors: ${fieldErrors}"
+    }
 }

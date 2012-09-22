@@ -1,7 +1,7 @@
 package org.devnull.zuul.data.dao
 
-import org.springframework.data.repository.PagingAndSortingRepository
 import org.devnull.zuul.data.model.Environment
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface EnvironmentDao extends PagingAndSortingRepository<Environment, String> {
+interface EnvironmentDao extends JpaRepository<Environment, String> {
 }
