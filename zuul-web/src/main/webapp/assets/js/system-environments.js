@@ -23,6 +23,20 @@ $(function () {
         });
     };
 
+    var addToEnvironmentsHtml = function(data) {
+        var environments = $("#environments");
+        var span = $(document.createElement("span"));
+        var deleteLink = $(document.createElement("a"));
+        span.addClass("label label-warning hide");
+        span.text(data.name + " ");
+        deleteLink.data("env-id", data.name);
+        deleteLink.html("&times;");
+        deleteLink.addClass("delete-env");
+        deleteLink.attr("href", "#");
+        deleteLink.click(deleteEnvironment);
+        span.append(deleteLink).appendTo(environments).show('slow');
+    };
+
 
     var createEnvironment = function () {
         var input = $("#environmentName");
@@ -30,25 +44,17 @@ $(function () {
             $.ajax({
                 url:getContextPath() + "/system/environments/" + encodeURI(input.val()) + ".json",
                 type:'POST',
-                contentType: "application/json",
+                contentType:"application/json",
                 success:function (data, status, xhr) {
-                    var environments = $("#environments");
-                    var span = $(document.createElement("span"));
-                    var deleteLink = $(document.createElement("a"));
-                    span.addClass("label label-warning hide");
-                    span.text(input.val() + " ");
-                    deleteLink.data("env-id", input.val());
-                    deleteLink.html("&times;");
-                    deleteLink.addClass("delete-env");
-                    deleteLink.attr("href", "#");
-                    deleteLink.click(deleteEnvironment);
-                    span.append(deleteLink).appendTo(environments).show('slow');
+                    clearFormValidationAlerts(input.parents("form"));
+                    addToEnvironmentsHtml(data);
                     input.val("");
                 },
                 error:function (xhr, status, error) {
                     switch (xhr.status) {
                         case 406:
-                            alert("Invalid data: " + error);
+                            var json = $.parseJSON(xhr.responseText);
+                            createFormValidationAlerts(input.parents("form"), json.messages, json.fieldMessages);
                             break;
                         default:
                             alert("An error has occurred while creating the environment. Please check the log for more details.");

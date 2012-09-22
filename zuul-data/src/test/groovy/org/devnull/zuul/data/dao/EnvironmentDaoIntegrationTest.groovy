@@ -25,7 +25,7 @@ class EnvironmentDaoIntegrationTest extends ZuulDataIntegrationTest {
     }
 
     @Test
-    void shoulSaveAndIncrementRowCount() {
+    void shouldSaveAndIncrementRowCount() {
         def count = dao.count()
         def environment = new Environment(name: "another1")
         dao.saveAndFlush(environment)

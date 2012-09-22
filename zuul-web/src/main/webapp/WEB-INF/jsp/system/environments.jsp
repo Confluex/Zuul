@@ -26,10 +26,12 @@
 </div>
 <div class="row">
     <div class="span3">
-        <div class="input-append">
-            <input id="environmentName" type="text" maxlength="12" class="input-small" placeholder="Name.."/>
-            <button class="btn add-env" type="button">New</button>
-        </div>
+        <form id="createEnvForm" method="POST" action="${pageContext.request.contextPath}/system/environments">
+            <div class="input-append">
+                <input id="environmentName" name="name" type="text" maxlength="12" class="input-small" placeholder="Name.."/>
+                <button class="btn add-env" type="button">New</button>
+            </div>
+        </form>
     </div>
     <div id="environments" class="span9">
         <c:forEach var="env" items="${environments}">
