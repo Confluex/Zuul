@@ -162,6 +162,7 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     SettingsEntry save(SettingsEntry entry) {
         log.info("Saving entry: {}", entry)
+        errorIfInvalid(entry, "entry")
         return settingsEntryDao.save(entry)
     }
 

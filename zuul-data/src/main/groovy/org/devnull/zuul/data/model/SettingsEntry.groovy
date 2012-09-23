@@ -8,6 +8,7 @@ import org.devnull.zuul.data.config.ZuulDataConstants
 import javax.persistence.*
 import javax.validation.constraints.Size
 import org.hibernate.annotations.Index
+import javax.validation.constraints.NotNull
 
 @Entity
 @EqualsAndHashCode()
@@ -26,6 +27,7 @@ class SettingsEntry implements Serializable {
     SettingsGroup group
 
     @Size(min=1, message= "Key cannot be empty")
+    @NotNull(message= "Key cannot be empty")
     @Column(nullable=false)
     String key
 
