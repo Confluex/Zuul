@@ -23,7 +23,7 @@
     <bean class="org.devnull.zuul.web.error.MediaTypeErrorResolver">
         <property name="mappings">
             <map>
-                <entry key="application/json">
+                <entry key="json">
                     <bean class="org.devnull.zuul.web.error.JsonErrorResolver"/>
                 </entry>
             </map>

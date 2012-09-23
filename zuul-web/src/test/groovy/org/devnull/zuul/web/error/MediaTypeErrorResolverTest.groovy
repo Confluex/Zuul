@@ -18,7 +18,7 @@ class MediaTypeErrorResolverTest {
         jsonResolver = mock(HandlerExceptionResolver)
         defaultResolver = mock(HandlerExceptionResolver)
         resolver = new MediaTypeErrorResolver(
-                mappings: ["application/json": jsonResolver],
+                mappings: ["json": jsonResolver],
                 defaultResolver: defaultResolver
         )
     }
