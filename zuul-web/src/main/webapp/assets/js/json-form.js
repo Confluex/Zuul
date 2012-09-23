@@ -56,8 +56,8 @@
             },
             statusCode:{
                 406:function (xhr, status, error) {
-                    var message = 'Some fields on the form were invalid. Please fix them and try again.';
-                    createAlert(message, JSON.parse(xhr.responseText));
+                    var json = JSON.parse(xhr.responseText);
+                    createFormValidationAlerts(form, json.messages, json.fieldMessages);
                 }
             },
             error:function (xhr, status, error) {
@@ -82,32 +82,10 @@
     }
 
     function resetForm() {
-        form.get(0).reset();
-        form.find('.alert').remove();
-        form.find('.control-group').removeClass('error');
-        form.find('input').attr('title', '');
+        form.reset();
+        clearFormValidationAlerts(form);
     }
 
-    function createAlert(message, errors) {
-        var alert = form.find('.alert');
-        if (!alert.length) {
-            alert = $(document.createElement('div'));
-            alert.addClass('alert alert-error').text(message);
-            form.prepend(alert);
-        }
-        else {
-            alert.text(message);
-        }
-        if (errors) {
-            for (var i = 0; i < errors.length; i++) {
-                var fieldError = errors[i];
-                var input = form.find("input[name=" + fieldError.field + "]");
-                input.parent().parent().addClass('error');
-                input.attr('title', fieldError.error);
-                input.tooltip({trigger:'focus', placement:'right'});
-            }
-        }
-    }
 
 
     $.fn.jsonForm = function (method) {

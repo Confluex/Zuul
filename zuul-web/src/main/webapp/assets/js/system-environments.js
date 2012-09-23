@@ -14,10 +14,10 @@ $(function () {
             error:function (xhr, status, error) {
                 switch (xhr.status) {
                     case 404:
-                        alert(envId + " is no longer available. Please try reloading the page.");
+                        createAlert(envId + " is no longer available. Please try reloading the page.");
                         break;
                     default:
-                        alert("An error has occurred while removing the environment. Please check the log for more details.");
+                        createAlert("An error has occurred while removing the environment. Please check the log for more details.");
                 }
             }
         });
@@ -57,7 +57,8 @@ $(function () {
                             createFormValidationAlerts(input.parents("form"), json.messages, json.fieldMessages);
                             break;
                         default:
-                            alert("An error has occurred while creating the environment. Please check the log for more details.");
+                            var message = "An error has occurred while creating the environment. Please check the log for more details.";
+                            createFormValidationAlerts(input.parents("form"), [message]);
                     }
                 }
             });
