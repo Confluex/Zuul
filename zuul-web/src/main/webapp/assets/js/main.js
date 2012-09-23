@@ -46,7 +46,7 @@ function createFormValidationAlerts(form, globalErrors, fieldErrors) {
             input.addClass('error');
             input.attr('title', 'Validation Errors');
             input.data('content', errors.join("<br/>"));
-            input.popover({trigger:'focus', placement:'bottom'});
+            input.popover({trigger:'focus', placement:'bottom'}).popover('enable');
         });
     }
 }
