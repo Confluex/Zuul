@@ -3,26 +3,17 @@ function getContextPath() {
 }
 
 function createAlert(message) {
-    var row = $(document.createElement("div"));
-    var span = $(document.createElement("div"));
-    var alertDiv = $(document.createElement('div'));
-
-    row.addClass("row generated");
-    span.addClass("span12");
+    var alertDiv = $(document.createElement("div"));
     alertDiv.addClass('alert alert-error');
     alertDiv.html(message);
-
-    alertDiv.appendTo(span);
-    span.appendTo(row);
-    row.hide().insertAfter("#topNav").fadeIn();
+    return alertDiv;
 }
 
-function clearLastAlert() {
-    $("#topNav").next(".generated").remove();
-}
-
-function clearFormValidationAlerts(form) {
-    clearLastAlert();
+function clearFormValidationAlerts(form, reset) {
+    if (reset) {
+        form.get(0).reset();
+    }
+    form.find(".alert").remove();
     form.find('input.error').removeData('content');
     form.find('input.error').attr('title', '');
     form.find('input.error').popover('disable');
@@ -32,10 +23,10 @@ function clearFormValidationAlerts(form) {
 function createFormValidationAlerts(form, globalErrors, fieldErrors) {
     clearFormValidationAlerts(form);
     if (globalErrors.length > 0) {
-        createAlert(globalErrors.join("<br/>"));
+        createAlert(globalErrors.join("<br/>")).prependTo(form).fadeIn();
     }
     else {
-        createAlert("Please correct the fields below.");
+        createAlert("Please correct the fields below.").prependTo(form).fadeIn();
     }
     if (fieldErrors) {
         $.each(fieldErrors, function (name, errors) {

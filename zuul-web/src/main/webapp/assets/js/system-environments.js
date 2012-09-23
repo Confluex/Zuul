@@ -12,13 +12,15 @@ $(function () {
                 })
             },
             error:function (xhr, status, error) {
+                var message = null;
                 switch (xhr.status) {
                     case 404:
-                        createAlert(envId + " is no longer available. Please try reloading the page.");
+                        message = envId + " is no longer available. Please try reloading the page.";
                         break;
                     default:
-                        createAlert("An error has occurred while removing the environment. Please check the log for more details.");
+                        message = "An error has occurred while removing the environment. Please check the log for more details.";
                 }
+                createAlert(message).insertAfter("#topNav").fadeIn();
             }
         });
     };

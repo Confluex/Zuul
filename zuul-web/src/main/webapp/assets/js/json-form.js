@@ -54,14 +54,15 @@
                     onSave(data)
                 }
             },
-            statusCode:{
-                406:function (xhr, status, error) {
-                    var json = JSON.parse(xhr.responseText);
-                    createFormValidationAlerts(form, json.messages, json.fieldMessages);
-                }
-            },
             error:function (xhr, status, error) {
-                createAlert("An error has occurred while saving the record. Please check the log for more details.");
+                switch (xhr.status) {
+                    case 406:
+                        var json = $.parseJSON(xhr.responseText);
+                        createFormValidationAlerts(form, json.messages, json.fieldMessages);
+                        break;
+                    default:
+                        alert("An error has occurred while creating the saving the record. Please check the log for more details.");
+                }
             }
         });
         return false;
@@ -70,22 +71,22 @@
     function deleteRecord() {
         $.ajax({
             url:resourceUri + '/' + encodeURI(resourceId) + ".json",
-            type: 'DELETE',
+            type:'DELETE',
             success:function (data, status, xhr) {
                 dialog.modal('hide');
-                if (onDelete) { onDelete() }
+                if (onDelete) {
+                    onDelete()
+                }
             },
             error:function (xhr, status, error) {
-                createAlert("An error has occurred while deleting the record. Please check the log for more details.");
+                alert("An error has occurred while deleting the record. Please check the log for more details.");
             }
         });
     }
 
     function resetForm() {
-        form.reset();
-        clearFormValidationAlerts(form);
+        clearFormValidationAlerts(form, true);
     }
-
 
 
     $.fn.jsonForm = function (method) {

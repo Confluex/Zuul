@@ -98,13 +98,10 @@ class SettingsServicesControllerTest {
     }
 
     @Test
-    void updateEntryJsonShouldBindToResultsFromService() {
-        def formEntry = new SettingsEntry(id: -1, key: "a", value: "b")
-        def persistedEntry = new SettingsEntry(id: 100, key: "c", value: "d")
-        when(controller.zuulService.findSettingsEntry(100)).thenReturn(persistedEntry)
-        when(controller.zuulService.save(persistedEntry)).thenReturn(persistedEntry)
+    void shouldUpdateSettingsEntry() {
+        def formEntry = new SettingsEntry(id: 100, key: "a", value: "b")
+        when(controller.zuulService.save(formEntry)).thenReturn(formEntry)
         def resultEntry = controller.updateEntryJson(100, formEntry)
-        assert resultEntry.is(persistedEntry)
         assert resultEntry.id == 100
         assert resultEntry.key == "a"
         assert resultEntry.value == "b"
