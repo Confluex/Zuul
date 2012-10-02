@@ -67,7 +67,8 @@ public class AccountControllerTest {
                 lastName: "doe",
                 email: "jdoe@fake.com"
         )
-        def view = controller.registerSubmit(formUser)
+        def flash = mock(RedirectAttributes)
+        def view = controller.registerSubmit(formUser, flash)
         assert user.id == 1
         assert user.openId == "http://fake.openid.com"
         assert user.firstName == "john"
@@ -75,10 +76,11 @@ public class AccountControllerTest {
         assert user.email == "jdoe@fake.com"
         assert user.roles.size() == 1
         assert user.roles.first() == userRole
-        assert view == "redirect:/account/welcome"
+        assert view == "redirect:/account/profile"
 
         verify(controller.securityService).updateCurrentUser(true)
-
+        verify(flash).addFlashAttribute(FLASH_ALERT_MESSAGE, "Registration Complete")
+        verify(flash).addFlashAttribute(FLASH_ALERT_TYPE, "success")
     }
 
     @Test
@@ -95,40 +97,5 @@ public class AccountControllerTest {
         def view = controller.submitPermissionsRequest("ROLE_TEST")
         verify(controller.zuulService).notifyPermissionsRequest("ROLE_TEST")
         assert view == "/account/requested"
-    }
-
-    @Test
-    void shouldAutoEnrollFirstUser() {
-        def sysAdminRole = new Role(name: "ROLE_SYSTEM_ADMIN")
-        def guestRole = new Role(name: "ROLE_GUEST")
-        def user = new User(roles: [guestRole])
-        def attributes = mock(RedirectAttributes)
-
-        when(controller.securityService.countUsers()).thenReturn(1L)
-        when(controller.securityService.getCurrentUser()).thenReturn(user)
-        when(controller.securityService.findRoleByName("ROLE_SYSTEM_ADMIN")).thenReturn(sysAdminRole)
-        def view = controller.register(attributes)
-        verify(controller.securityService).updateCurrentUser(true)
-
-        assert view == "redirect:/account/profile"
-        assert !user.roles.contains(guestRole)
-        assert user.roles.contains(sysAdminRole)
-    }
-
-    @Test
-    void shouldNotAutoEnrollIfNotFirstUser() {
-        def sysAdminRole = new Role(name: "ROLE_SYSTEM_ADMIN")
-        def guestRole = new Role(name: "ROLE_GUEST")
-        def user = new User(roles: [guestRole])
-        def attributes = mock(RedirectAttributes)
-
-        when(controller.securityService.countUsers()).thenReturn(2L)
-        when(controller.securityService.getCurrentUser()).thenReturn(user)
-        def view = controller.register(attributes)
-        verify(controller.securityService, never()).updateCurrentUser(true)
-
-        assert view == "/account/register"
-        assert user.roles.contains(guestRole)
-        assert !user.roles.contains(sysAdminRole)
     }
 }

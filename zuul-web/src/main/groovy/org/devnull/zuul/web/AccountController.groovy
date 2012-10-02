@@ -52,24 +52,19 @@ class AccountController {
 
     @RequestMapping(value = "/account/register", method = RequestMethod.GET)
     String register(RedirectAttributes attributes) {
-        def userCount = securityService.countUsers()
-        if (userCount == 1) {
-            registerCurrentUser(ROLE_SYSTEM_ADMIN)
-            attributes.addFlashAttribute(FLASH_ALERT_MESSAGE, "<h3>Congratulations!</h3> You're the first user so I've made you a system admin :-)")
-            attributes.addFlashAttribute(FLASH_ALERT_TYPE, "success")
-            return "redirect:/account/profile"
-        }
         return "/account/register"
     }
 
     @RequestMapping(value = "/account/register", method = RequestMethod.POST)
-    String registerSubmit(@ModelAttribute User user) {
+    String registerSubmit(@ModelAttribute User user, RedirectAttributes redirectAttrs) {
         def currentUser = securityService.currentUser
         currentUser.firstName = user.firstName
         currentUser.lastName = user.lastName
         currentUser.email = user.email
         registerCurrentUser(ROLE_USER)
-        return "redirect:/account/welcome"
+        redirectAttrs.addFlashAttribute(FLASH_ALERT_MESSAGE, "Registration Complete")
+        redirectAttrs.addFlashAttribute(FLASH_ALERT_TYPE, "success")
+        return "redirect:/account/profile"
     }
 
     @RequestMapping("/account/welcome")

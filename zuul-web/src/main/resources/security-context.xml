@@ -45,41 +45,13 @@
     </b:bean>
 
 
-    <global-method-security pre-post-annotations="enabled" secured-annotations="enabled">
+    <global-method-security pre-post-annotations="enabled" secured-annotations="enabled"
+                            authentication-manager-ref="authenticationManager">
         <expression-handler ref="methodExpressionHandler"/>
     </global-method-security>
     <jpa:repositories base-package="org.devnull.security.dao"/>
     <context:component-scan base-package="org.devnull.security"/>
 
-    <http use-expressions="true" access-decision-manager-ref="accessDecisionManager">
-        <intercept-url pattern="/account/**" access="hasRole('ROLE_GUEST')"/>
-        <intercept-url pattern="/settings/create**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/settings/**/*.properties" access="permitAll"/>
-        <intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
-        <intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
-        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/**" access="permitAll"/>
-
-        <logout logout-url="/logout" logout-success-url="/"/>
-        <openid-login login-page="/login"
-                      authentication-failure-url="/login?login_error=true"
-                      user-service-ref="openIdUserDetailsService"
-                      authentication-failure-handler-ref="openIdRegistrationHandler">
-            <attribute-exchange>
-                <openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
-                <openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last" required="true"/>
-                <openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first" required="true"/>
-            </attribute-exchange>
-        </openid-login>
-    </http>
-
-    <b:bean id="openIdAuthenticationProvider" class="org.springframework.security.openid.OpenIDAuthenticationProvider">
-        <b:property name="userDetailsService" ref="openIdUserDetailsService"/>
-    </b:bean>
-
-    <authentication-manager alias="authenticationManager">
-        <authentication-provider ref="openIdAuthenticationProvider"/>
-    </authentication-manager>
-
-
+    <!--<b:import resource="security-ldap-context.xml"/>-->
+    <b:import resource="security-openid-context.xml"/>
 </b:beans>
