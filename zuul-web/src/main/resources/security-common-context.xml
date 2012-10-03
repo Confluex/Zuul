@@ -1,55 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<b:beans xmlns="http://www.springframework.org/schema/security"
-         xmlns:b="http://www.springframework.org/schema/beans"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:context="http://www.springframework.org/schema/context"
-         xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:s="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
                         http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.1.xsd">
 
-    <!--
-        Hierarchical Roles need to be placed before the http element.
-        See https://jira.springsource.org/browse/SEC-1452 for details
-     -->
-    <b:bean id="roleHierarchy"
-            class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
-        <b:property name="hierarchy">
-            <b:value>
+    <bean id="roleHierarchy"
+          class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <property name="hierarchy">
+            <value>
                 ROLE_SYSTEM_ADMIN > ROLE_ADMIN
                 ROLE_ADMIN > ROLE_USER
                 ROLE_USER > ROLE_GUEST
                 ROLE_GUEST > ROLE_ANONYMOUS
-            </b:value>
-        </b:property>
-    </b:bean>
-    <b:bean id="methodExpressionHandler"
-            class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
-        <b:property name="roleHierarchy" ref="roleHierarchy"/>
-    </b:bean>
-    <b:bean id="webExpressionHandler"
-            class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
-        <b:property name="roleHierarchy" ref="roleHierarchy"/>
-    </b:bean>
-    <b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
-        <b:property name="decisionVoters">
-            <b:list>
-                <b:bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
-                    <b:property name="expressionHandler" ref="webExpressionHandler"/>
-                </b:bean>
-                <b:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
-            </b:list>
-        </b:property>
-    </b:bean>
+            </value>
+        </property>
+    </bean>
+    <bean id="methodExpressionHandler"
+          class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="roleHierarchy" ref="roleHierarchy"/>
+    </bean>
+    <bean id="webExpressionHandler"
+          class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+        <property name="roleHierarchy" ref="roleHierarchy"/>
+    </bean>
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <property name="decisionVoters">
+            <list>
+                <bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                    <property name="expressionHandler" ref="webExpressionHandler"/>
+                </bean>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </list>
+        </property>
+    </bean>
 
 
-    <global-method-security pre-post-annotations="enabled" secured-annotations="enabled"
-                            authentication-manager-ref="authenticationManager">
-        <expression-handler ref="methodExpressionHandler"/>
-    </global-method-security>
+    <s:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"
+                              authentication-manager-ref="authenticationManager">
+        <s:expression-handler ref="methodExpressionHandler"/>
+    </s:global-method-security>
     <jpa:repositories base-package="org.devnull.security.dao"/>
     <context:component-scan base-package="org.devnull.security"/>
 
-</b:beans>
+</beans>
