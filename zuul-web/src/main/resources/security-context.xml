@@ -3,55 +3,56 @@
 <b:beans xmlns="http://www.springframework.org/schema/security"
          xmlns:b="http://www.springframework.org/schema/beans"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:context="http://www.springframework.org/schema/context"
-         xmlns:jpa="http://www.springframework.org/schema/data/jpa"
          xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
-                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-                        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.1.xsd">
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <!--
-        Hierarchical Roles need to be placed before the http element.
-        See https://jira.springsource.org/browse/SEC-1452 for details
-     -->
-    <b:bean id="roleHierarchy"
-            class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
-        <b:property name="hierarchy">
-            <b:value>
-                ROLE_SYSTEM_ADMIN > ROLE_ADMIN
-                ROLE_ADMIN > ROLE_USER
-                ROLE_USER > ROLE_GUEST
-                ROLE_GUEST > ROLE_ANONYMOUS
-            </b:value>
-        </b:property>
-    </b:bean>
-    <b:bean id="methodExpressionHandler"
-            class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
-        <b:property name="roleHierarchy" ref="roleHierarchy"/>
-    </b:bean>
-    <b:bean id="webExpressionHandler"
-            class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
-        <b:property name="roleHierarchy" ref="roleHierarchy"/>
-    </b:bean>
-    <b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
-        <b:property name="decisionVoters">
+
+    <b:import resource="security-common-context.xml"/>
+
+    <http use-expressions="true"
+          authentication-manager-ref="openIdAuthenticationManager"
+          access-decision-manager-ref="accessDecisionManager">
+        <intercept-url pattern="/account/**" access="hasRole('ROLE_GUEST')"/>
+        <intercept-url pattern="/settings/create**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/settings/**/*.properties" access="permitAll"/>
+        <intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/**" access="permitAll"/>
+
+        <logout logout-url="/logout" logout-success-url="/"/>
+        <openid-login login-page="/login"
+                      authentication-failure-url="/login?login_error=true"
+                      user-service-ref="openIdUserDetailsService"
+                      authentication-failure-handler-ref="openIdRegistrationHandler">
+            <attribute-exchange>
+                <openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
+                <openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last" required="true"/>
+                <openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first" required="true"/>
+            </attribute-exchange>
+        </openid-login>
+    </http>
+
+    <b:bean id="openIdRegistrationHandler" class="org.devnull.security.spring.OpenIdRegistrationHandler">
+        <b:property name="defaultRoles">
             <b:list>
-                <b:bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
-                    <b:property name="expressionHandler" ref="webExpressionHandler"/>
-                </b:bean>
-                <b:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+                <b:value>ROLE_GUEST</b:value>
+            </b:list>
+        </b:property>
+        <b:property name="firstUserRoles">
+            <b:list>
+                <b:value>ROLE_SYSTEM_ADMIN</b:value>
             </b:list>
         </b:property>
     </b:bean>
 
+    <b:bean id="openIdAuthenticationProvider" class="org.springframework.security.openid.OpenIDAuthenticationProvider">
+        <b:property name="userDetailsService" ref="openIdUserDetailsService"/>
+    </b:bean>
 
-    <global-method-security pre-post-annotations="enabled" secured-annotations="enabled"
-                            authentication-manager-ref="authenticationManager">
-        <expression-handler ref="methodExpressionHandler"/>
-    </global-method-security>
-    <jpa:repositories base-package="org.devnull.security.dao"/>
-    <context:component-scan base-package="org.devnull.security"/>
+    <authentication-manager id="openIdAuthenticationManager" alias="authenticationManager">
+        <authentication-provider ref="openIdAuthenticationProvider"/>
+    </authentication-manager>
 
-    <!--<b:import resource="security-ldap-context.xml"/>-->
-    <b:import resource="security-openid-context.xml"/>
+
 </b:beans>
