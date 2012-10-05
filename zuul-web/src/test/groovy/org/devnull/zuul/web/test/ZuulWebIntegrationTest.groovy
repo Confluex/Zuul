@@ -1,6 +1,5 @@
 package org.devnull.zuul.web.test
 
-import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -49,7 +48,7 @@ abstract class ZuulWebIntegrationTest {
     }
 
     protected void loginAsUser(String openId) {
-        def user = securityService.findUserByOpenId(openId)
+        def user = securityService.findByUserName(openId)
         def testUser = new TestingAuthenticationToken(user, "fake", user.authorities as List)
         def response = authenticationManager.authenticate(testUser)
         SecurityContextHolder.getContext().setAuthentication(response);
