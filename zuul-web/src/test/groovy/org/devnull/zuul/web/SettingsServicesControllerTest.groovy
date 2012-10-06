@@ -10,8 +10,6 @@ import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.web.multipart.MultipartFile
 
 import static org.mockito.Mockito.*
-import org.devnull.zuul.data.model.EncryptionKey
-import javax.servlet.http.HttpServletResponse
 
 class SettingsServicesControllerTest {
 
@@ -54,7 +52,7 @@ class SettingsServicesControllerTest {
     @Test
     void deletePropertiesByNameAndEnvShouldInvokeServiceAndReturnCorrectResponseCode() {
         def response = new MockHttpServletResponse()
-        def group = new SettingsGroup(id:123)
+        def group = new SettingsGroup(id: 123)
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "dev")).thenReturn(group)
         controller.deletePropertiesByNameAndEnv(response, "test-config", "dev")
         verify(controller.zuulService).deleteSettingsGroup(123)
@@ -116,5 +114,12 @@ class SettingsServicesControllerTest {
         assert response.status == 204
     }
 
+    @Test
+    void shouldRenderSettingsGroupForGivenNameAndEnvironment() {
+        def expected = new SettingsGroup()
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "qa")).thenReturn(expected)
+        def result = controller.showByNameAndEnvJson("test-config", "qa")
+        assert result.is(expected)
+    }
 
 }

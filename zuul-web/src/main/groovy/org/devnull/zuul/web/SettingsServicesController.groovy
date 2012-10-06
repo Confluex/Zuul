@@ -5,16 +5,11 @@ import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
 
 import javax.servlet.http.HttpServletResponse
-import org.devnull.zuul.data.model.EncryptionKey
+
+import org.springframework.web.bind.annotation.*
 
 @Controller
 class SettingsServicesController {
@@ -64,6 +59,14 @@ class SettingsServicesController {
         return deepFetch ? groups : groups.collect { it as Map } as List<SettingsGroup>
     }
 
+    /**
+     * Render the settings group as JSON
+     */
+    @RequestMapping(value = "/settings/{environment}/{name}.json", method = RequestMethod.GET)
+    @ResponseBody
+    SettingsGroup showByNameAndEnvJson(@PathVariable("name") String name, @PathVariable("environment") String env) {
+        return zuulService.findSettingsGroupByNameAndEnvironment(name, env)
+    }
 
     /**
      * View a specific entry in JSON
