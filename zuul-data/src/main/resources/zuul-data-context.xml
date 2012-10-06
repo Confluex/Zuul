@@ -77,15 +77,15 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
         <property name="persistenceUnitName" value="zuul"/>
     </bean>
 
-    <bean class="org.devnull.orm.boot.DataBootStrap">
+    <bean class="org.devnull.orm.boot.EmptyDatabaseBootStrap">
+        <constructor-arg ref="dataSource" index="0"/>
+        <constructor-arg value="select * from Environment" index="1"/>
         <property name="tester">
             <bean class="org.dbunit.DataSourceDatabaseTester">
                 <constructor-arg ref="dataSource"/>
             </bean>
         </property>
         <property name="csvImportsPath" value="${dbunit.cvs.path}"/>
-        <!--suppress SpringModelInspection -->
-        <property name="enabled" value="${dbunit.enabled}"/>
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
