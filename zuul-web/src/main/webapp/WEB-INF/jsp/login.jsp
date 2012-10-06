@@ -1,5 +1,6 @@
 <%@ taglib prefix='c' uri='http://java.sun.com/jstl/core_rt' %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="z" tagdir="/WEB-INF/tags/zuul" %>
 <%--@elvariable id="SPRING_SECURITY_LAST_EXCEPTION" type="org.springframework.security.core.AuthenticationException"--%>
 
 <html>
@@ -29,24 +30,13 @@
         </div>
         <ul class="thumbnails">
             <li class="span2">
-                <div class="thumbnail">
-                    <c:url var="openIdUrl" value="j_spring_openid_security_check">
-                        <c:param name="openid_identifier" value="https://www.google.com/accounts/o8/id"/>
-                    </c:url>
-                    <a href="${openIdUrl}">
-                        <img src="${pageContext.request.contextPath}/assets/images/logins/google.png" alt="Google">
-                    </a>
-                </div>
+                <z:openIdProvider url="https://www.google.com/accounts/o8/id" icon="google.png" name="Google"/>
             </li>
             <li class="span2">
-                <div class="thumbnail">
-                    <c:url var="openIdUrl" value="j_spring_openid_security_check">
-                        <c:param name="openid_identifier" value="https://me.yahoo.com/"/>
-                    </c:url>
-                    <a href="${openIdUrl}">
-                        <img src="${pageContext.request.contextPath}/assets/images/logins/yahoo.png" alt="Yahoo">
-                    </a>
-                </div>
+                <z:openIdProvider url="https://me.yahoo.com/" icon="yahoo.png" name="Yahoo!"/>
+            </li>
+            <li class="span2">
+                <z:openIdProvider url="https://myopenid.com/" icon="myopenid.png" name="My OpenID!"/>
             </li>
         </ul>
     </div>
@@ -56,8 +46,7 @@
                 <small>(any other provider)</small>
             </h1>
         </div>
-
-        <form class="form-horizontal" action="<c:url value='j_spring_openid_security_check'/>" method="POST">
+        <form class="form-horizontal" action="${pageContext.request.contextPath}/j_spring_openid_security_check" method="POST">
             <fieldset>
                 <div class="control-group">
                     <label class="control-label" for="customOpenIdUrl">URL</label>
