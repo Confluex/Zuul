@@ -48,25 +48,6 @@
                     </a>
                 </div>
             </li>
-            <li class="span2">
-                <div class="thumbnail">
-                    <a href="#">
-                        <img src="${pageContext.request.contextPath}/assets/images/logins/facebook.png" alt="Facebook">
-                    </a>
-                </div>
-            </li>
-            <li class="span2">
-                <div class="thumbnail">
-                    <a href="#">
-                        <img src="${pageContext.request.contextPath}/assets/images/logins/twitter.png" alt="Twitter">
-                    </a>
-                </div>
-            </li>
-            <li class="span2">
-                <div class="thumbnail">
-                    <a href="#"><img src="${pageContext.request.contextPath}/assets/images/logins/live.png" alt="Live"></a>
-                </div>
-            </li>
         </ul>
     </div>
     <div class="span-6">
@@ -84,7 +65,7 @@
                     <div class="controls">
                         <div class="input-append">
                             <input id="customOpenIdUrl" name="openid_identifier" class="span3" type="text">
-                            <button class="btn btn-primary" type="button">Login</button>
+                            <button class="btn btn-primary" type="submit">Login</button>
                         </div>
                     </div>
                 </div>
