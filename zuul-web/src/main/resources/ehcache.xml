@@ -1,0 +1,65 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="false" monitoring="autodetect" dynamicConfig="true">
+
+    <diskStore path="java.io.tmpdir/zuul"/>
+    <defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+            maxElementsOnDisk="10000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            />
+
+    <!--
+         ======================== Clustering ========================
+
+         If you intend to cluster zuul between multiple applicaiton servers, uncomment the
+         cacheManagerPeerProviderFactory and each cacheEventListenerFactory. If your network does not
+         handle UDP multicasting, take a look at the ehcache documentation for RMI and JMS alternatives
+         to replicating cache.
+
+         If you cluster the application but do not replicate the cache, you have a chance of editing
+         stale data between servers.
+    -->
+
+    <!--
+    <cacheManagerPeerProviderFactory
+         class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
+         properties="connect=UDP(mcast_addr=231.12.21.130;mcast_port=45569;):PING:
+         MERGE2:FD_SOCK:VERIFY_SUSPECT:pbcast.NAKACK:UNICAST:pbcast.STABLE:FRAG:pbcast.GMS"
+         propertySeparator="::"
+         />
+    -->
+
+    <cache name="org.hibernate.cache.spi.UpdateTimestampsCache" maxElementsInMemory="10000" eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120" overflowToDisk="true" diskPersistent="false" diskExpiryThreadIntervalSeconds="120">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>-->
+    </cache>
+    <cache name="org.hibernate.cache.internal.StandardQueryCache" maxElementsInMemory="10000" eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120" overflowToDisk="true" diskPersistent="false" diskExpiryThreadIntervalSeconds="120">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>-->
+    </cache>
+    <cache name="org.devnull.zuul.data.model.SettingsGroup" maxElementsInMemory="10000" eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120" overflowToDisk="true" diskPersistent="false" diskExpiryThreadIntervalSeconds="120">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>-->
+    </cache>
+    <cache name="org.devnull.zuul.data.model.EncryptionKey" maxElementsInMemory="10000" eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120" overflowToDisk="true" diskPersistent="false" diskExpiryThreadIntervalSeconds="120">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>-->
+    </cache>
+    <cache name="org.devnull.zuul.data.model.Environment" maxElementsInMemory="10000" eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120" overflowToDisk="true" diskPersistent="false" diskExpiryThreadIntervalSeconds="120">
+        <!--<cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"/>-->
+    </cache>
+
+</ehcache>
