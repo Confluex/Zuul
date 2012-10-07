@@ -44,4 +44,15 @@ class MediaTypeErrorResolverTest {
         resolver.resolveException(request, response, null, ex)
         verify(defaultResolver).resolveException(request, response, null, ex)
     }
+
+    @Test
+    void shouldUseDefaultResolverIfNoContentTypeIsPresent() {
+        def request = new MockHttpServletRequest()
+        def response = new MockHttpServletResponse()
+        def ex = new RuntimeException("test")
+
+        request.contentType = null
+        resolver.resolveException(request, response, null, ex)
+        verify(defaultResolver).resolveException(request, response, null, ex)
+    }
 }

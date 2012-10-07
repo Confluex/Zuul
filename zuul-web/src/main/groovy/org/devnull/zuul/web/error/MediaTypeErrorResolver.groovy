@@ -15,8 +15,8 @@ class MediaTypeErrorResolver implements HandlerExceptionResolver {
     HandlerExceptionResolver defaultResolver = new DefaultErrorResolver()
     @Override
     ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        def mediaType = MediaType.parseMediaType(request.contentType)
-        def resolver = mappings[mediaType.subtype] ?: defaultResolver
+        def mediaType = request.contentType ? MediaType.parseMediaType(request.contentType) : null
+        def resolver = mappings[mediaType?.subtype] ?: defaultResolver
         return resolver.resolveException(request, response, handler, ex)
     }
 }
