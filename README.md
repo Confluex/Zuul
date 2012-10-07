@@ -6,15 +6,13 @@ Web application for securely managing and accessing configuration for webapps.
 
 Project Goals:
 
-* Asymmetrical encryption of sensitive fields (assuming I can enhance the Jasypt project)
- - shared private key if not
-* RESTful interface for application to grab settings from a URL
- - Java Properties File for use with something like Spring's URLResource and PropertyPlaceholderConfigurer
- - JSON and XML
- - Maybe .NET web.configs
+* Encryption of sensitive values such as passwords, etc.
+* Role based access control
+* RESTful interface for the applications to grab settings from a URL
+ - Java Properties
+ - JSON
 * Separation of configuration by environment (dev/qa/prod)
 * OpenID authentication with popular providers
-* Provision API keys and authorization for applications
 * Client APIs with caching for offline development or Zuul down status :-)
 
 
