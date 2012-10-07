@@ -23,7 +23,7 @@ class SettingsEntry implements Serializable {
     @ManyToOne
     @JoinColumn(name = "groupId")
     @JsonBackReference
-    @Index(name="IdxSettingsEntryGroup")
+    @Index(name="Idx_Settings_Entry_Group")
     SettingsGroup group
 
     @Size(min=1, message= "Key cannot be empty")

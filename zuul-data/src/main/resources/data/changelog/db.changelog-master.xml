@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <!-- Create Tables -->
+    <changeSet author="mcantrell" id="1349583032107-1">
+        <createTable tableName="ENCRYPTION_KEY">
+            <column name="NAME" type="VARCHAR(32)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ENCRYPTION_KEY"/>
+            </column>
+            <column name="DEFAULT_KEY" type="BOOLEAN"/>
+            <column name="DESCRIPTION" type="VARCHAR(64)"/>
+            <column name="PASSWORD" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-2">
+        <createTable tableName="ENVIRONMENT">
+            <column name="NAME" type="VARCHAR(12)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ENVIRONMENT"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-3">
+        <createTable tableName="SECURITY_ROLE">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_ROLE"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-4">
+        <createTable tableName="SECURITY_USER">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_USER"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR(255)"/>
+            <column name="ENABLED" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR(255)"/>
+            <column name="LAST_NAME" type="VARCHAR(255)"/>
+            <column name="USER_NAME" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-5">
+        <createTable tableName="SECURITY_USER_ROLE">
+            <column name="USER_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROLE_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-6">
+        <createTable tableName="SETTINGS_ENTRY">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_ENTRY"/>
+            </column>
+            <column name="ENCRYPTED" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="KEY" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="GROUP_ID" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-7">
+        <createTable tableName="SETTINGS_GROUP">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_GROUP"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENVIRONMENT" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="KEY" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Foreign Keys -->
+    <changeSet author="mcantrell" id="1349583032107-8">
+        <addForeignKeyConstraint baseTableName="SECURITY_USER_ROLE" baseColumnNames="ROLE_ID"
+                                 referencedTableName="SECURITY_ROLE" referencedColumnNames="ID"
+                                 constraintName="FK_SECURITY_USER_ROLE_1"/>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-9">
+        <addForeignKeyConstraint baseTableName="SECURITY_USER_ROLE" baseColumnNames="USER_ID"
+                                 referencedTableName="SECURITY_USER" referencedColumnNames="ID"
+                                 constraintName="FK_SECURITY_USER_ROLE_2"
+                />
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-10">
+        <addForeignKeyConstraint baseTableName="SETTINGS_ENTRY" baseColumnNames="GROUP_ID"
+                                 referencedTableName="SETTINGS_GROUP" referencedColumnNames="ID"
+                                 constraintName="FK_SETTINGS_ENTRY_1" onDelete="CASCADE"
+                />
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-11">
+        <addForeignKeyConstraint baseTableName="SETTINGS_GROUP" baseColumnNames="ENVIRONMENT"
+                                 referencedTableName="ENVIRONMENT" referencedColumnNames="NAME"
+                                 constraintName="FK_SETTINGS_GROUP_1" onDelete="CASCADE"
+                />
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-12">
+        <addForeignKeyConstraint baseTableName="SETTINGS_GROUP" baseColumnNames="KEY"
+                                 referencedTableName="ENCRYPTION_KEY" referencedColumnNames="NAME"
+                                 constraintName="FK_SETTINGS_GROUP_2"
+                />
+    </changeSet>
+
+    <!-- Indexes -->
+    <changeSet author="mcantrell" id="1349583032107-13">
+        <createIndex indexName="UQX_SECURITY_ROLE_1" tableName="SECURITY_ROLE" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-14">
+        <createIndex indexName="UQX_SECURITY_USER_1" tableName="SECURITY_USER" unique="true">
+            <column name="USER_NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-15">
+        <createIndex indexName="IDX_SETTINGS_GROUP_NAME" tableName="SETTINGS_GROUP" unique="false">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-16">
+        <createIndex indexName="IDX_SETTINGS_GROUP_ENVIRONMENT" tableName="SETTINGS_GROUP" unique="false">
+            <column name="ENVIRONMENT"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="mcantrell" id="1349583032107-17">
+        <createIndex indexName="IDX_SETTINGS_ENTRY_GROUP" tableName="SETTINGS_ENTRY" unique="false">
+            <column name="GROUP_ID"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Load Data -->
+    <changeSet author="mcantrell" id="1349583032107-18" context="deploy">
+        <loadData tableName="encryption_key" file="/data/deploy/EncryptionKey.csv"/>
+        <loadData tableName="security_role" file="/data/deploy/SecurityRole.csv"/>
+        <loadData tableName="environment" file="/data/deploy/Environment.csv"/>
+    </changeSet>
+
+    <changeSet author="mcantrell" id="1349583032107-19" context="test">
+        <loadData tableName="encryption_key" file="/data/test/EncryptionKey.csv"/>
+        <loadData tableName="security_role" file="/data/test/SecurityRole.csv"/>
+        <loadData tableName="security_user" file="/data/test/SecurityUser.csv"/>
+        <loadData tableName="security_user_role" file="/data/test/SecurityUserRole.csv"/>
+        <loadData tableName="environment" file="/data/test/Environment.csv"/>
+        <loadData tableName="settings_group" file="/data/test/SettingsGroup.csv"/>
+        <loadData tableName="settings_entry" file="/data/test/SettingsEntry.csv"/>
+    </changeSet>
+
+</databaseChangeLog>

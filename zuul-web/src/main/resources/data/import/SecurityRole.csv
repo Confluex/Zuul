@@ -1,5 +1,0 @@
-id, name, description
-1, ROLE_GUEST, Guest
-2, ROLE_USER, User
-3, ROLE_ADMIN, Admin
-4, ROLE_SYSTEM_ADMIN, Sysadmin

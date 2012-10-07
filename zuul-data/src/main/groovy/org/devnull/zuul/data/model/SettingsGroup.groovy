@@ -34,7 +34,7 @@ class SettingsGroup implements Serializable {
     @JoinColumn(name = "environment")
     @JsonBackReference
     @NotNull
-    @Index(name="IdxSettingsGroupEnvironment")
+    @Index(name="Idx_Settings_Group_Environment")
     Environment environment
 
     @ManyToOne(optional=false)
@@ -45,7 +45,7 @@ class SettingsGroup implements Serializable {
 
     @Size(min=1, message="Name cannot by empty")
     @Column(nullable=false)
-    @Index(name="IdxSettingsEntryName")
+    @Index(name="Idx_Settings_Entry_Name")
     String name
 
     void addToEntries(SettingsEntry entry) {
