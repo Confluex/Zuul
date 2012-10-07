@@ -11,8 +11,4 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional('transactionManager')
 abstract class ZuulDataIntegrationTest {
 
-    @BeforeClass
-    static void setDataConfigLocation() {
-        System.setProperty('zuul.data.config', 'classpath:sample-data-config.properties')
-    }
 }

@@ -1,5 +1,0 @@
-id,name,environment,key
-1,app-data-config,dev,Default Key
-2,app-data-config,qa,Default Key
-3,app-data-config,prod,Default Key
-4,hr-service-config,prod,Human Resources Key

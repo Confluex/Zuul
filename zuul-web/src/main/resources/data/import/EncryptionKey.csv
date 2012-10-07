@@ -1,3 +1,2 @@
 name,description,password,defaultKey
 Default Key,Default key which can be used for evaluation purposes..,badpassword1,true
-Human Resources Key, Used for securing HR applications.,badpassword2,false
