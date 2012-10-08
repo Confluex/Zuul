@@ -79,17 +79,6 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
         <property name="persistenceUnitName" value="zuul"/>
     </bean>
 
-    <!--<bean class="org.devnull.orm.boot.EmptyDatabaseBootStrap" depends-on="liquibase">-->
-        <!--<constructor-arg ref="dataSource" index="0"/>-->
-        <!--<constructor-arg value="select * from Environment" index="1"/>-->
-        <!--<property name="tester">-->
-            <!--<bean class="org.dbunit.DataSourceDatabaseTester">-->
-                <!--<constructor-arg ref="dataSource"/>-->
-            <!--</bean>-->
-        <!--</property>-->
-        <!--<property name="csvImportsPath" value="${dbunit.cvs.path}"/>-->
-    <!--</bean>-->
-
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="${smtp.host}"/>
         <property name="port" value="${smtp.port}"/>
