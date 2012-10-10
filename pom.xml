@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.devnull</groupId>
     <artifactId>zuul-parent</artifactId>
@@ -34,30 +35,6 @@
         <artifactId>devnull-parent</artifactId>
         <version>1.0-RC1</version>
     </parent>
-    <repositories>
-        <repository>
-            <id>sonatype-snapshots</id>
-            <name>Sonatype OSS Maven Repo (snapshots)</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>sonatype-releases</id>
-            <name>Sonatype OSS Maven Repo (snapshots)</name>
-            <url>https://oss.sonatype.org/content/repositories/releases/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
     <modules>
         <module>zuul-data</module>
         <module>zuul-web</module>
@@ -97,4 +74,48 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <repositories>
+                <repository>
+                    <id>sonatype-snapshots</id>
+                    <name>Sonatype OSS Maven Repo (snapshots)</name>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </repository>
+                <repository>
+                    <id>sonatype-releases</id>
+                    <name>Sonatype OSS Maven Repo (snapshots)</name>
+                    <url>https://oss.sonatype.org/content/repositories/releases/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+            </repositories>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
