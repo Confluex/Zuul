@@ -1,3 +1,4 @@
 language: java
 install: "mvn install -P ci -U --quiet -DskipTests=true"
 script: "mvn -U -P ci test"
+env: MAVEN_OPTS="-Dhttps.protocols=SSLv3 -Dforce.http.jre.executor=true"
