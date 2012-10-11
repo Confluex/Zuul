@@ -28,7 +28,7 @@ class SettingsEntry implements Serializable {
 
     @Size(min=1, message= "Key cannot be empty")
     @NotNull(message= "Key cannot be empty")
-    @Column(nullable=false)
+    @Column(nullable=false, name="KEY_NAME")
     String key
 
     String value

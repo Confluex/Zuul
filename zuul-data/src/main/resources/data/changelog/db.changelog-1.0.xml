@@ -53,7 +53,7 @@
             <column name="ENCRYPTED" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="KEY" type="VARCHAR(255)">
+            <column name="KEY_NAME" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="VALUE" type="VARCHAR(255)"/>
