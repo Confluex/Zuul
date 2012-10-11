@@ -4,16 +4,9 @@
 
 Web application for securely managing and accessing configuration for webapps.
 
-Project Goals:
+# More Information
 
-* Encryption of sensitive values such as passwords, etc.
-* Role based access control
-* RESTful interface for the applications to grab settings from a URL
- - Java Properties
- - JSON
-* Separation of configuration by environment (dev/qa/prod)
-* OpenID authentication with popular providers
-* Client APIs with caching for offline development or Zuul down status :-)
+[See the wiki for more information](https://github.com/mcantrell/Zuul/wiki)
 
 
 # License
