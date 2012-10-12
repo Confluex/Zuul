@@ -38,7 +38,7 @@ class SettingsGroup implements Serializable {
     Environment environment
 
     @ManyToOne(optional=false)
-    @JoinColumn(name = "key")
+    @JoinColumn(name = "key_name")
     @JsonIgnore
     @NotNull
     EncryptionKey key

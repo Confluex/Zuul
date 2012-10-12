@@ -69,7 +69,7 @@
             <column name="ENVIRONMENT" type="VARCHAR(12)">
                 <constraints nullable="false"/>
             </column>
-            <column name="KEY" type="VARCHAR(32)">
+            <column name="KEY_NAME" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -91,7 +91,7 @@
                                  referencedTableName="ENVIRONMENT" referencedColumnNames="NAME"
                                  constraintName="FK_SETTINGS_GROUP_1" onDelete="CASCADE"
                 />
-        <addForeignKeyConstraint baseTableName="SETTINGS_GROUP" baseColumnNames="KEY"
+        <addForeignKeyConstraint baseTableName="SETTINGS_GROUP" baseColumnNames="KEY_NAME"
                                  referencedTableName="ENCRYPTION_KEY" referencedColumnNames="NAME"
                                  constraintName="FK_SETTINGS_GROUP_2"
                 />
