@@ -98,8 +98,18 @@
             <groupId>com.icegreen</groupId>
             <artifactId>greenmail</artifactId>
         </dependency>
-
-
     </dependencies>
 
+    <build>
+        <plugins>
+            <!-- no need to deploy this module to central repo -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
