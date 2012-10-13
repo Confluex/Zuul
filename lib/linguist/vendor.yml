@@ -1,2 +1,2 @@
 # External web libraries
-^zuul-web/src/main/webapp/assets/ext/.*$
+- (^|/)zuul-web/src/main/webapp/assets/ext/.*$
