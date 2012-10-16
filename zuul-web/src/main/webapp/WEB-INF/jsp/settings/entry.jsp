@@ -14,7 +14,10 @@
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>New Key Value Pair</h1>
+            <h1>
+                New Key Value Pair
+                <small>${fn:escapeXml(environment)}</small>
+            </h1>
         </div>
     </div>
 </div>
