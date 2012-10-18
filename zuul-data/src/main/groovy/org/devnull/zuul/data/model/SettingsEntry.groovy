@@ -24,6 +24,7 @@ class SettingsEntry implements Serializable {
     @JoinColumn(name = "groupId")
     @JsonBackReference
     @Index(name="Idx_Settings_Entry_Group")
+    @NotNull
     SettingsGroup group
 
     @Size(min=1, message= "Key cannot be empty")

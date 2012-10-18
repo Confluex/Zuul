@@ -57,7 +57,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="VALUE" type="VARCHAR(255)"/>
-            <column name="GROUP_ID" type="INT"/>
+            <column name="GROUP_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createTable tableName="SETTINGS_GROUP">
             <column autoIncrement="true" name="ID" type="INT">

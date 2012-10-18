@@ -83,8 +83,10 @@ class SettingsServicesController {
     @RequestMapping(value = "/settings/entry/{id}.json", method = RequestMethod.PUT)
     @ResponseBody
     SettingsEntry updateEntryJson(@PathVariable("id") Integer id, @RequestBody SettingsEntry formEntry) {
-        formEntry.id = id
-        return zuulService.save(formEntry)
+        def entry = zuulService.findSettingsEntry(id)
+        entry.key = formEntry.key
+        entry.value = formEntry.value
+        return zuulService.save(entry)
     }
 
     /**

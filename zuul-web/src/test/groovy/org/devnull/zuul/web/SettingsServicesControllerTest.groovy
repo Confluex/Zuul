@@ -97,13 +97,18 @@ class SettingsServicesControllerTest {
 
     @Test
     void shouldUpdateSettingsEntry() {
-        def formEntry = new SettingsEntry(id: 100, key: "a", value: "b")
-        when(controller.zuulService.save(formEntry)).thenReturn(formEntry)
+        def formEntry = new SettingsEntry(key: "a", value: "b")
+        def dbEntry = new SettingsEntry(id:100, key: "not a", value: "not b", group: new SettingsGroup(id: 1))
+
+        when(controller.zuulService.findSettingsEntry(100)).thenReturn(dbEntry)
+        when(controller.zuulService.save(dbEntry)).thenReturn(dbEntry)
         def resultEntry = controller.updateEntryJson(100, formEntry)
+        verify(controller.zuulService).save(dbEntry)
         assert resultEntry.id == 100
         assert resultEntry.key == "a"
         assert resultEntry.value == "b"
-
+        assert resultEntry.group.id == 1
+        assert resultEntry.is(dbEntry)
     }
 
     @Test
