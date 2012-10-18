@@ -64,18 +64,20 @@ public class SettingsControllerTest {
 
     @Test
     void addEntryFormShouldHaveCorrectViewNameAndModelValue() {
+        def group = new SettingsGroup()
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("testGroup", "testEnvironment")).thenReturn(group)
         def mv = controller.addEntryForm("testGroup", "testEnvironment")
         assert mv.viewName == "/settings/entry"
+        assert mv.model.group.is(group)
     }
 
     @Test
-    void addEntrySubmitShouldAddNewEntryToCorrectGroupAndRedirectToCorrectView() {
+    void addEntrySubmitShouldSaveRecord() {
         def environmentName = 'testEnvironment'
         def groupName = 'testGroup'
-        def group = new SettingsGroup(name: groupName)
-        def entry = new SettingsEntry(key: 'a', value: 'b')
+        def group = new SettingsGroup(id: 1, name: groupName)
+        def entry = new SettingsEntry(key: 'a', value: 'b', group:group)
 
-        when(controller.zuulService.findSettingsGroupByNameAndEnvironment(groupName, environmentName)).thenReturn(group)
         def view = controller.addEntrySubmit(groupName, environmentName, entry, mockSuccessfulBindingResult())
         def args = ArgumentCaptor.forClass(SettingsEntry)
         verify(controller.zuulService).save(args.capture())

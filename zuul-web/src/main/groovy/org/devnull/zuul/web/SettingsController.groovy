@@ -79,8 +79,8 @@ class SettingsController {
      */
     @RequestMapping(value = "/settings/{environment}/{name}/create/entry", method = RequestMethod.GET)
     ModelAndView addEntryForm(@PathVariable("name") String groupName, @PathVariable("environment") String environment) {
-        def model = [groupName: groupName, environment: environment]
-        return new ModelAndView("/settings/entry", model)
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, environment)
+        return new ModelAndView("/settings/entry",  [group:group])
     }
 
     /**
@@ -92,9 +92,7 @@ class SettingsController {
         if (result.hasErrors()){
             return "/settings/entry"
         }
-        def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, env)
-        def entry = new SettingsEntry(key: formEntry.key, value: formEntry.value, group: group)
-        zuulService.save(entry)
+        zuulService.save(formEntry)
         return "redirect:/settings/${groupName}#${env}"
     }
 
