@@ -24,23 +24,23 @@ class SettingsGroupDaoIntegrationTest extends ZuulDataIntegrationTest {
         assert group.entries.size() == 7
         assert group.key.name == "Default Key"
 
-        assert group.entries[0].key == "jdbc.zuul.url"
-        assert group.entries[0].value == "jdbc:h2:mem:zuul"
+        assert group.entries[0].key == "jdbc.zuul.dialect"
+        assert group.entries[0].value == "org.hibernate.dialect.H2Dialect"
 
-        assert group.entries[1].key == "jdbc.zuul.generate.ddl"
-        assert group.entries[1].value == "create-drop"
+        assert group.entries[1].key == "jdbc.zuul.driver"
+        assert group.entries[1].value == "org.h2.Driver"
 
-        assert group.entries[2].key == "jdbc.zuul.username"
-        assert group.entries[2].value == "sa"
+        assert group.entries[2].key == "jdbc.zuul.generate.ddl"
+        assert group.entries[2].value == "create-drop"
 
         assert group.entries[3].key == "jdbc.zuul.password"
         assert group.entries[3].value == ""
 
-        assert group.entries[4].key == "jdbc.zuul.driver"
-        assert group.entries[4].value == "org.h2.Driver"
+        assert group.entries[4].key == "jdbc.zuul.url"
+        assert group.entries[4].value == "jdbc:h2:mem:zuul"
 
-        assert group.entries[5].key == "jdbc.zuul.dialect"
-        assert group.entries[5].value == "org.hibernate.dialect.H2Dialect"
+        assert group.entries[5].key == "jdbc.zuul.username"
+        assert group.entries[5].value == "sa"
 
         assert group.entries[6].key == "jdbc.zuul.validationQuery"
         assert group.entries[6].value == "select 1"

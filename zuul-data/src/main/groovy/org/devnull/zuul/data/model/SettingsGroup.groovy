@@ -28,6 +28,7 @@ class SettingsGroup implements Serializable {
     Integer id
 
     @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL])
+    @OrderBy("key")
     List<SettingsEntry> entries = []
 
     @ManyToOne(optional=false)
