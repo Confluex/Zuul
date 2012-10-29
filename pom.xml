@@ -27,12 +27,12 @@
         </developer>
     </developers>
     <properties>
-        <devnull.version>1.0</devnull.version>
+        <devnull.version>1.1-SNAPSHOT</devnull.version>
     </properties>
     <parent>
         <groupId>org.devnull</groupId>
         <artifactId>devnull-parent</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
     <modules>
         <module>zuul-data</module>
@@ -49,6 +49,11 @@
             <dependency>
                 <groupId>org.devnull</groupId>
                 <artifactId>devnull-security</artifactId>
+                <version>${devnull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devnull</groupId>
+                <artifactId>devnull-error</artifactId>
                 <version>${devnull.version}</version>
             </dependency>
             <dependency>

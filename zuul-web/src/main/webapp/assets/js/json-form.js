@@ -56,7 +56,7 @@
             },
             error:function (xhr, status, error) {
                 switch (xhr.status) {
-                    case 406:
+                    case 422:
                         var json = $.parseJSON(xhr.responseText);
                         createFormValidationAlerts(form, json.messages, json.fieldMessages);
                         break;

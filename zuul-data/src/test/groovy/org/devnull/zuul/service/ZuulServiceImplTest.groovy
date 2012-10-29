@@ -14,8 +14,6 @@ import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
-import org.devnull.zuul.service.error.ConflictingOperationException
-import org.devnull.zuul.service.error.ValidationException
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.junit.After
 import org.junit.Before
@@ -30,6 +28,8 @@ import org.springframework.validation.Validator
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import org.devnull.error.ValidationException
+import org.devnull.error.ConflictingOperationException
 
 public class ZuulServiceImplTest {
 
