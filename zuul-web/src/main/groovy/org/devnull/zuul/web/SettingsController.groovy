@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView
 import javax.validation.Valid
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.servlet.view.RedirectView
 
 @Controller
 class SettingsController {
@@ -87,13 +88,13 @@ class SettingsController {
      * Create a new key/value entry for the settings group
      */
     @RequestMapping(value = "/settings/{environment}/{groupName}/create/entry", method = RequestMethod.POST)
-    String addEntrySubmit(@PathVariable("groupName") String groupName, @PathVariable("environment") String env,
+    ModelAndView addEntrySubmit(@PathVariable("groupName") String groupName, @PathVariable("environment") String env,
                           @ModelAttribute("formEntry") @Valid SettingsEntry formEntry,  BindingResult result) {
         if (result.hasErrors()){
-            return "/settings/entry"
+            return addEntryForm(groupName, env)
         }
         zuulService.save(formEntry)
-        return "redirect:/settings/${groupName}#${env}"
+        return new ModelAndView("redirect:/settings/${groupName}#${env}")
     }
 
     /**
