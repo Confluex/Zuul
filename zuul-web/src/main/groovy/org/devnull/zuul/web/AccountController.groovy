@@ -62,7 +62,10 @@ class AccountController {
   }
 
   @RequestMapping(value = "/account/register", method = RequestMethod.POST)
-  String registerSubmit(@ModelAttribute User user, RedirectAttributes redirectAttrs) {
+  String registerSubmit(RedirectAttributes redirectAttrs, @ModelAttribute @Valid User user, BindingResult result) {
+    if (result.hasErrors()) {
+      return "/account/register"
+    }
     def currentUser = securityService.currentUser
     currentUser.firstName = user.firstName
     currentUser.lastName = user.lastName

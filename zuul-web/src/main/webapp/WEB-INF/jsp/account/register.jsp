@@ -1,6 +1,7 @@
 <%--@elvariable id="user" type="org.devnull.security.model.User"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -31,7 +32,7 @@
         <div class="page-header">
             <h1>Registration Form</h1>
         </div>
-        <form action="${pageContext.request.contextPath}/account/register" method="POST" class="form-horizontal">
+        <form id="user" action="${pageContext.request.contextPath}/account/register" method="POST" class="form-horizontal">
             <fieldset>
                 <div class="control-group">
                     <label class="control-label" for="email">Email</label>
@@ -62,6 +63,6 @@
     </div>
 
 </div>
-
+<bootstrap:validate formId="user" modelName="user" placement="top"/>
 </body>
 </html>

@@ -56,9 +56,9 @@ public class AccountControllerTest {
   @Test
   void shouldValidateUserProfile() {
     def redirectAttributes = mock(RedirectAttributes)
-    def user = new User(id: 1, firstName: "oldFirst", lastName: "oldLast", email: "old@devnull.org")
+    def user = new User(id: 1, firstName: "a", lastName: "b", email: "ab@devnull.org")
     def view = controller.saveProfile(redirectAttributes, user, mockFailureBindingResult())
-    verify(controller.securityService, never()).updateCurrentUser(false)
+    verify(controller.securityService, never()).updateCurrentUser(anyBoolean())
     assert view == "/account/profile"
   }
 
@@ -79,7 +79,7 @@ public class AccountControllerTest {
             email: "jdoe@fake.com"
     )
     def flash = mock(RedirectAttributes)
-    def view = controller.registerSubmit(formUser, flash)
+    def view = controller.registerSubmit(flash, formUser, mockSuccessfulBindingResult())
     assert user.id == 1
     assert user.userName == "http://fake.openid.com"
     assert user.firstName == "john"
@@ -92,6 +92,15 @@ public class AccountControllerTest {
     verify(controller.securityService).updateCurrentUser(true)
     verify(flash).addFlashAttribute(FLASH_ALERT_MESSAGE, "Registration Complete")
     verify(flash).addFlashAttribute(FLASH_ALERT_TYPE, "success")
+  }
+
+  @Test
+  void shouldValidateUserBeforeRegistration() {
+    def redirectAttributes = mock(RedirectAttributes)
+    def user = new User(id: 1, firstName: "a", lastName: "b", email: "ab@devnull.org")
+    def view = controller.registerSubmit(redirectAttributes, user, mockFailureBindingResult())
+    verify(controller.securityService, never()).updateCurrentUser(anyBoolean())
+    assert view == "/account/register"
   }
 
   @Test
