@@ -3,6 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -20,7 +21,7 @@
 </div>
 <div class="row">
     <div class="span12">
-        <form class="form-horizontal" action="${pageContext.request.contextPath}/account/profile" method="POST">
+        <form id="user" class="form-horizontal" action="${pageContext.request.contextPath}/account/profile" method="POST">
             <div class="control-group">
                 <label class="control-label" for="firstName">First Name</label>
 
@@ -49,5 +50,6 @@
         </form>
     </div>
 </div>
+<bootstrap:validate formId="user" modelName="user" placement="top"/>
 </body>
 </html>
