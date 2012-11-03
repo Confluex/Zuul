@@ -17,14 +17,20 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import javax.persistence.*
 
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED
+
 @Audited
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
 @ToString(includeNames = true, excludes = 'entries')
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-class SettingsGroup extends AbstractAuditable<User, Integer> {
+class SettingsGroup implements Serializable {
 
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer id
 
     @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL])
     @OrderBy("key")
@@ -35,12 +41,14 @@ class SettingsGroup extends AbstractAuditable<User, Integer> {
     @JsonBackReference
     @NotNull
     @Index(name = "Idx_Settings_Group_Environment")
+    @Audited(targetAuditMode = NOT_AUDITED)
     Environment environment
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "key_name")
     @JsonIgnore
     @NotNull
+    @Audited(targetAuditMode = NOT_AUDITED)
     EncryptionKey key
 
     @Size(min = 1, message = "Name cannot by empty")

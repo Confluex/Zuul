@@ -3,72 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
-    <changeSet author="mcantrell" id="zuul-1.1-add-audit-columns">
-        <addColumn tableName="SETTINGS_ENTRY">
-            <column name="CREATED_DATE" type="DATETIME"/>
-            <column name="CREATED_BY" type="INTEGER"/>
-            <column name="LAST_MODIFIED_DATE" type="DATETIME"/>
-            <column name="LAST_MODIFIED_BY" type="INTEGER"/>
-        </addColumn>
-        <addForeignKeyConstraint constraintName="FK_SETTINGS_ENTRY_CREATED_BY" onDelete="SET NULL"
-                                 baseTableName="SETTINGS_ENTRY" baseColumnNames="CREATED_BY"
-                                 referencedTableName="SECURITY_USER" referencedColumnNames="ID"
-                />
-        <addForeignKeyConstraint constraintName="FK_SETTINGS_ENTRY_LAST_MODIFIED_BY" onDelete="SET NULL"
-                                 baseTableName="SETTINGS_ENTRY" baseColumnNames="LAST_MODIFIED_BY"
-                                 referencedTableName="SECURITY_USER" referencedColumnNames="ID"
-                />
-
-        <addColumn tableName="SETTINGS_GROUP">
-            <column name="CREATED_DATE" type="DATETIME"/>
-            <column name="CREATED_BY" type="INTEGER"/>
-            <column name="LAST_MODIFIED_DATE" type="DATETIME"/>
-            <column name="LAST_MODIFIED_BY" type="INTEGER"/>
-        </addColumn>
-        <addForeignKeyConstraint constraintName="FK_SETTINGS_GROUP_CREATED_BY" onDelete="SET NULL"
-                                 baseTableName="SETTINGS_GROUP" baseColumnNames="CREATED_BY"
-                                 referencedTableName="SECURITY_USER" referencedColumnNames="ID"
-                />
-        <addForeignKeyConstraint constraintName="FK_SETTINGS_GROUP_LAST_MODIFIED_BY" onDelete="SET NULL"
-                                 baseTableName="SETTINGS_GROUP" baseColumnNames="LAST_MODIFIED_BY"
-                                 referencedTableName="SECURITY_USER" referencedColumnNames="ID"
-                />
-    </changeSet>
-
     <changeSet author="mcantrell" id="zuul-1.1-create-audit-tables">
-        <createTable tableName="ENCRYPTION_KEY_AUD">
-            <column name="NAME" type="VARCHAR(32)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="DEFAULT_KEY" type="BOOLEAN"/>
-            <column name="DESCRIPTION" type="VARCHAR(64)"/>
-            <column name="PASSWORD" type="VARCHAR(32)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="REV" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="REVTYPE" type="TINYINT"/>
-        </createTable>
-        <addPrimaryKey tableName="ENCRYPTION_KEY_AUD"
-                       columnNames="NAME,REV"
-                       constraintName="PK_ENCRYPTION_KEY_AUD"/>
-
-
-        <createTable tableName="ENVIRONMENT_AUD">
-            <column name="NAME" type="VARCHAR(12)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="REV" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="REVTYPE" type="TINYINT"/>
-        </createTable>
-        <addPrimaryKey tableName="ENVIRONMENT_AUD"
-                       columnNames="NAME,REV"
-                       constraintName="PK_ENVIRONMENT_AUD"/>
-
-
         <createTable tableName="SETTINGS_ENTRY_AUD">
             <column name="ID" type="INT">
                 <constraints nullable="false"/>

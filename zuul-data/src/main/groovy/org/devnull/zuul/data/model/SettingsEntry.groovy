@@ -15,13 +15,20 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.GenerationType
 
 @Audited
 @Entity
 @EqualsAndHashCode()
 @ToString(includeNames = true)
-class SettingsEntry extends AbstractAuditable<User, Integer> {
+class SettingsEntry implements Serializable {
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer id
 
     @ManyToOne
     @JoinColumn(name = "groupId")

@@ -15,7 +15,6 @@ import javax.persistence.Column
 import javax.validation.constraints.Size
 import org.hibernate.envers.Audited
 
-@Audited
 @Entity
 @EqualsAndHashCode(includes = "name")
 @ToString(includeNames = true, excludes = "groups")
