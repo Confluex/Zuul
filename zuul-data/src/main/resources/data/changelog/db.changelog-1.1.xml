@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="mcantrell" id="zuul-1.1-create-audit-tables">
+        <createTable tableName="ENCRYPTION_KEY_AUD">
+            <column name="NAME" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DEFAULT_KEY" type="BOOLEAN"/>
+            <column name="DESCRIPTION" type="VARCHAR(64)"/>
+            <column name="PASSWORD" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REV" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="TINYINT"/>
+        </createTable>
+        <addPrimaryKey tableName="ENCRYPTION_KEY_AUD"
+                       columnNames="NAME,REV"
+                       constraintName="PK_ENCRYPTION_KEY_AUD"/>
+
+
+        <createTable tableName="ENVIRONMENT_AUD">
+            <column name="NAME" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REV" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="TINYINT"/>
+        </createTable>
+        <addPrimaryKey tableName="ENVIRONMENT_AUD"
+                       columnNames="NAME,REV"
+                       constraintName="PK_ENVIRONMENT_AUD"/>
+
+
+        <createTable tableName="SETTINGS_ENTRY_AUD">
+            <column name="ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENCRYPTED" type="BOOLEAN"/>
+            <column name="KEY_NAME" type="VARCHAR(255)"/>
+            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="GROUP_ID" type="INT"/>
+            <column name="REV" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="TINYINT"/>
+        </createTable>
+        <addPrimaryKey tableName="SETTINGS_ENTRY_AUD"
+                       columnNames="ID,REV"
+                       constraintName="PK_SETTINGS_ENTRY_AUD"/>
+
+
+        <createTable tableName="SETTINGS_GROUP_AUD">
+            <column name="ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="ENVIRONMENT" type="VARCHAR(12)"/>
+            <column name="KEY_NAME" type="VARCHAR(32)"/>
+            <column name="REV" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="TINYINT"/>
+        </createTable>
+        <addPrimaryKey tableName="SETTINGS_GROUP_AUD"
+                       columnNames="ID,REV"
+                       constraintName="PK_SETTINGS_GROUP_AUD"/>
+
+        <createTable tableName="REVINFO">
+            <column autoIncrement="true" name="REV" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REVINFO"/>
+            </column>
+            <column name="REVTSTMP" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>

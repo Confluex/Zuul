@@ -9,7 +9,9 @@ import javax.persistence.*
 import javax.validation.constraints.Size
 import org.hibernate.annotations.Index
 import javax.validation.constraints.NotNull
+import org.hibernate.envers.Audited
 
+@Audited
 @Entity
 @EqualsAndHashCode()
 @ToString(includeNames = true)

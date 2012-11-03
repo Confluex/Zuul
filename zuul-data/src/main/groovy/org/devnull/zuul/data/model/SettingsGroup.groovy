@@ -14,7 +14,9 @@ import javax.validation.constraints.NotNull
 import org.hibernate.annotations.Index
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
+import org.hibernate.envers.Audited
 
+@Audited
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
 @ToString(includeNames = true, excludes = 'entries')
