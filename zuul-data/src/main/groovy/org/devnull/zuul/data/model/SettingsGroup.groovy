@@ -5,50 +5,47 @@ import groovy.transform.ToString
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 import org.codehaus.jackson.annotate.JsonBackReference
 import org.codehaus.jackson.annotate.JsonIgnore
+import org.devnull.security.model.User
 import org.devnull.zuul.data.config.ZuulDataConstants
-
-import javax.persistence.*
-import org.hibernate.validator.constraints.NotEmpty
-import javax.validation.constraints.Size
-import javax.validation.constraints.NotNull
-import org.hibernate.annotations.Index
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
+import org.hibernate.annotations.Index
 import org.hibernate.envers.Audited
+import org.springframework.data.jpa.domain.AbstractAuditable
+
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
+import javax.persistence.*
 
 @Audited
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
 @ToString(includeNames = true, excludes = 'entries')
-@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-class SettingsGroup implements Serializable {
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+class SettingsGroup extends AbstractAuditable<User, Integer> {
 
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id
 
     @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL])
     @OrderBy("key")
     List<SettingsEntry> entries = []
 
-    @ManyToOne(optional=false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "environment")
     @JsonBackReference
     @NotNull
-    @Index(name="Idx_Settings_Group_Environment")
+    @Index(name = "Idx_Settings_Group_Environment")
     Environment environment
 
-    @ManyToOne(optional=false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "key_name")
     @JsonIgnore
     @NotNull
     EncryptionKey key
 
-    @Size(min=1, message="Name cannot by empty")
-    @Column(nullable=false)
-    @Index(name="Idx_Settings_Entry_Name")
+    @Size(min = 1, message = "Name cannot by empty")
+    @Column(nullable = false)
+    @Index(name = "Idx_Settings_Entry_Name")
     String name
 
     void addToEntries(SettingsEntry entry) {
@@ -63,15 +60,15 @@ class SettingsGroup implements Serializable {
             case Properties:
                 def properties = new Properties()
                 entries.each {
-                    properties.put(it.key, it.encrypted ? "ENC(${it.value})".toString()  : it.value)
+                    properties.put(it.key, it.encrypted ? "ENC(${it.value})".toString() : it.value)
                 }
                 return properties
             case Map:
                 def map = [:]
                 map.id = id
                 map.name = name
-                map.environment = [ name: environment.name ]
-                map.key = [ name: key.name, description:key.description ]
+                map.environment = [name: environment.name]
+                map.key = [name: key.name, description: key.description]
                 return map
             default:
                 throw new GroovyCastException("Hmm... ${this.class} cannot be converted to ${type}")
