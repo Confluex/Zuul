@@ -3,6 +3,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
+<%@ taglib prefix="zuul" uri="/WEB-INF/tags/zuul/zuul.tld" %>
 <%@ taglib prefix="zfn" uri="/WEB-INF/tags/functions.tld" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -99,10 +100,13 @@
                         </security:authorize>
                     </ul>
                     <security:authorize access="isAuthenticated()">
+                        <div class="navbar-text pull-right">
+                            <zuul:gravatar/>
+                        </div>
                         <ul class="nav pull-right">
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-user"></i>
+
                                     <security:authentication property="principal.firstName"/>
                                     <security:authentication property="principal.lastName"/>
                                     <b class="caret"></b>

@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
+<%@ taglib prefix="zuul" uri="/WEB-INF/tags/zuul/zuul.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -13,15 +14,23 @@
 </head>
 <body>
 <div class="row">
-    <div class="span12">
+    <div class="span3">
+        <div class="thumbnail">
+            <zuul:gravatar size="250"/>
+            <p style="padding-top: 1em; text-align: center;">
+                <a id="gravatar" href="http://www.gravatar.com/" title="Gravatar" target="_blank"
+                   data-content="Avatar pictures are provided by Gravatar. Sign up for free to personalize your account!">
+                    <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=32" class="img-rounded">
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="span9">
         <div class="page-header">
             <h1>${user.firstName} ${user.lastName}</h1>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="span12">
-        <form id="user" class="form-horizontal" action="${pageContext.request.contextPath}/account/profile" method="POST">
+        <form id="user" class="form-horizontal" action="${pageContext.request.contextPath}/account/profile"
+              method="POST">
             <div class="control-group">
                 <label class="control-label" for="firstName">First Name</label>
 
@@ -51,5 +60,10 @@
     </div>
 </div>
 <bootstrap:validate formId="user" modelName="user" placement="top"/>
+<script>
+    $(function() {
+       $("#gravatar").popover({trigger:'hover'});
+    });
+</script>
 </body>
 </html>
