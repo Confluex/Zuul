@@ -19,6 +19,7 @@
         <intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/audit/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/**" access="permitAll"/>
 
         <logout logout-url="/logout" logout-success-url="/"/>
