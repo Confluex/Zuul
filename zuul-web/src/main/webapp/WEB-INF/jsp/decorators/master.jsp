@@ -88,6 +88,12 @@
                                             Environments
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="${pageContext.request.contextPath}/audit">
+                                            <i class="icon-eye-open"></i>
+                                            Audit
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         </security:authorize>

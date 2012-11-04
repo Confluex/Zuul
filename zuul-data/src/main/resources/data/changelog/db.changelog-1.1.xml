@@ -38,11 +38,12 @@
                        columnNames="ID,REV"
                        constraintName="PK_SETTINGS_GROUP_AUD"/>
 
-        <createTable tableName="REVINFO">
-            <column autoIncrement="true" name="REV" type="INT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REVINFO"/>
+        <createTable tableName="SECURITY_USER_REVISION">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_USER_REVISION"/>
             </column>
-            <column name="REVTSTMP" type="BIGINT"/>
+            <column name="TIMESTAMP" type="BIGINT"/>
+            <column name="USER_NAME" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 
