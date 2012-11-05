@@ -42,8 +42,8 @@
             <column autoIncrement="true" name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_USER_REVISION"/>
             </column>
-            <column name="TIMESTAMP" type="BIGINT"/>
-            <column name="USER_NAME" type="VARCHAR(255)"/>
+            <column name="MODIFIED_DATE" type="DATETIME"/>
+            <column name="MODIFIED_BY" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 
@@ -55,8 +55,8 @@
         </sql>
 
         <sql>
-            INSERT INTO SECURITY_USER_REVISION (USER_NAME, TIMESTAMP)
-            SELECT 'generated' AS USER_NAME, 1352083440 AS TIMESTAMP
+            INSERT INTO SECURITY_USER_REVISION (MODIFIED_BY, MODIFIED_DATE)
+            SELECT 'generated' AS MODIFIED_BY, '2012-10-31' AS MODIFIED_DATE
             FROM SETTINGS_GROUP
         </sql>
 
@@ -67,8 +67,8 @@
         </sql>
 
         <sql>
-           INSERT INTO SECURITY_USER_REVISION (USER_NAME, TIMESTAMP)
-           SELECT 'generated' AS USER_NAME, 1352083440 AS TIMESTAMP
+           INSERT INTO SECURITY_USER_REVISION (MODIFIED_BY, MODIFIED_DATE)
+           SELECT 'generated' AS MODIFIED_BY, '2012-10-31' AS MODIFIED_DATE
            FROM SETTINGS_ENTRY
        </sql>
     </changeSet>
