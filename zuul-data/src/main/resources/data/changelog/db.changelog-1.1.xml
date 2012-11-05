@@ -47,5 +47,31 @@
         </createTable>
     </changeSet>
 
+    <changeSet author="mcantrell" id="zuul-1.1-populate-aud-tables">
+        <sql>
+            INSERT INTO SETTINGS_GROUP_AUD (ID, NAME, ENVIRONMENT, KEY_NAME, REV, REVTYPE)
+            SELECT ID, NAME, ENVIRONMENT, KEY_NAME, 1 AS REV, 0 AS REVTYPE
+            FROM SETTINGS_GROUP
+        </sql>
+
+        <sql>
+            INSERT INTO SECURITY_USER_REVISION (USER_NAME, TIMESTAMP)
+            SELECT 'generated' AS USER_NAME, 1352083440 AS TIMESTAMP
+            FROM SETTINGS_GROUP
+        </sql>
+
+        <sql>
+            INSERT INTO SETTINGS_ENTRY_AUD (ID, ENCRYPTED, KEY_NAME, VALUE, GROUP_ID, REV, REVTYPE)
+            SELECT ID, ENCRYPTED, KEY_NAME, VALUE, GROUP_ID, 1 AS REV, 0 AS REVTYPE
+            FROM SETTINGS_ENTRY
+        </sql>
+
+        <sql>
+           INSERT INTO SECURITY_USER_REVISION (USER_NAME, TIMESTAMP)
+           SELECT 'generated' AS USER_NAME, 1352083440 AS TIMESTAMP
+           FROM SETTINGS_ENTRY
+       </sql>
+    </changeSet>
+
 
 </databaseChangeLog>

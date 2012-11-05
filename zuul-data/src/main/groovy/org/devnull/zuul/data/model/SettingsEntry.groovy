@@ -3,21 +3,12 @@ package org.devnull.zuul.data.model
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.codehaus.jackson.annotate.JsonBackReference
-import org.devnull.security.model.User
 import org.devnull.zuul.data.config.ZuulDataConstants
-import org.hibernate.annotations.Index
 import org.hibernate.envers.Audited
-import org.springframework.data.jpa.domain.AbstractAuditable
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.GenerationType
+import javax.persistence.*
 
 @Audited
 @Entity
@@ -33,7 +24,6 @@ class SettingsEntry implements Serializable {
     @ManyToOne
     @JoinColumn(name = "groupId")
     @JsonBackReference
-    @Index(name = "Idx_Settings_Entry_Group")
     @NotNull
     SettingsGroup group
 

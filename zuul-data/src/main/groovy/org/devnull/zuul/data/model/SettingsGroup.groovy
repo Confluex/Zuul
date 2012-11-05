@@ -5,19 +5,17 @@ import groovy.transform.ToString
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 import org.codehaus.jackson.annotate.JsonBackReference
 import org.codehaus.jackson.annotate.JsonIgnore
-import org.devnull.security.model.User
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.Index
 import org.hibernate.envers.Audited
-import org.springframework.data.jpa.domain.AbstractAuditable
 
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import javax.persistence.*
 
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED
+import static org.hibernate.envers.RelationTargetAuditMode.*
 
 @Audited
 @Entity
@@ -40,7 +38,6 @@ class SettingsGroup implements Serializable {
     @JoinColumn(name = "environment")
     @JsonBackReference
     @NotNull
-    @Index(name = "Idx_Settings_Group_Environment")
     @Audited(targetAuditMode = NOT_AUDITED)
     Environment environment
 
