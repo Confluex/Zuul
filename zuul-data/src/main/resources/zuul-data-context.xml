@@ -64,6 +64,7 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
                 <prop key="hibernate.cache.use_query_cache">true</prop>
                 <prop key="hibernate.cache.use_second_level_cache">true</prop>
                 <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+                <prop key="org.hibernate.envers.store_data_at_delete">true</prop>
             </props>
         </property>
         <property name="persistenceUnitPostProcessors">
