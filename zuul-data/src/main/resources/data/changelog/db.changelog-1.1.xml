@@ -55,21 +55,13 @@
         </sql>
 
         <sql>
-            INSERT INTO SECURITY_USER_REVISION (MODIFIED_BY, MODIFIED_DATE)
-            SELECT 'generated' AS MODIFIED_BY, '2012-10-31' AS MODIFIED_DATE
-            FROM SETTINGS_GROUP
-        </sql>
-
-        <sql>
             INSERT INTO SETTINGS_ENTRY_AUD (ID, ENCRYPTED, KEY_NAME, VALUE, GROUP_ID, REV, REVTYPE)
             SELECT ID, ENCRYPTED, KEY_NAME, VALUE, GROUP_ID, 1 AS REV, 0 AS REVTYPE
             FROM SETTINGS_ENTRY
         </sql>
 
         <sql>
-           INSERT INTO SECURITY_USER_REVISION (MODIFIED_BY, MODIFIED_DATE)
-           SELECT 'generated' AS MODIFIED_BY, '2012-10-31' AS MODIFIED_DATE
-           FROM SETTINGS_ENTRY
+           INSERT INTO SECURITY_USER_REVISION (MODIFIED_BY, MODIFIED_DATE) VALUES ('generated', '2012-10-31')
        </sql>
     </changeSet>
 
