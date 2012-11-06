@@ -50,7 +50,6 @@ class SettingsGroup implements Serializable {
 
     @Size(min = 1, message = "Name cannot by empty")
     @Column(nullable = false)
-    @Index(name = "Idx_Settings_Entry_Name")
     String name
 
     void addToEntries(SettingsEntry entry) {

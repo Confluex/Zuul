@@ -15,6 +15,7 @@
             <column name="REV" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="REVEND" type="INT"/>
             <column name="REVTYPE" type="TINYINT"/>
         </createTable>
         <addPrimaryKey tableName="SETTINGS_ENTRY_AUD"
@@ -32,6 +33,7 @@
             <column name="REV" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="REVEND" type="INT"/>
             <column name="REVTYPE" type="TINYINT"/>
         </createTable>
         <addPrimaryKey tableName="SETTINGS_GROUP_AUD"
@@ -49,6 +51,10 @@
 
     <changeSet author="mcantrell" id="zuul-1.1-populate-aud-tables">
         <sql>
+           INSERT INTO SECURITY_USER_REVISION (MODIFIED_BY, MODIFIED_DATE) VALUES ('generated', '2012-10-31')
+       </sql>
+
+        <sql>
             INSERT INTO SETTINGS_GROUP_AUD (ID, NAME, ENVIRONMENT, KEY_NAME, REV, REVTYPE)
             SELECT ID, NAME, ENVIRONMENT, KEY_NAME, 1 AS REV, 0 AS REVTYPE
             FROM SETTINGS_GROUP
@@ -60,9 +66,6 @@
             FROM SETTINGS_ENTRY
         </sql>
 
-        <sql>
-           INSERT INTO SECURITY_USER_REVISION (MODIFIED_BY, MODIFIED_DATE) VALUES ('generated', '2012-10-31')
-       </sql>
     </changeSet>
 
 
