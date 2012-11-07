@@ -19,21 +19,12 @@ class AuditController {
     @Autowired
     AuditService auditService
 
-    @Autowired
-    SecurityService securityService
 
     @RequestMapping(value = "/audit", method = RequestMethod.GET)
     ModelAndView list() {
         def audits = auditService.findAllByEntity(SettingsEntry)
-        def users = collectUsersFromRevisions(audits)
+        def users = auditService.collectUsersFromRevisions(audits)
         return new ModelAndView("/audit/index", [audits: audits, users: users])
     }
 
-    protected Map<String, User> collectUsersFromRevisions(List<AuditRevision<SettingsEntry>> audits) {
-        def users = [:]
-        audits.collect { it.revision.modifiedBy }.unique().collect {
-            users[it] = securityService.findByUserName(it)
-        }
-        return users
-    }
 }
