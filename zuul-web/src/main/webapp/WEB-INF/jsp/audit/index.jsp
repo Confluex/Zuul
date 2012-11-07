@@ -1,4 +1,5 @@
 <%--@elvariable id="audits" type="java.util.List<org.devnull.security.audit.AuditRevision<org.devnull.zuul.data.model.SettingsEntry>>"--%>
+<%--@elvariable id="users" type="java.util.Map<org.devnull.security.model.User,java.lang.String>"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
@@ -29,12 +30,13 @@
             <tbody>
 
             <c:forEach var="audit" items="${audits}">
+                <c:set var="user" value="${users[audit.revision.modifiedBy]}"/>
                 <tr>
                     <td>${audit.revision.id}</td>
                     <td><fmt:formatDate pattern="MM/dd/yy HH:mm" value="${audit.revision.modifiedDate}"/></td>
                     <td>${fn:escapeXml(audit.entity.key)}</td>
                     <td>${fn:escapeXml(audit.entity.value)}</td>
-                    <td>${fn:escapeXml(audit.revision.modifiedBy)}</td>
+                    <td>${fn:escapeXml(user.firstName)} ${fn:escapeXml(user.lastName)}</td>
                     <td>${audit.type}</td>
                 </tr>
             </c:forEach>

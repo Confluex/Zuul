@@ -8,6 +8,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
+import org.devnull.security.service.SecurityService
+import org.devnull.security.audit.AuditRevision
+import org.devnull.security.model.User
 
 @Controller
 @Slf4j
@@ -16,9 +19,21 @@ class AuditController {
     @Autowired
     AuditService auditService
 
+    @Autowired
+    SecurityService securityService
+
     @RequestMapping(value = "/audit", method = RequestMethod.GET)
     ModelAndView list() {
         def audits = auditService.findAllByEntity(SettingsEntry)
-        return new ModelAndView("/audit/index", [audits: audits])
+        def users = collectUsersFromRevisions(audits)
+        return new ModelAndView("/audit/index", [audits: audits, users: users])
+    }
+
+    protected Map<String, User> collectUsersFromRevisions(List<AuditRevision<SettingsEntry>> audits) {
+        def users = [:]
+        audits.collect { it.revision.modifiedBy }.unique().collect {
+            users[it] = securityService.findByUserName(it)
+        }
+        return users
     }
 }
