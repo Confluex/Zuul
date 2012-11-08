@@ -21,6 +21,7 @@
             <tr>
                 <th>Rev</th>
                 <th>Date</th>
+                <th>Group</th>
                 <th>Key</th>
                 <th>Value</th>
                 <th>Author</th>
@@ -34,6 +35,12 @@
                 <tr>
                     <td>${audit.revision.id}</td>
                     <td><fmt:formatDate pattern="MM/dd/yy HH:mm" value="${audit.revision.modifiedDate}"/></td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/audit?groupId=${audit.entity.group.id}">
+                            ${fn:escapeXml(audit.entity.group.name)} -
+                            ${fn:escapeXml(audit.entity.group.environment.name)}
+                        </a>
+                    </td>
                     <td>${fn:escapeXml(audit.entity.key)}</td>
                     <td>${fn:escapeXml(audit.entity.value)}</td>
                     <td>${fn:escapeXml(user.firstName)} ${fn:escapeXml(user.lastName)}</td>
