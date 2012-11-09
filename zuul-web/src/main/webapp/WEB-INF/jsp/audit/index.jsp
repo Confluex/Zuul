@@ -22,19 +22,22 @@
         </div>
         <div class="stacked">
             <c:if test="${filters.group != null}">
-                <span class="label label-warning">
+                <span class="label label-warning filter" title="Filter"
+                      data-content="The results are filtered by settings group. Click the the close icon to remove the filter.">
                     Group Filter
                     <a href="${pageContext.request.contextPath}/audit/filter/remove/group">&times;</a>
                 </span>
             </c:if>
             <c:if test="${filters.modifiedBy != null}">
-                <span class="label label-warning">
+                <span class="label label-warning filter" title="Filter"
+                      data-content="The results are filtered by the user who modified the revision. Click the the close icon to remove the filter.">
                     Modified By Filter
                     <a href="${pageContext.request.contextPath}/audit/filter/remove/modifiedBy">&times;</a>
                 </span>
             </c:if>
             <c:if test="${filters.key != null}">
-                <span class="label label-warning">
+                <span class="label label-warning filter" title="Filter"
+                      data-content="The results are filtered by the user who modified the revision. Click the the close icon to remove the filter.">
                     Key Filter
                     <a href="${pageContext.request.contextPath}/audit/filter/remove/key">&times;</a>
                 </span>
@@ -88,7 +91,11 @@
         </table>
     </div>
 </div>
-
+<script>
+    $(function() {
+        $(".filter").popover({trigger:'hover'});
+    });
+</script>
 
 </body>
 </html>
