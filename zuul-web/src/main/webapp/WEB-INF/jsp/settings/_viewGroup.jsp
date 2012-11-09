@@ -7,43 +7,68 @@
 
 <security:authorize var="isAdmin" access="hasRole('ROLE_ADMIN')"/>
 
-<div class="btn-toolbar">
-    <c:url var="downloadUrl"
-           value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}.properties"/>
-    <a class="btn btn-primary descriptive" href="${downloadUrl}" title="Download"
-       data-content="Use this URL in your application.">
-        <i class="icon-white icon-download-alt"></i>
-        ${fn:escapeXml(environment.name)}
-    </a>
-    <c:if test="${isAdmin}">
+<div class="navbar">
+    <div class="navbar-inner">
+        <c:url var="downloadUrl"
+               value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}.properties"/>
         <c:url var="addUrl"
                value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}/create/entry"/>
-        <a class="btn btn-primary descriptive" href="${addUrl}" title="Add Entry"
-           data-content="Create a new key value pair">
-            <i class="icon-white icon-plus"></i>
-            Create Entry
-        </a>
+        <c:url var="auditUrl" value="/audit/filter/add/group">
+            <c:param name="value">${group.id}</c:param>
+        </c:url>
+        <ul class="nav">
+            <li>
+                <a class="descriptive" href="${downloadUrl}" title="Download"
+                   data-content="Use this URL in your application.">
+                    <i class="icon-download-alt"></i>
+                    ${fn:escapeXml(environment.name)}
+                </a>
+            </li>
+            <c:if test="${isAdmin}">
+                <li>
+                    <a class="descriptive" href="${addUrl}" title="Add Entry"
+                       data-content="Create a new key value pair">
+                        <i class="icon-plus"></i>
+                        Create Entry
+                    </a>
+                </li>
+                <li>
+                    <a class="descriptive" href="${auditUrl}" title="Audit Log"
+                       data-content="View the changes performed to this group of settings.">
+                        <i class="icon-eye-open"></i>
+                        Audit Log
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle descriptive" data-toggle="dropdown" title="Change Encryption Key"
+                       data-content="Change the encryption key for this group. This will re-encrypt any existing entries with the new key.">
+                        <i class="icon-lock"></i>
+                            ${fn:escapeXml(group.key.name)}
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu keys-dropdown-menu" data-group="${fn:escapeXml(group.name)}"
+                        data-environment="${fn:escapeXml(environment.name)}"
+                        data-current-key="${fn:escapeXml(group.key.name)}">
+                    </ul>
+                </li>
 
-        <div class="btn-group">
-            <button class="btn btn-primary dropdown-toggle descriptive" title="Change Key" data-toggle="dropdown"
-                    data-content="Change the encryption key for this group. This will re-encrypt any existing entries with the new key.">
-                <i class="icon-lock icon-white"></i>
-                    ${fn:escapeXml(group.key.name)}
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu keys-dropdown-menu" data-group="${fn:escapeXml(group.name)}"
-                data-environment="${fn:escapeXml(environment.name)}" data-current-key="${fn:escapeXml(group.key.name)}">
+            </c:if>
+        </ul>
+        <c:if test="${isAdmin}">
+            <ul class="nav pull-right">
+                <li>
+                    <a class="delete-group-link descriptive" href="#" title="Warning"
+                       data-env="${fn:escapeXml(environment.name)}" data-group="${fn:escapeXml(group.name)}"
+                       data-content="This will delete the ${environment.name} settings group. This operation cannot be undone.">
+                        <i class="icon-trash"></i>
+                        Delete
+                    </a>
+                </li>
             </ul>
-        </div>
-
-        <a class="btn btn-danger descriptive delete-group-link pull-right" href="#" title="Warning"
-           data-env="${fn:escapeXml(environment.name)}" data-group="${fn:escapeXml(group.name)}"
-           data-content="This will delete the ${environment.name} settings group. This operation cannot be undone.">
-            <i class="icon-white icon-trash"></i>
-            Delete
-        </a>
-    </c:if>
+        </c:if>
+    </div>
 </div>
+
 
 <table class="table table-bordered table-condensed" style="margin-bottom: 10em; margin-top: 1em;">
     <thead>
