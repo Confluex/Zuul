@@ -70,6 +70,11 @@ tr .discoverable  {
     margin-bottom: 0.5em;
 }
 
+.stacked {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
 footer {
     text-align: center;
 }
