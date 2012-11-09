@@ -17,13 +17,13 @@
 <div class="navbar">
     <div class="navbar-inner">
         <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".group-actions">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".group-actions-${group.id}">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
 
-            <div class="group-actions nav-collapse collapse">
+            <div class="group-actions-${group.id} nav-collapse collapse">
                 <ul class="nav">
                     <li>
                         <a class="descriptive" href="${downloadUrl}" title="Download"
