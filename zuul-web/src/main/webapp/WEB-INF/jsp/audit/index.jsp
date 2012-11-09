@@ -33,6 +33,12 @@
                     <a href="${pageContext.request.contextPath}/audit/filter/remove/modifiedBy">&times;</a>
                 </span>
             </c:if>
+            <c:if test="${filters.key != null}">
+                <span class="label label-warning">
+                    Key Filter
+                    <a href="${pageContext.request.contextPath}/audit/filter/remove/key">&times;</a>
+                </span>
+            </c:if>
         </div>
         <table class="table table-bordered table-condensed">
             <thead>
@@ -55,18 +61,23 @@
                     <td><fmt:formatDate pattern="MM/dd/yy HH:mm" value="${audit.revision.modifiedDate}"/></td>
                     <td>
                         <c:url var="auditUrl" value="/audit/filter/add/group">
-                            <c:param name="groupId" value="${audit.entity.group.id}"/>
+                            <c:param name="value" value="${audit.entity.group.id}"/>
                         </c:url>
                         <a href="${auditUrl}">
                                 ${fn:escapeXml(audit.entity.group.name)} -
                                 ${fn:escapeXml(audit.entity.group.environment.name)}
                         </a>
                     </td>
-                    <td>${fn:escapeXml(audit.entity.key)}</td>
+                    <td>
+                        <c:url var="auditUrl" value="/audit/filter/add/key">
+                            <c:param name="value" value="${audit.entity.key}"/>
+                        </c:url>
+                        <a href="${auditUrl}">${fn:escapeXml(audit.entity.key)}</a>
+                    </td>
                     <td>${fn:escapeXml(audit.entity.value)}</td>
                     <td>
                         <c:url var="auditUrl" value="/audit/filter/add/modifiedBy">
-                            <c:param name="modifiedBy" value="${audit.revision.modifiedBy}"/>
+                            <c:param name="value" value="${audit.revision.modifiedBy}"/>
                         </c:url>
                         <a href="${auditUrl}"> ${fn:escapeXml(user.firstName)} ${fn:escapeXml(user.lastName)}</a>
                     </td>
