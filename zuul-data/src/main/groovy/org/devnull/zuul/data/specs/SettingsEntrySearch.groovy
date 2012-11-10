@@ -24,13 +24,13 @@ class SettingsEntrySearch  implements Specification<SettingsEntry> {
         def terms = buildSearchTerms()
         def group = root.join("group", JoinType.INNER)
         def env = group.join("environment", JoinType.INNER)
-        terms.each { term ->
+        def where = terms.collect { term ->
             def keysPredicates = builder.like(builder.lower(root.get("key")), "%${term}%")
             def groupPredicates = builder.like(builder.lower(group.get("name")), "%${term}%")
             def envPredicates = builder.like(builder.lower(env.get("name")), "%${term}%")
-            query.where(builder.or(keysPredicates, groupPredicates, envPredicates))
-        }
-
+            return builder.or(keysPredicates, groupPredicates, envPredicates)
+        } as Predicate[]
+        query.where(where)
         return query.restriction
     }
 
