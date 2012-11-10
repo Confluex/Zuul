@@ -116,4 +116,10 @@ class SettingsServicesController {
         return zuulService.decryptSettingsEntryValue(id)
     }
 
+    @RequestMapping(value = "/settings/entry/search.json")
+    @ResponseBody
+    Map<SettingsGroup, List<SettingsEntry>> search(@RequestParam("q") String query) {
+        def entries = zuulService.search(query)
+        return entries.groupBy { it.group }
+    }
 }

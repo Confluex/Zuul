@@ -127,4 +127,20 @@ class SettingsServicesControllerTest {
         assert result.is(expected)
     }
 
+    @Test
+    void shouldGroupSearchResultsByGroup() {
+        def groupA = new SettingsGroup(name: "groupA")
+        def groupB = new SettingsGroup(name: "groupB")
+        def entries = [
+                new SettingsEntry(key: "abc", value: '123', group: groupA),
+                new SettingsEntry(key: "abc", value: '456', group: groupB),
+                new SettingsEntry(key: "abcdef", value: 'false', group: groupA)
+        ]
+        when(controller.zuulService.search("abc")).thenReturn(entries)
+        def results = controller.search("abc")
+        assert results == [
+                (groupA): [entries[0], entries[2]],
+                (groupB): [entries[1]]
+        ]
+    }
 }
