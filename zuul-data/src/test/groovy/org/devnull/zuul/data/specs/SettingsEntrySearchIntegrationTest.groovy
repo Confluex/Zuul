@@ -52,6 +52,16 @@ class SettingsEntrySearchIntegrationTest extends ZuulDataIntegrationTest {
     }
 
     @Test
+    void shouldMatchValues() {
+        def results = dao.findAll(new SettingsEntrySearch("h2"))
+        printResults(results)
+        assert results.size()  == 5
+        results.each {
+            it.value.toLowerCase().contains("h2")
+        }
+    }
+
+    @Test
     void shouldMatchMultipleTermsAcrossFields() {
         def results = dao.findAll(new SettingsEntrySearch("prod url"))
         results.each {
