@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.CriteriaBuilder
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
+import javax.persistence.criteria.JoinType
 
 @ToString(includeNames=true)
 @EqualsAndHashCode
@@ -21,9 +22,15 @@ class SettingsEntrySearch  implements Specification<SettingsEntry> {
 
     Predicate toPredicate(Root<SettingsEntry> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         def terms = buildSearchTerms()
+        def group = root.join("group", JoinType.INNER)
+        def env = group.join("environment", JoinType.INNER)
         terms.each { term ->
-            query.where(builder.like(builder.lower(root.get("key")),"%${term}%"))
+            def keysPredicates = builder.like(builder.lower(root.get("key")), "%${term}%")
+            def groupPredicates = builder.like(builder.lower(group.get("name")), "%${term}%")
+            def envPredicates = builder.like(builder.lower(env.get("name")), "%${term}%")
+            query.where(builder.or(keysPredicates, groupPredicates, envPredicates))
         }
+
         return query.restriction
     }
 

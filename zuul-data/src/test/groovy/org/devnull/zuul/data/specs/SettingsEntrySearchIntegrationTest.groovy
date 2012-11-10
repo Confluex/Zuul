@@ -31,4 +31,22 @@ class SettingsEntrySearchIntegrationTest extends ZuulDataIntegrationTest {
         def results = dao.findAll(new SettingsEntrySearch(null))
         assert results.size() == dao.count()
     }
+
+    @Test
+    void shouldMatchGroupNames() {
+        def results = dao.findAll(new SettingsEntrySearch("app-data"))
+        assert results.size()  == 13
+        results.each {
+            it.group.name == "app-data-config"
+        }
+    }
+
+    @Test
+    void shouldMatchGroupEnvironments() {
+        def results = dao.findAll(new SettingsEntrySearch("prod"))
+        assert results.size()  == 7
+        results.each {
+            it.group.environment.name == "prod"
+        }
+    }
 }
