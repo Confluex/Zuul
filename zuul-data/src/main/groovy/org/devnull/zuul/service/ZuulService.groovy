@@ -61,6 +61,8 @@ public interface ZuulService {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     SettingsEntry save(SettingsEntry entry)
 
+    List<SettingsEntry> search(String query)
+
     /* Environments -------------------- */
 
     List<Environment> listEnvironments()
@@ -107,5 +109,7 @@ public interface ZuulService {
 
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     void deleteKey(String name)
+
+
 
 }

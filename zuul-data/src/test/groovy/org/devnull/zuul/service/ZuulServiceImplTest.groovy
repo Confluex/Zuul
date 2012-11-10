@@ -30,6 +30,8 @@ import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 import org.devnull.error.ValidationException
 import org.devnull.error.ConflictingOperationException
+import org.devnull.zuul.data.specs.SettingsEntrySearch
+import org.springframework.data.jpa.domain.Specification
 
 public class ZuulServiceImplTest {
 
@@ -457,5 +459,14 @@ public class ZuulServiceImplTest {
     void deleteSettingsGroupShouldInvokeDao() {
         service.deleteSettingsGroup(1)
         verify(service.settingsGroupDao).delete(1)
+    }
+
+    @Test
+    void shouldSearchSettingsEntries() {
+        def query = new SettingsEntrySearch("abc")
+        def expected = [new SettingsEntry(id: 1)]
+        when(service.settingsEntryDao.findAll(query)).thenReturn(expected)
+        def results = service.search("abc")
+        assert results.is(expected)
     }
 }
