@@ -135,6 +135,11 @@
                                 </ul>
                             </li>
                         </ul>
+                        <form class="navbar-search pull-right" method="GET"
+                              action="${pageContext.request.contextPath}/settings/search">
+                            <input id="searchInput" name="q" type="text"
+                                   class="search-query" placeholder="Search.." value="${param.q}">
+                        </form>
                     </security:authorize>
                     <security:authorize access="isAnonymous()">
                         <p class="navbar-text pull-right">

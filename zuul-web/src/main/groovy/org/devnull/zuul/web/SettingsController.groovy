@@ -1,21 +1,17 @@
 package org.devnull.zuul.web
 
-import org.devnull.security.service.SecurityService
 import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.servlet.ModelAndView
-import javax.validation.Valid
 import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.servlet.view.RedirectView
+import org.springframework.web.servlet.ModelAndView
+
+import javax.validation.Valid
+
+import org.springframework.web.bind.annotation.*
 
 @Controller
 class SettingsController {
@@ -81,7 +77,7 @@ class SettingsController {
     @RequestMapping(value = "/settings/{environment}/{name}/create/entry", method = RequestMethod.GET)
     ModelAndView addEntryForm(@PathVariable("name") String groupName, @PathVariable("environment") String environment) {
         def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, environment)
-        return new ModelAndView("/settings/entry",  [group:group])
+        return new ModelAndView("/settings/entry", [group: group])
     }
 
     /**
@@ -89,8 +85,8 @@ class SettingsController {
      */
     @RequestMapping(value = "/settings/{environment}/{groupName}/create/entry", method = RequestMethod.POST)
     ModelAndView addEntrySubmit(@PathVariable("groupName") String groupName, @PathVariable("environment") String env,
-                          @ModelAttribute("formEntry") @Valid SettingsEntry formEntry,  BindingResult result) {
-        if (result.hasErrors()){
+                                @ModelAttribute("formEntry") @Valid SettingsEntry formEntry, BindingResult result) {
+        if (result.hasErrors()) {
             return addEntryForm(groupName, env)
         }
         zuulService.save(formEntry)
@@ -121,4 +117,10 @@ class SettingsController {
         return "redirect:/settings/${groupName}#${environment}"
     }
 
+
+    @RequestMapping(value = "/settings/search")
+    ModelAndView search(@RequestParam("q") String query) {
+        def results = zuulService.search(query)?.groupBy { it.group }
+        return new ModelAndView("/settings/search", [query:query, results:results])
+    }
 }
