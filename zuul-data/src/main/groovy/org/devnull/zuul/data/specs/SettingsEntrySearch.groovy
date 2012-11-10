@@ -36,6 +36,6 @@ class SettingsEntrySearch  implements Specification<SettingsEntry> {
     }
 
     List<String> buildSearchTerms() {
-        return query?.split()?.collect { it.trim().toLowerCase() }
+        return query?.split()?.collect { it.trim().toLowerCase().replace("*", "%") }
     }
 }
