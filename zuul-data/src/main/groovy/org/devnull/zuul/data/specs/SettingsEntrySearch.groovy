@@ -22,14 +22,10 @@ class SettingsEntrySearch  implements Specification<SettingsEntry> {
 
     Predicate toPredicate(Root<SettingsEntry> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         def terms = buildSearchTerms()
-        def group = root.join("group", JoinType.INNER)
-        def env = group.join("environment", JoinType.INNER)
         def where = terms.collect { term ->
             def valuesPredicates = builder.like(builder.lower(root.get("value")), "%${term}%")
             def keysPredicates = builder.like(builder.lower(root.get("key")), "%${term}%")
-            def groupPredicates = builder.like(builder.lower(group.get("name")), "%${term}%")
-            def envPredicates = builder.like(builder.lower(env.get("name")), "%${term}%")
-            return builder.or(valuesPredicates, keysPredicates, groupPredicates, envPredicates)
+            return builder.or(valuesPredicates, keysPredicates)
         } as Predicate[]
         query.where(where)
         return query.restriction
