@@ -137,7 +137,7 @@
                         </ul>
                         <form class="navbar-search pull-right" method="GET"
                               action="${pageContext.request.contextPath}/settings/search">
-                            <input id="searchInput" name="q" type="text"
+                            <input id="searchInput" name="q" type="text" data-provide="typeahead" autocomplete="off"
                                    class="search-query" placeholder="Search.." value="${param.q}">
                         </form>
                     </security:authorize>

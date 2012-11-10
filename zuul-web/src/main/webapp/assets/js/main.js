@@ -59,6 +59,10 @@ function createFormValidationAlerts(form, globalErrors, fieldErrors) {
                     subMenuItem.append(link);
                     subMenu.append(subMenuItem);
                 }
+                $("#searchInput").typeahead({source:fileNames, minLength:3,
+                    updater:function (selected, context) {
+                        document.location = getContextPath() + "/settings/" + encodeURI(selected);
+                    }});
             }
         });
         function distinctGroupNames(data) {
