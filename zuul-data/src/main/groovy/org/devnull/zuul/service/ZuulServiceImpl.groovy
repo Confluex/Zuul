@@ -2,7 +2,9 @@ package org.devnull.zuul.service
 
 import org.devnull.error.ConflictingOperationException
 import org.devnull.error.ValidationException
+import org.devnull.orm.util.JpaPaginationAdapter
 import org.devnull.security.service.SecurityService
+import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
@@ -13,6 +15,7 @@ import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
+import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,7 +26,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
-import org.devnull.zuul.data.specs.SettingsEntrySearch
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -167,9 +169,12 @@ class ZuulServiceImpl implements ZuulService {
         return settingsEntryDao.save(entry)
     }
 
-    List<SettingsEntry> search(String query) {
-        log.info("Searching with query: {}", query)
-        return settingsEntryDao.findAll(new SettingsEntrySearch(query))
+    List<SettingsEntry> search(String query, Pagination<SettingsEntry> pagination) {
+        log.info("Searching with query: {}, pagination: {}", query, pagination)
+        def results = settingsEntryDao.findAll(new SettingsEntrySearch(query), new JpaPaginationAdapter(pagination))
+        pagination.results = results.content
+        pagination.total = results.totalElements
+        return pagination
     }
 
     @Transactional(readOnly = false)
@@ -275,4 +280,5 @@ class ZuulServiceImpl implements ZuulService {
             throw new ValidationException(errors)
         }
     }
+
 }

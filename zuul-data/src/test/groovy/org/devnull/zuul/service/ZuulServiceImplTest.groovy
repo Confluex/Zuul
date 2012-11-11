@@ -1,9 +1,12 @@
 package org.devnull.zuul.service
 
 import groovy.mock.interceptor.MockFor
+import org.devnull.error.ConflictingOperationException
+import org.devnull.error.ValidationException
 import org.devnull.security.model.Role
 import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
+import org.devnull.util.pagination.SimplePagination
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
@@ -14,12 +17,15 @@ import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
+import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
@@ -28,10 +34,6 @@ import org.springframework.validation.Validator
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
-import org.devnull.error.ValidationException
-import org.devnull.error.ConflictingOperationException
-import org.devnull.zuul.data.specs.SettingsEntrySearch
-import org.springframework.data.jpa.domain.Specification
 
 public class ZuulServiceImplTest {
 
@@ -464,9 +466,9 @@ public class ZuulServiceImplTest {
     @Test
     void shouldSearchSettingsEntries() {
         def query = new SettingsEntrySearch("abc")
-        def expected = [new SettingsEntry(id: 1)]
-        when(service.settingsEntryDao.findAll(query)).thenReturn(expected)
-        def results = service.search("abc")
-        assert results.is(expected)
+        def page = new PageImpl([new SettingsEntry(id: 1)])
+        when(service.settingsEntryDao.findAll(eq(query), any(Pageable))).thenReturn(page)
+        def results = service.search("abc", new SimplePagination<SettingsEntry>())
+        assert results == page.content
     }
 }

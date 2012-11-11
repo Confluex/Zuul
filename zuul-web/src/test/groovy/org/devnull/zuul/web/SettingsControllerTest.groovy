@@ -1,5 +1,6 @@
 package org.devnull.zuul.web
 
+import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
@@ -10,7 +11,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
+import org.springframework.mock.web.MockHttpServletRequest
 
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 @Mixin(ControllerTestMixin)
@@ -157,8 +160,8 @@ public class SettingsControllerTest {
                 new SettingsEntry(key: "abc", value: '456', group: groupB),
                 new SettingsEntry(key: "abcdef", value: 'false', group: groupA)
         ]
-        when(controller.zuulService.search("abc")).thenReturn(entries)
-        def mv = controller.search("abc")
+        when(controller.zuulService.search(eq("abc"), Matchers.any(Pagination))).thenReturn(entries)
+        def mv = controller.search("abc", new MockHttpServletRequest())
         assert mv.model.results == [
                 (groupA): [entries[0], entries[2]],
                 (groupB): [entries[1]]

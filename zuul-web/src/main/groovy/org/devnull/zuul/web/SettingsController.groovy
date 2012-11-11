@@ -1,7 +1,7 @@
 package org.devnull.zuul.web
 
+import org.devnull.util.pagination.HttpRequestPagination
 import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
 import org.springframework.web.servlet.ModelAndView
 
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 import org.springframework.web.bind.annotation.*
@@ -119,8 +120,9 @@ class SettingsController {
 
 
     @RequestMapping(value = "/settings/search")
-    ModelAndView search(@RequestParam("q") String query) {
-        def results = zuulService.search(query)?.groupBy { it.group }
-        return new ModelAndView("/settings/search", [query:query, results:results])
+    ModelAndView search(@RequestParam("q") String query, HttpServletRequest request) {
+        def pagination = new HttpRequestPagination<SettingsEntry>(request)
+        def results = zuulService.search(query, pagination)?.groupBy { it.group }
+        return new ModelAndView("/settings/search", [query: query, results: results])
     }
 }

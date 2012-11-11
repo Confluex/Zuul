@@ -44,6 +44,11 @@
         <dependencies>
             <dependency>
                 <groupId>org.devnull</groupId>
+                <artifactId>devnull-util</artifactId>
+                <version>${devnull.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devnull</groupId>
                 <artifactId>devnull-orm</artifactId>
                 <version>${devnull.version}</version>
             </dependency>

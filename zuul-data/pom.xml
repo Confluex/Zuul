@@ -14,6 +14,10 @@
         <!-- DevNull -->
         <dependency>
             <groupId>org.devnull</groupId>
+            <artifactId>devnull-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.devnull</groupId>
             <artifactId>devnull-orm</artifactId>
         </dependency>
         <dependency>
