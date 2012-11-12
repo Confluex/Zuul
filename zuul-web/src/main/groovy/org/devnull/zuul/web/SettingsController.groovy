@@ -108,6 +108,13 @@ class SettingsController {
         return new ModelAndView("/settings/show", model)
     }
 
+    @RequestMapping(value = "/settings/{environment}/{name}", method = RequestMethod.GET)
+    ModelAndView showGroupByEnv(@PathVariable("name") String groupName, @PathVariable("environment") envName) {
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, envName)
+        def model = [group: group]
+        return new ModelAndView("/settings/test", model)
+    }
+
 
     @RequestMapping(value = "/settings/{environment}/{groupName}/key/change", method = RequestMethod.GET)
     String changeGroupKey(@PathVariable("environment") String environment, @PathVariable("groupName") String groupName,

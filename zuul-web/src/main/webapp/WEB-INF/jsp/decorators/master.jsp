@@ -20,7 +20,7 @@
           href="${pageContext.request.contextPath}/assets/ext/bootstrap-2.1.1/css/bootstrap-responsive.min.css"
           type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css" type="text/css">
-    <script src="${pageContext.request.contextPath}/assets/ext/jquery-1.7.2.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/ext/jquery-1.8.2.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/ext/bootstrap-2.1.1/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/main.js"></script>
     <!--[if lt IE 9]>
