@@ -11,10 +11,8 @@
     <meta name="tab" content="settings"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/ext/slickgrid-2.0.2/slick.grid.css"
           type="text/css"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/ext/slickgrid-2.0.2/theme/css/slick.theme.css"
-          type="text/css"/>
     <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/assets/ext/jquery-ui-1.9.1/css/ui-lightness/jquery-ui-1.9.1.custom.min.css"
+          href="${pageContext.request.contextPath}/assets/ext/slickgrid-2.0.2/theme/css/slick.theme.css"
           type="text/css"/>
     <script src="${pageContext.request.contextPath}/assets/ext/jquery.event.drag-2.0.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/ext/jquery-ui-1.9.1/js/jquery-ui-1.9.1.custom.min.js"></script>
@@ -34,19 +32,19 @@
 <script>
     var grid;
     var columns = [
-        {id:"key", name:"Key", field:"key", sortable:true, width: 300},
-        {id:"value", name:"Value", field:"value", sortable:true, width: 300}
+        {id:"key", name:"Key", field:"key", sortable:true, width:300},
+        {id:"value", name:"Value", field:"value", sortable:true, width:300}
     ];
 
     var options = {
         enableCellNavigation:true,
         enableColumnReorder:false,
-        enableAddRow: true,
+        enableAddRow:true,
     };
 
     var testData = [
-        {id: 1, key:'a', value: 1},
-        {id: 2, key:'b', value: 2}
+        {id:1, key:'a', value:1},
+        {id:2, key:'b', value:2}
     ];
 
     $(function () {
