@@ -3,7 +3,9 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
-    <changeSet author="mcantrell" id="zuul-1.1-create-audit-tables">
+    <changeSet author="mcantrell" id="zuul-1.1-create-envers-audit-tables">
+
+        <!-- Settings Entry Table -->
         <createTable tableName="SETTINGS_ENTRY_AUD">
             <column name="ID" type="INT">
                 <constraints nullable="false"/>
@@ -15,14 +17,19 @@
             <column name="REV" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="REVTYPE" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="REVEND" type="INT"/>
-            <column name="REVTYPE" type="TINYINT"/>
         </createTable>
         <addPrimaryKey tableName="SETTINGS_ENTRY_AUD"
                        columnNames="ID,REV"
                        constraintName="PK_SETTINGS_ENTRY_AUD"/>
+        <createIndex indexName="IDX_SETTINGS_ENTRY_AUD_1" tableName="SETTINGS_ENTRY_AUD" unique="false">
+            <column name="REVEND"/>
+        </createIndex>
 
-
+        <!-- Settings Group Table -->
         <createTable tableName="SETTINGS_GROUP_AUD">
             <column name="ID" type="INT">
                 <constraints nullable="false"/>
@@ -33,13 +40,19 @@
             <column name="REV" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="REVTYPE" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="REVEND" type="INT"/>
-            <column name="REVTYPE" type="TINYINT"/>
         </createTable>
         <addPrimaryKey tableName="SETTINGS_GROUP_AUD"
                        columnNames="ID,REV"
                        constraintName="PK_SETTINGS_GROUP_AUD"/>
+        <createIndex indexName="IDX_SETTINGS_GROUP_AUD_1" tableName="SETTINGS_GROUP_AUD" unique="false">
+            <column name="REVEND"/>
+        </createIndex>
 
+        <!-- Revision Table -->
         <createTable tableName="SECURITY_USER_REVISION">
             <column autoIncrement="true" name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_USER_REVISION"/>
@@ -47,26 +60,29 @@
             <column name="MODIFIED_DATE" type="DATETIME"/>
             <column name="MODIFIED_BY" type="VARCHAR(255)"/>
         </createTable>
+        <createIndex indexName="IDX_SECURITY_USER_REVISION_1" tableName="SECURITY_USER_REVISION" unique="false">
+            <column name="MODIFIED_DATE"/>
+        </createIndex>
+        <createIndex indexName="IDX_SECURITY_USER_REVISION_2" tableName="SECURITY_USER_REVISION" unique="false">
+            <column name="MODIFIED_BY"/>
+        </createIndex>
     </changeSet>
 
+    <!-- back-fill audit tables with ADD modification types for existing data -->
     <changeSet author="mcantrell" id="zuul-1.1-populate-aud-tables">
         <sql>
            INSERT INTO SECURITY_USER_REVISION (MODIFIED_BY, MODIFIED_DATE) VALUES ('generated', '2012-10-31')
        </sql>
-
         <sql>
             INSERT INTO SETTINGS_GROUP_AUD (ID, NAME, ENVIRONMENT, KEY_NAME, REV, REVTYPE)
             SELECT ID, NAME, ENVIRONMENT, KEY_NAME, 1 AS REV, 0 AS REVTYPE
             FROM SETTINGS_GROUP
         </sql>
-
         <sql>
             INSERT INTO SETTINGS_ENTRY_AUD (ID, ENCRYPTED, KEY_NAME, VALUE, GROUP_ID, REV, REVTYPE)
             SELECT ID, ENCRYPTED, KEY_NAME, VALUE, GROUP_ID, 1 AS REV, 0 AS REVTYPE
             FROM SETTINGS_ENTRY
         </sql>
-
     </changeSet>
-
 
 </databaseChangeLog>
