@@ -30,7 +30,7 @@ class AuditController {
 
     @ModelAttribute("audits")
     List<AuditRevision<SettingsEntry>> findAudits(HttpServletRequest request) {
-        def pagination = new AuditPagination()
+        def pagination = new AuditPagination(selectedDeletedEntities: false)
         def groupId = request.session.getAttribute(SESSION_GROUP_ID)
         def modifiedBy = request.session.getAttribute(SESSION_MODIFIED_BY)
         def key = request.session.getAttribute(SESSION_SETTINGS_ENTRY_KEY)
