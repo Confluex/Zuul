@@ -1,2 +1,2 @@
-id,settings_key,settings_value,encrypted,group_name,modified_by,modified_date,type
-1,jdbc.zuul.username,zuul,0,app-data-config,system,2012-10-31,0
+id,settings_key,settings_value,encrypted,group_name,group_environment,modified_by,modified_date,type
+1,jdbc.zuul.username,zuul,0,app-data-config,dev,system,2012-10-31,0

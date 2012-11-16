@@ -22,6 +22,7 @@
             <tr>
                 <th>Rev</th>
                 <th>Date</th>
+                <th>Environment</th>
                 <th>Group</th>
                 <th>Key</th>
                 <th>Value</th>
@@ -35,6 +36,7 @@
                 <tr>
                     <td>${audit.id}</td>
                     <td><fmt:formatDate pattern="MM/dd/yy HH:mm" value="${audit.modifiedDate}"/></td>
+                    <td>${fn:escapeXml(audit.groupEnvironment)}</td>
                     <td>${fn:escapeXml(audit.groupName)}</td>
                     <td>${fn:escapeXml(audit.settingsKey)}</td>
                     <td>${fn:escapeXml(audit.settingsValue)}</td>

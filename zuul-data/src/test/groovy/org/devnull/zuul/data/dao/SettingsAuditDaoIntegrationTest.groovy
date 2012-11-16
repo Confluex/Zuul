@@ -15,6 +15,7 @@ class SettingsAuditDaoIntegrationTest extends ZuulDataIntegrationTest {
         def audit = settingsAuditDao.findOne(1L)
         assert audit.id == 1L
         assert audit.groupName == "app-data-config"
+        assert audit.groupEnvironment == "dev"
         assert audit.settingsKey == "jdbc.zuul.username"
         assert audit.settingsValue == "zuul"
         assert !audit.encrypted

@@ -23,6 +23,7 @@ class SettingsAudit implements Serializable {
     String settingsValue
     Boolean encrypted
     String groupName
+    String groupEnvironment
     String modifiedBy
     Date modifiedDate
     AuditType type

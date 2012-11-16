@@ -12,6 +12,7 @@
             <column name="SETTINGS_VALUE" type="VARCHAR(255)"/>
             <column name="ENCRYPTED" type="BOOLEAN"/>
             <column name="GROUP_NAME" type="VARCHAR(255)"/>
+            <column name="GROUP_ENVIRONMENT" type="VARCHAR(12)"/>
             <column name="MODIFIED_BY" type="VARCHAR(255)"/>
             <column name="MODIFIED_DATE" type="DATETIME"/>
             <column name="TYPE" type="INT"/>
