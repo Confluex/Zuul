@@ -11,6 +11,19 @@ class SettingsAuditDaoIntegrationTest extends ZuulDataIntegrationTest {
     SettingsAuditDao settingsAuditDao
 
     @Test
+    void findOneShouldRetrieveAndMapResults() {
+        def audit = settingsAuditDao.findOne(1L)
+        assert audit.id == 1L
+        assert audit.groupName == "app-data-config"
+        assert audit.settingsKey == "jdbc.zuul.username"
+        assert audit.settingsValue == "zuul"
+        assert !audit.encrypted
+        assert audit.modifiedBy == "system"
+        assert audit.modifiedDate.format("MM/dd/yy") == "10/31/12"
+        assert audit.type == SettingsAudit.AuditType.ADD
+    }
+
+    @Test
     void shouldInsertRecord() {
         def count = settingsAuditDao.count()
         def audit = settingsAuditDao.save(new SettingsAudit(

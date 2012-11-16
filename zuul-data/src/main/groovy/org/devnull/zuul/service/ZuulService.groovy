@@ -1,11 +1,8 @@
 package org.devnull.zuul.service
 
 import org.devnull.util.pagination.Pagination
-import org.devnull.zuul.data.model.EncryptionKey
-import org.devnull.zuul.data.model.Environment
-import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.springframework.security.access.prepost.PreAuthorize
+import org.devnull.zuul.data.model.*
 
 public interface ZuulService {
     /* Notifications ---------------------- */
@@ -109,5 +106,7 @@ public interface ZuulService {
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     void deleteKey(String name)
 
+    /* Auditing ---------------------------- */
+    List<SettingsAudit> findSettingAudits(Pagination<SettingsAudit> pagination)
 
 }

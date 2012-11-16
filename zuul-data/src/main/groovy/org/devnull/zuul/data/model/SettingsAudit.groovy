@@ -28,7 +28,7 @@ class SettingsAudit implements Serializable {
     AuditType type
 
     enum AuditType {
-        DELETE, ADD, MOD
+        ADD, MOD, DELETE
     }
 }
 

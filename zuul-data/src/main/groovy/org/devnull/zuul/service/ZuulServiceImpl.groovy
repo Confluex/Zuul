@@ -6,14 +6,6 @@ import org.devnull.orm.util.JpaPaginationAdapter
 import org.devnull.security.service.SecurityService
 import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.config.ZuulDataConstants
-import org.devnull.zuul.data.dao.EncryptionKeyDao
-import org.devnull.zuul.data.dao.EnvironmentDao
-import org.devnull.zuul.data.dao.SettingsEntryDao
-import org.devnull.zuul.data.dao.SettingsGroupDao
-import org.devnull.zuul.data.model.EncryptionKey
-import org.devnull.zuul.data.model.Environment
-import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
@@ -26,6 +18,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
+import org.devnull.zuul.data.dao.*
+import org.devnull.zuul.data.model.*
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -41,6 +35,9 @@ class ZuulServiceImpl implements ZuulService {
 
     @Autowired
     SettingsEntryDao settingsEntryDao
+
+    @Autowired
+    SettingsAuditDao settingsAuditDao
 
     @Autowired
     EnvironmentDao environmentDao
@@ -59,6 +56,13 @@ class ZuulServiceImpl implements ZuulService {
 
     @Autowired
     Validator validator
+
+    List<SettingsAudit> findSettingAudits(Pagination<SettingsAudit> pagination) {
+        def audits = settingsAuditDao.findAll(new JpaPaginationAdapter(pagination))
+        pagination.results = audits.content
+        pagination.total = audits.totalElements
+        return pagination
+    }
 
     @Transactional(readOnly = false)
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName) {
@@ -248,7 +252,7 @@ class ZuulServiceImpl implements ZuulService {
         return encryptionKeyDao.save(key)
     }
 
-
+    @Transactional(readOnly = false)
     void deleteKey(String name) {
         def key = encryptionKeyDao.findOne(name)
         if (key.defaultKey) {

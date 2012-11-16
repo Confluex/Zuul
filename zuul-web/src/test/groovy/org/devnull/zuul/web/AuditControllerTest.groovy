@@ -1,108 +1,34 @@
 package org.devnull.zuul.web
 
+import org.devnull.util.pagination.Pagination
+import org.devnull.zuul.data.model.SettingsAudit
+import org.devnull.zuul.service.ZuulService
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Matchers
 import org.springframework.mock.web.MockHttpServletRequest
+
+import static org.mockito.Mockito.*
 
 class AuditControllerTest {
     AuditController controller
 
     @Before
     void createController() {
-        controller = new AuditController()
-    }
-
-
-    // ------ Group Filters
-
-    @SuppressWarnings("GroovyAccessibility")
-    @Test
-    void shouldFilterAuditsByGroupWhenSessionAttributeIsPresent() {
-//        def request = new MockHttpServletRequest()
-//        request.session.setAttribute(AuditController.SESSION_GROUP_ID, 123)
-//        controller.findAudits(request)
-//        def args = ArgumentCaptor.forClass(AuditPagination)
-//        verify(controller.auditService).findAllByEntity(eq(SettingsEntry), args.capture())
-//        assert args.value.filter.size() == 1
-////        def criteria = args.value.filter[0] as RelatedAuditExpression
-////        assert criteria.id == 123
-    }
-
-
-    @Test
-    void shouldAddGroupToSession() {
-        def request = new MockHttpServletRequest()
-        assert "redirect:/audit" == controller.addGroupFilter(request, 11)
-        assert request.session.getAttribute(AuditController.SESSION_GROUP_ID) == 11
+        controller = new AuditController(zuulService: mock(ZuulService))
     }
 
     @Test
-    void shouldRemoveGroupFromSession() {
-        def request = new MockHttpServletRequest()
-        request.session.setAttribute(AuditController.SESSION_GROUP_ID, 11)
-        assert "redirect:/audit" == controller.removeGroupFilter(request)
-        assert !request.session.getAttribute(AuditController.SESSION_GROUP_ID)
-    }
-
-    // ------ Modified By Filters
-
-    @SuppressWarnings("GroovyAccessibility")
-    @Test
-    void shouldFilterAuditsByUserWhenSessionAttributeIsPresent() {
-//        def request = new MockHttpServletRequest()
-//        request.session.setAttribute(AuditController.SESSION_MODIFIED_BY, "userA")
-//        controller.findAudits(request)
-//        def args = ArgumentCaptor.forClass(AuditPagination)
-//        verify(controller.auditService).findAllByEntity(eq(SettingsEntry), args.capture())
-//        assert args.value.filter.size() == 1
-////        def criteria = args.value.filter[0] as SimpleAuditExpression
-////        assert criteria.value == "userA"
-////        assert criteria.op == "="
+    void shouldFindAudits() {
+        def audits = [new SettingsAudit(id:1)]
+        when(controller.zuulService.findSettingAudits(Matchers.any(Pagination))).thenReturn(audits)
+        def results = controller.findAudits(new MockHttpServletRequest())
+        assert audits == results
     }
 
     @Test
-    void shouldAddModifiedByToSession() {
-        def request = new MockHttpServletRequest()
-        assert "redirect:/audit" == controller.addModifiedByFilter(request, "userA")
-        assert request.session.getAttribute(AuditController.SESSION_MODIFIED_BY) == "userA"
+    void shouldHaveIndexPage() {
+        assert controller.index() == "/audit/index"
     }
 
-    @Test
-    void shouldRemoveModifiedByFromSession() {
-        def request = new MockHttpServletRequest()
-        request.session.setAttribute(AuditController.SESSION_MODIFIED_BY, "userB")
-        assert "redirect:/audit" == controller.removeModifiedByFilter(request)
-        assert !request.session.getAttribute(AuditController.SESSION_MODIFIED_BY)
-    }
-
-    // ------ Key Filters
-
-    @SuppressWarnings("GroovyAccessibility")
-    @Test
-    void shouldFilterAuditsByKeyWhenSessionAttributeIsPresent() {
-//        def request = new MockHttpServletRequest()
-//        request.session.setAttribute(AuditController.SESSION_SETTINGS_ENTRY_KEY, "a.b.c")
-//        controller.findAudits(request)
-//        def args = ArgumentCaptor.forClass(AuditPagination)
-//        verify(controller.auditService).findAllByEntity(eq(SettingsEntry), args.capture())
-//        assert args.value.filter.size() == 1
-////        def criteria = args.value.filter[0] as SimpleAuditExpression
-////        assert criteria.value == "a.b.c"
-////        assert criteria.op == "="
-    }
-
-    @Test
-    void shouldAddKeyToSession() {
-        def request = new MockHttpServletRequest()
-        assert "redirect:/audit" == controller.addKeyFilter(request, "a.b.c")
-        assert request.session.getAttribute(AuditController.SESSION_SETTINGS_ENTRY_KEY) == "a.b.c"
-    }
-
-    @Test
-    void shouldRemoveKeyFromSession() {
-        def request = new MockHttpServletRequest()
-        request.session.setAttribute(AuditController.SESSION_SETTINGS_ENTRY_KEY, "a.b.c")
-        assert "redirect:/audit" == controller.removeKeyFilter(request)
-        assert !request.session.getAttribute(AuditController.SESSION_SETTINGS_ENTRY_KEY)
-    }
 }
