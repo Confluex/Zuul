@@ -23,9 +23,9 @@ class AuditControllerTest {
 
     @Test
     void shouldFindAudits() {
-        def audits = [new SettingsAudit(id:1)]
+        def audits = [new SettingsAudit(id: 1)]
         when(controller.zuulService.findSettingAudits(Matchers.any(Pagination))).thenReturn(audits)
-        def results = controller.findAudits(new MockHttpServletRequest())
+        def results = controller.findAudits(new MockHttpServletRequest(), 1)
         assert audits == results
     }
 
@@ -34,13 +34,22 @@ class AuditControllerTest {
         def request = new MockHttpServletRequest()
         request.setParameter("sort", "modifiedBy")
         request.setParameter("dir", "DESC")
-        controller.findAudits(request)
+        controller.findAudits(request, 1)
         def args = ArgumentCaptor.forClass(HttpRequestPagination)
         verify(controller.zuulService).findSettingAudits(args.capture())
         assert args.value.sorts.size() == 1
         def sort = args.value.sorts.first()
         assert sort.direction == Sort.DESC
         assert sort.field == "modifiedBy"
+    }
+
+    @Test
+    void shouldApplyPagingCriteriaWhenFindingAudits() {
+        def request = new MockHttpServletRequest()
+        controller.findAudits(request, 1)
+        def args = ArgumentCaptor.forClass(HttpRequestPagination)
+        verify(controller.zuulService).findSettingAudits(args.capture())
+        assert args.value.page == 0
     }
 
     @Test

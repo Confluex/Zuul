@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 import javax.servlet.http.HttpServletRequest
 
@@ -21,8 +22,11 @@ class AuditController {
     ZuulService zuulService
 
     @ModelAttribute("audits")
-    List<SettingsAudit> findAudits(HttpServletRequest request) {
+    List<SettingsAudit> findAudits(HttpServletRequest request,
+                                   @RequestParam(required=false, value="page", defaultValue="1") Integer page) {
         def pagination = new HttpRequestPagination<SettingsAudit>(request)
+        pagination.max = 3
+        pagination.page = page - 1 // account for zero based indexing on our Pagination API
         def audits = zuulService.findSettingAudits(pagination)
         return new DisplayTagPaginatedListAdapter(audits as Pagination)
     }
