@@ -18,7 +18,7 @@
         <div class="page-header">
             <h1>Audit History</h1>
         </div>
-        <display:table name="audits" class="table table-bordered table-condensed table-striped" requestURI="/audit" sort="external">
+        <display:table name="audits" class="table table-bordered table-condensed table-striped" requestURI="/audit" >
             <display:column property="id" title="Rev" sortable="true" sortProperty="id" />
             <display:column property="modifiedDate" title="Date" sortable="true"/>
             <display:column property="groupEnvironment" title="Environment" sortable="true"/>
