@@ -8,16 +8,11 @@ import org.codehaus.jackson.annotate.JsonIgnore
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
-import org.hibernate.annotations.Index
-import org.hibernate.envers.Audited
 
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import javax.persistence.*
 
-import static org.hibernate.envers.RelationTargetAuditMode.*
-
-@Audited
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
 @ToString(includeNames = true, excludes = 'entries')
@@ -38,14 +33,12 @@ class SettingsGroup implements Serializable {
     @JoinColumn(name = "environment")
     @JsonBackReference
     @NotNull
-    @Audited(targetAuditMode = NOT_AUDITED)
     Environment environment
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "key_name")
     @JsonIgnore
     @NotNull
-    @Audited(targetAuditMode = NOT_AUDITED)
     EncryptionKey key
 
     @Size(min = 1, message = "Name cannot by empty")

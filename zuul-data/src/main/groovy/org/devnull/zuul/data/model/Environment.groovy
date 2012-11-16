@@ -6,14 +6,9 @@ import org.devnull.zuul.data.config.ZuulDataConstants
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.OneToMany
 import javax.validation.constraints.Pattern
-import javax.persistence.Column
 import javax.validation.constraints.Size
-import org.hibernate.envers.Audited
+import javax.persistence.*
 
 @Entity
 @EqualsAndHashCode(includes = "name")

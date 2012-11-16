@@ -4,13 +4,12 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.codehaus.jackson.annotate.JsonBackReference
 import org.devnull.zuul.data.config.ZuulDataConstants
-import org.hibernate.envers.Audited
 
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import javax.persistence.*
 
-@Audited
+
 @Entity
 @EqualsAndHashCode()
 @ToString(includeNames = true)
