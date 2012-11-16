@@ -16,8 +16,8 @@ class SettingsAuditDaoIntegrationTest extends ZuulDataIntegrationTest {
         assert audit.id == 1L
         assert audit.groupName == "app-data-config"
         assert audit.groupEnvironment == "dev"
-        assert audit.settingsKey == "jdbc.zuul.username"
-        assert audit.settingsValue == "zuul"
+        assert audit.settingsKey == "jdbc.zuul.jms.enabled"
+        assert audit.settingsValue == "true"
         assert !audit.encrypted
         assert audit.modifiedBy == "system"
         assert audit.modifiedDate.format("MM/dd/yy") == "10/31/12"
