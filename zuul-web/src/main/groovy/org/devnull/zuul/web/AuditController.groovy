@@ -2,6 +2,8 @@ package org.devnull.zuul.web
 
 import groovy.util.logging.Slf4j
 import org.devnull.util.pagination.HttpRequestPagination
+import org.devnull.util.pagination.Pagination
+import org.devnull.util.pagination.adapter.DisplayTagPaginatedListAdapter
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +22,9 @@ class AuditController {
 
     @ModelAttribute("audits")
     List<SettingsAudit> findAudits(HttpServletRequest request) {
-        return zuulService.findSettingAudits(new HttpRequestPagination<SettingsAudit>(request))
+        def pagination = new HttpRequestPagination<SettingsAudit>(request)
+        def audits = zuulService.findSettingAudits(pagination)
+        return new DisplayTagPaginatedListAdapter(audits as Pagination)
     }
 
     @RequestMapping("/audit")
