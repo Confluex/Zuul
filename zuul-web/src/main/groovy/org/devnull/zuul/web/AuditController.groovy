@@ -23,8 +23,10 @@ class AuditController {
 
     @ModelAttribute("audits")
     List<SettingsAudit> findAudits(HttpServletRequest request,
-                                   @RequestParam(required=false, value="page", defaultValue="1") Integer page) {
+                                   @RequestParam(required = false, value = "page", defaultValue = "1") Integer page,
+                                   @RequestParam(required = false, value = "max", defaultValue = "10") Integer max) {
         def pagination = new HttpRequestPagination<SettingsAudit>(request)
+        pagination.max = max
         pagination.page = page - 1 // account for zero based indexing on our Pagination API
         def audits = zuulService.findSettingAudits(pagination)
         return new DisplayTagPaginatedListAdapter(audits as Pagination)
