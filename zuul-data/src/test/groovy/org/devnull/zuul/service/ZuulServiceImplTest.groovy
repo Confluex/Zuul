@@ -8,6 +8,10 @@ import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.devnull.util.pagination.SimplePagination
 import org.devnull.zuul.data.config.ZuulDataConstants
+import org.devnull.zuul.data.dao.EncryptionKeyDao
+import org.devnull.zuul.data.dao.EnvironmentDao
+import org.devnull.zuul.data.dao.SettingsEntryDao
+import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
@@ -27,7 +31,6 @@ import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
-import org.devnull.zuul.data.dao.*
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
@@ -51,7 +54,6 @@ public class ZuulServiceImplTest {
         def templateMessage = new SimpleMailMessage()
         templateMessage.from = "test@devnull.org"
         service = new ZuulServiceImpl(
-                settingsAuditDao: mock(SettingsAuditDao),
                 settingsGroupDao: mock(SettingsGroupDao),
                 settingsEntryDao: mock(SettingsEntryDao),
                 environmentDao: mock(EnvironmentDao),
