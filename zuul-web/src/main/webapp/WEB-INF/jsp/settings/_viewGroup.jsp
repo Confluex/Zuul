@@ -10,9 +10,7 @@
        value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}.properties"/>
 <c:url var="addUrl"
        value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}/create/entry"/>
-<c:url var="auditUrl" value="/audit/filter/add/group">
-    <c:param name="value">${group.id}</c:param>
-</c:url>
+<c:url var="auditUrl" value="/audit/filter/group/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}"/>
 
 <div class="navbar">
     <div class="navbar-inner">

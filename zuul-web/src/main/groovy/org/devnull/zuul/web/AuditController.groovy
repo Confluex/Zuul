@@ -7,14 +7,13 @@ import org.devnull.util.pagination.Pagination
 import org.devnull.util.pagination.adapter.DisplayTagPaginatedListAdapter
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.service.AuditService
+import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
 
 import javax.servlet.http.HttpServletRequest
+
+import org.springframework.web.bind.annotation.*
 
 @Controller
 @Slf4j
@@ -30,6 +29,9 @@ class AuditController {
 
     @Autowired
     AuditService auditService
+
+    @Autowired
+    ZuulService zuulService
 
     @ModelAttribute("audits")
     List<SettingsAudit> findAudits(HttpServletRequest request,
@@ -94,6 +96,12 @@ class AuditController {
         return "redirect:/audit"
     }
 
+    @RequestMapping(value = "/audit/filter/group/{env}/{name}", method = RequestMethod.GET)
+    String filterByGroup(HttpServletRequest request, @PathVariable("env") String env, @PathVariable("name") String name) {
+        request.session.setAttribute(SESSION_FILTERS.groupName, name)
+        request.session.setAttribute(SESSION_FILTERS.groupEnvironment, env)
+        return "redirect:/audit"
+    }
 
     /**
      * Looks for potential filters in the session and applies them to the pagination.

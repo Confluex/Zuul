@@ -131,5 +131,12 @@ class AuditControllerTest {
         assert request.session.getAttribute(attribute) == "test"
     }
 
+    @Test
+    void shouldFilterByGroup() {
+        def request = new MockHttpServletRequest()
+        assert "redirect:/audit" == controller.filterByGroup(request, "dev", "test-config")
+        assert request.session.getAttribute(AuditController.SESSION_FILTERS.groupName) == "test-config"
+        assert request.session.getAttribute(AuditController.SESSION_FILTERS.groupEnvironment) == "dev"
+    }
 
 }
