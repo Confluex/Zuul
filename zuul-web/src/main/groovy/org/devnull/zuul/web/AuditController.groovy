@@ -1,6 +1,7 @@
 package org.devnull.zuul.web
 
 import groovy.util.logging.Slf4j
+import org.devnull.security.model.User
 import org.devnull.util.pagination.HttpRequestPagination
 import org.devnull.util.pagination.Pagination
 import org.devnull.util.pagination.adapter.DisplayTagPaginatedListAdapter
@@ -30,6 +31,11 @@ class AuditController {
         if (pagination.page > 0) pagination.page = pagination.page - 1
         def audits = auditService.findSettingAudits(pagination)
         return new DisplayTagPaginatedListAdapter(audits as Pagination)
+    }
+
+    @ModelAttribute("users")
+    Map<String, User> findUsers(@ModelAttribute("audits") List<SettingsAudit> audits) {
+        return auditService.lookupUsersForAudits(audits)
     }
 
     @RequestMapping("/audit")

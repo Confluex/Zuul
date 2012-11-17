@@ -75,7 +75,7 @@ class ZuulServiceImpl implements ZuulService {
         log.info("Appending entries from properties file..")
         def properties = new Properties()
         properties.load(inputStream)
-        log.info("Loading entries: {}", properties)
+        log.debug("Loading entries: {}", properties)
         properties.each {k, v ->
             group.addToEntries(new SettingsEntry(key: k, value: v))
         }
@@ -90,7 +90,7 @@ class ZuulServiceImpl implements ZuulService {
         def group = new SettingsGroup(name: name, environment: env, key: copy.key)
         copy.entries.each {
             def entry = new SettingsEntry(key: it.key, value: it.value, encrypted: it.encrypted)
-            log.info("appending entry: {}", entry)
+            log.debug("appending entry: {}", entry)
             group.addToEntries(entry)
         }
         return settingsGroupDao.save(group)
