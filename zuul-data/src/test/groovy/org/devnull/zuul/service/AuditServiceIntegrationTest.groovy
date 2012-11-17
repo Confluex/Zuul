@@ -35,7 +35,7 @@ public class AuditServiceIntegrationTest extends ZuulDataIntegrationTest {
     @Test
     @NotTransactional
     void shouldLogAuditsWithTaskExecutor() {
-        def count = settingsAuditDao.count().toInteger() // no change of loss here with this test data
+        def count = settingsAuditDao.count().toInteger() // no loss with this test data set
         def entry = settingsEntryDao.findOne(1)
         def user = userDao.findOne(1)
         service.logAudit(user, SettingsAudit.AuditType.MOD, [entry])

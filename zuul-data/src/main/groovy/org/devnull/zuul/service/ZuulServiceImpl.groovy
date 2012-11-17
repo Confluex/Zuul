@@ -79,7 +79,7 @@ class ZuulServiceImpl implements ZuulService {
         properties.each {k, v ->
             group.addToEntries(new SettingsEntry(key: k, value: v))
         }
-        auditService.logAudit(SettingsAudit.AuditType.ADD, group.entries)
+        auditService.logAudit(securityService.currentUser, SettingsAudit.AuditType.ADD, group.entries)
         return settingsGroupDao.save(group)
     }
 

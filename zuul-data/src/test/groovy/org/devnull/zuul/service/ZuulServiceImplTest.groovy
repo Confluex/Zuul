@@ -12,10 +12,6 @@ import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
-import org.devnull.zuul.data.model.EncryptionKey
-import org.devnull.zuul.data.model.Environment
-import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
@@ -24,6 +20,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
+import org.springframework.core.io.ClassPathResource
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -31,6 +28,7 @@ import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
+import org.devnull.zuul.data.model.*
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
@@ -59,6 +57,7 @@ public class ZuulServiceImplTest {
                 environmentDao: mock(EnvironmentDao),
                 encryptionKeyDao: mock(EncryptionKeyDao),
                 encryptionStrategy: mock(EncryptionStrategy),
+                auditService: mock(AuditService),
                 securityService: mock(SecurityService),
                 templateMessage: templateMessage,
                 validator: mock(Validator)
@@ -302,6 +301,38 @@ public class ZuulServiceImplTest {
         assert groupArg.value.key == mockGroup.key
         assert !groupArg.value.entries
         assert result.is(mockGroup)
+    }
+
+    @Test
+    void shouldCreateSettingsGroupFromPropertiesFile() {
+        def environment = new Environment(name: "qa")
+        def group = new SettingsGroup(environment: environment, name:"test-data-config")
+        def stream = new ClassPathResource("/test-data-config-qa.properties")
+        def user = new User(userName: "userA")
+
+        when(service.settingsGroupDao.save(Matchers.any(SettingsGroup))).thenReturn(group)
+        when(service.environmentDao.findOne("qa")).thenReturn(environment)
+        when(service.securityService.currentUser).thenReturn(user)
+        def result = service.createSettingsGroupFromPropertiesFile("test-data-config", "qa", stream.inputStream)
+
+        def arg = ArgumentCaptor.forClass(SettingsGroup)
+        verify(service.settingsGroupDao, times(2)).save(arg.capture())
+
+        assert arg.value == result
+
+        assert result.name == "test-data-config"
+        assert result.environment == environment
+        assert result.entries.size() == 2
+
+        assert result.entries[0].key == "jdbc.zuul.generate.ddl"
+        assert result.entries[0].value == "validate"
+        assert !result.entries[0].encrypted
+
+        assert result.entries[1].key == "jdbc.zuul.url"
+        assert result.entries[1].value == "jdbc:h2:file:zuul-qa"
+        assert !result.entries[1].encrypted
+
+        verify(service.auditService).logAudit(user, SettingsAudit.AuditType.ADD, result.entries)
     }
 
     @Test
