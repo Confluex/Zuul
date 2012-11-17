@@ -20,9 +20,13 @@ import javax.servlet.http.HttpServletRequest
 @Slf4j
 class AuditController {
 
-    static final String SESSION_GROUP_NAME = "AUDIT_GROUP_ID"
-    static final String SESSION_MODIFIED_BY = "AUDIT_MODIFIED_BY"
-    static final String SESSION_SETTINGS_ENTRY_KEY = "AUDIT_SETTINGS_ENTRY_KEY"
+    static final Map<String, String> SESSION_FILTERS = [
+            groupEnvironment: "SESSION_ENVIRONMENT_NAME",
+            groupName: "SESSION_GROUP_NAME",
+            modifiedBy: "SESSION_MODIFIED_BY",
+            settingsKey: "SESSION_SETTINGS_ENTRY_KEY"
+    ]
+
 
     @Autowired
     AuditService auditService
@@ -49,11 +53,14 @@ class AuditController {
 
     @ModelAttribute("filters")
     Map findFilters(HttpServletRequest request) {
-        return [
-                group: request.session.getAttribute(SESSION_GROUP_NAME),
-                modifiedBy: request.session.getAttribute(SESSION_MODIFIED_BY),
-                key: request.session.getAttribute(SESSION_SETTINGS_ENTRY_KEY)
-        ]
+        def filters = [:]
+        SESSION_FILTERS.each { field, attribute ->
+            def value = request.session.getAttribute(attribute)
+            if (value) {
+                filters[field] = value
+            }
+        }
+        return filters
     }
 
     @RequestMapping(value = "/audit", method = RequestMethod.GET)
@@ -61,62 +68,43 @@ class AuditController {
         return "/audit/index"
     }
 
-     // ----- Group Filters
-    @RequestMapping(value = "/audit/filter/add/group", method = RequestMethod.GET)
-    String addGroupFilter(HttpServletRequest request, @RequestParam("value") String group) {
-        request.session.setAttribute(SESSION_GROUP_NAME, group)
-        return "redirect:/audit"
-    }
-    @RequestMapping(value = "/audit/filter/remove/group", method = RequestMethod.GET)
-    String removeGroupFilter(HttpServletRequest request) {
-        request.session.removeAttribute(SESSION_GROUP_NAME)
-        return "redirect:/audit"
-    }
-
-
-    // ----- Modified By Filters
-    @RequestMapping(value = "/audit/filter/add/modifiedBy", method = RequestMethod.GET)
-    String addModifiedByFilter(HttpServletRequest request, @RequestParam("value") String modifiedBy) {
-        request.session.setAttribute(SESSION_MODIFIED_BY, modifiedBy)
-        return "redirect:/audit"
-    }
-    @RequestMapping(value = "/audit/filter/remove/modifiedBy", method = RequestMethod.GET)
-    String removeModifiedByFilter(HttpServletRequest request) {
-        request.session.removeAttribute(SESSION_MODIFIED_BY)
+    @RequestMapping(value = "/audit/filter/add", method = RequestMethod.GET)
+    String addSessionFilter(HttpServletRequest request, @RequestParam("value") String value, @RequestParam("field") String field) {
+        def attribute = SESSION_FILTERS[field]
+        if (attribute) {
+            log.info("Adding filter {}={} to session attribute: {}", field, value, attribute)
+            request.session.setAttribute(attribute, value)
+        }
+        else {
+            log.warn("Invalid filter attribute: {}. Valid filters: {}", field, SESSION_FILTERS.keySet())
+        }
         return "redirect:/audit"
     }
 
-
-    // ----- Key Filters
-    @RequestMapping(value = "/audit/filter/add/key", method = RequestMethod.GET)
-    String addKeyFilter(HttpServletRequest request, @RequestParam("value") String key) {
-        request.session.setAttribute(SESSION_SETTINGS_ENTRY_KEY, key)
+    @RequestMapping(value = "/audit/filter/remove", method = RequestMethod.GET)
+    String removeSessionFilter(HttpServletRequest request, @RequestParam("field") String field) {
+        def attribute = SESSION_FILTERS[field]
+        if (attribute) {
+            log.info("Removing filter {}", attribute)
+            request.session.removeAttribute(attribute)
+        }
+        else {
+            log.warn("Invalid filter attribute: {}. Valid filters: {}", field, SESSION_FILTERS.keySet())
+        }
         return "redirect:/audit"
     }
-    @RequestMapping(value = "/audit/filter/remove/key", method = RequestMethod.GET)
-    String removeKeyFilter(HttpServletRequest request) {
-        request.session.removeAttribute(SESSION_SETTINGS_ENTRY_KEY)
-        return "redirect:/audit"
-    }
 
-    /* ---------- Internals --------- */
 
     /**
      * Looks for potential filters in the session and applies them to the pagination.
      */
     @SuppressWarnings("GroovyAssignabilityCheck")
     protected void applySessionFilters(HttpServletRequest request, HttpRequestPagination<SettingsAudit> pagination) {
-        def groupFilter = request.session.getAttribute(SESSION_GROUP_NAME)
-        def modifiedByFilter  = request.session.getAttribute(SESSION_MODIFIED_BY)
-        def keyFilter  = request.session.getAttribute(SESSION_SETTINGS_ENTRY_KEY)
-        if (groupFilter) {
-            pagination.filter.groupName = groupFilter
-        }
-        if (modifiedByFilter) {
-            pagination.filter.modifiedBy = modifiedByFilter
-        }
-        if (keyFilter) {
-            pagination.filter.settingsKey = keyFilter
+        SESSION_FILTERS.each { field, attribute ->
+            def value = request.session.getAttribute(attribute)
+            if (value) {
+                pagination.filter[field] = value
+            }
         }
     }
 
