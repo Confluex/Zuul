@@ -5,7 +5,7 @@ import org.devnull.util.pagination.HttpRequestPagination
 import org.devnull.util.pagination.Pagination
 import org.devnull.util.pagination.adapter.DisplayTagPaginatedListAdapter
 import org.devnull.zuul.data.model.SettingsAudit
-import org.devnull.zuul.service.ZuulService
+import org.devnull.zuul.service.AuditService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest
 class AuditController {
 
     @Autowired
-    ZuulService zuulService
+    AuditService auditService
 
     @ModelAttribute("audits")
     List<SettingsAudit> findAudits(HttpServletRequest request,
@@ -28,7 +28,7 @@ class AuditController {
         def pagination = new HttpRequestPagination<SettingsAudit>(request)
         pagination.max = max
         pagination.page = page - 1 // account for zero based indexing on our Pagination API
-        def audits = zuulService.findSettingAudits(pagination)
+        def audits = auditService.findSettingAudits(pagination)
         return new DisplayTagPaginatedListAdapter(audits as Pagination)
     }
 
