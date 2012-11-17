@@ -6,6 +6,7 @@ import org.devnull.orm.util.JpaPaginationAdapter
 import org.devnull.security.service.SecurityService
 import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.config.ZuulDataConstants
+import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
@@ -62,6 +64,31 @@ class ZuulServiceImpl implements ZuulService {
         pagination.results = audits.content
         pagination.total = audits.totalElements
         return pagination
+    }
+
+    @Transactional(readOnly = false)
+    @Async("auditExecutor")
+    void logAudit(AuditType type, List<SettingsEntry> entries) {
+        def auditDate = new Date()
+        entries.each { entry ->
+            try {
+                def audit = new SettingsAudit(
+                        groupName: entry.group?.name,
+                        groupEnvironment: entry.group?.environment?.name,
+                        encrypted: entry.encrypted,
+                        modifiedBy: securityService.currentUser?.userName,
+                        modifiedDate: auditDate,
+                        settingsKey: entry.key,
+                        settingsValue: entry.value,
+                        type: type
+                )
+                log.debug("Saving new audit entry: {}", audit)
+                settingsAuditDao.save(audit)
+            }
+            catch (Exception e) {
+                log.error("Unable to save audit for entry ${entry}", e)
+            }
+        }
     }
 
     @Transactional(readOnly = false)

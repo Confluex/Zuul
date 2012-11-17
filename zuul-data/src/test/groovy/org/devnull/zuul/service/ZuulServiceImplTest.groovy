@@ -8,14 +8,6 @@ import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.devnull.util.pagination.SimplePagination
 import org.devnull.zuul.data.config.ZuulDataConstants
-import org.devnull.zuul.data.dao.EncryptionKeyDao
-import org.devnull.zuul.data.dao.EnvironmentDao
-import org.devnull.zuul.data.dao.SettingsEntryDao
-import org.devnull.zuul.data.dao.SettingsGroupDao
-import org.devnull.zuul.data.model.EncryptionKey
-import org.devnull.zuul.data.model.Environment
-import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
@@ -31,6 +23,8 @@ import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
+import org.devnull.zuul.data.dao.*
+import org.devnull.zuul.data.model.*
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
@@ -54,6 +48,7 @@ public class ZuulServiceImplTest {
         def templateMessage = new SimpleMailMessage()
         templateMessage.from = "test@devnull.org"
         service = new ZuulServiceImpl(
+                settingsAuditDao: mock(SettingsAuditDao),
                 settingsGroupDao: mock(SettingsGroupDao),
                 settingsEntryDao: mock(SettingsEntryDao),
                 environmentDao: mock(EnvironmentDao),
@@ -471,4 +466,27 @@ public class ZuulServiceImplTest {
         def results = service.search("abc", new SimplePagination<SettingsEntry>())
         assert results == page.content
     }
+
+    @Test
+    void shouldSaveAuditSettingsEntries() {
+        when(service.securityService.currentUser).thenReturn(new User(userName: "userA"))
+        def group = new SettingsGroup(
+                environment: new Environment(name: "dev"),
+                name: "test group"
+        )
+        group.addToEntries(new SettingsEntry(key: "property.a", value: "1"))
+        group.addToEntries(new SettingsEntry(key: "property.b", value: "mumbojumbo", encrypted: true))
+        service.logAudit(SettingsAudit.AuditType.ADD, group.entries)
+        def args = ArgumentCaptor.forClass(SettingsAudit)
+        verify(service.settingsAuditDao, times(2)).save(args.capture())
+        // not sure how to get a captor for each invocation.. just use the last for now
+        assert args.value.encrypted
+        assert args.value.groupEnvironment == "dev"
+        assert args.value.groupName == "test group"
+        assert args.value.settingsKey == "property.b"
+        assert args.value.settingsValue == "mumbojumbo"
+        assert args.value.modifiedBy == "userA"
+        assert args.value.type == SettingsAudit.AuditType.ADD
+    }
+
 }

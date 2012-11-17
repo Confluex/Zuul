@@ -1,6 +1,7 @@
 package org.devnull.zuul.service
 
 import org.devnull.util.pagination.Pagination
+import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.devnull.zuul.data.model.*
 
@@ -108,5 +109,7 @@ public interface ZuulService {
 
     /* Auditing ---------------------------- */
     List<SettingsAudit> findSettingAudits(Pagination<SettingsAudit> pagination)
+
+    void logAudit(AuditType type, List<SettingsEntry> entries)
 
 }
