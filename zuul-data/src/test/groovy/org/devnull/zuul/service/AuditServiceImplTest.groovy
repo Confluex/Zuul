@@ -1,7 +1,6 @@
 package org.devnull.zuul.service
 
 import org.devnull.security.model.User
-import org.devnull.security.service.SecurityService
 import org.devnull.zuul.data.dao.SettingsAuditDao
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsAudit
@@ -19,21 +18,19 @@ class AuditServiceImplTest {
     @Before
     void createService() {
         service = new AuditServiceImpl(
-                settingsAuditDao: mock(SettingsAuditDao),
-                securityService: mock(SecurityService)
+                settingsAuditDao: mock(SettingsAuditDao)
         )
     }
 
     @Test
     void shouldSaveAuditSettingsEntries() {
-        when(service.securityService.currentUser).thenReturn(new User(userName: "userA"))
         def group = new SettingsGroup(
                 environment: new Environment(name: "dev"),
                 name: "test group"
         )
         group.addToEntries(new SettingsEntry(key: "property.a", value: "1"))
         group.addToEntries(new SettingsEntry(key: "property.b", value: "mumbojumbo", encrypted: true))
-        service.logAudit(SettingsAudit.AuditType.ADD, group.entries)
+        service.logAudit(new User(userName: "userA"), SettingsAudit.AuditType.ADD, group.entries)
         def args = ArgumentCaptor.forClass(SettingsAudit)
         verify(service.settingsAuditDao, times(2)).save(args.capture())
         // not sure how to get a captor for each invocation.. just use the last for now

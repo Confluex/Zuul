@@ -10,10 +10,6 @@ import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
-import org.devnull.zuul.data.model.EncryptionKey
-import org.devnull.zuul.data.model.Environment
-import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
@@ -26,6 +22,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
+import org.devnull.zuul.data.model.*
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -58,6 +55,9 @@ class ZuulServiceImpl implements ZuulService {
     SecurityService securityService
 
     @Autowired
+    AuditService auditService
+
+    @Autowired
     Validator validator
 
     @Transactional(readOnly = false)
@@ -79,6 +79,7 @@ class ZuulServiceImpl implements ZuulService {
         properties.each {k, v ->
             group.addToEntries(new SettingsEntry(key: k, value: v))
         }
+        auditService.logAudit(SettingsAudit.AuditType.ADD, group.entries)
         return settingsGroupDao.save(group)
     }
 

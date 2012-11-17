@@ -2,7 +2,7 @@ package org.devnull.zuul.service
 
 import groovy.util.logging.Slf4j
 import org.devnull.orm.util.JpaPaginationAdapter
-import org.devnull.security.service.SecurityService
+import org.devnull.security.model.User
 import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.dao.SettingsAuditDao
 import org.devnull.zuul.data.model.SettingsAudit
@@ -20,8 +20,6 @@ class AuditServiceImpl implements AuditService {
     @Autowired
     SettingsAuditDao settingsAuditDao
 
-    @Autowired
-    SecurityService securityService
 
     List<SettingsAudit> findSettingAudits(Pagination<SettingsAudit> pagination) {
         def audits = settingsAuditDao.findAll(new JpaPaginationAdapter(pagination))
@@ -32,7 +30,7 @@ class AuditServiceImpl implements AuditService {
 
     @Transactional(readOnly = false)
     @Async("auditExecutor")
-    void logAudit(SettingsAudit.AuditType type, List<SettingsEntry> entries) {
+    void logAudit(User user, SettingsAudit.AuditType type, List<SettingsEntry> entries) {
         def auditDate = new Date()
         entries.each { entry ->
             try {
@@ -40,7 +38,7 @@ class AuditServiceImpl implements AuditService {
                         groupName: entry.group?.name,
                         groupEnvironment: entry.group?.environment?.name,
                         encrypted: entry.encrypted,
-                        modifiedBy: securityService.currentUser?.userName,
+                        modifiedBy: user?.userName,
                         modifiedDate: auditDate,
                         settingsKey: entry.key,
                         settingsValue: entry.value,
