@@ -8,6 +8,7 @@ import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.dao.SettingsAuditDao
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.specs.SettingsAuditFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -26,7 +27,8 @@ class AuditServiceImpl implements AuditService {
 
 
     List<SettingsAudit> findSettingAudits(Pagination<SettingsAudit> pagination) {
-        def audits = settingsAuditDao.findAll(new JpaPaginationAdapter(pagination))
+        def filter = new SettingsAuditFilter(pagination.filter)
+        def audits = settingsAuditDao.findAll(filter, new JpaPaginationAdapter(pagination))
         pagination.results = audits.content
         pagination.total = audits.totalElements
         return pagination

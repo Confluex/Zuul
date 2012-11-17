@@ -1,16 +1,23 @@
 package org.devnull.zuul.service
 
+import org.devnull.orm.util.JpaPaginationAdapter
 import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
+import org.devnull.util.pagination.SimplePagination
 import org.devnull.zuul.data.dao.SettingsAuditDao
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
+import org.devnull.zuul.data.specs.SettingsAuditFilter
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 class AuditServiceImplTest {
@@ -22,6 +29,25 @@ class AuditServiceImplTest {
                 settingsAuditDao: mock(SettingsAuditDao),
                 securityService: mock(SecurityService)
         )
+    }
+
+    @Test
+    void shouldFindAuditsFromPagination() {
+        def audits = [new SettingsAudit(id: 1)]
+        def filter = [id: 1]
+        def pagination = new SimplePagination<SettingsAudit>(filter: filter)
+        def page = mock(Page)
+        when(service.settingsAuditDao.findAll(any(Specification), any(Pageable))).thenReturn(page)
+        when(page.content).thenReturn(audits)
+
+        def results = service.findSettingAudits(pagination)
+        def specArg = ArgumentCaptor.forClass(SettingsAuditFilter)
+        def pagingArg = ArgumentCaptor.forClass(JpaPaginationAdapter)
+        verify(service.settingsAuditDao).findAll(specArg.capture(), pagingArg.capture())
+        assert specArg.value.filter == filter
+        assert pagingArg.value.pageNumber == pagination.page
+        assert pagingArg.value.pageSize == pagination.max
+        assert results == audits
     }
 
     @Test
