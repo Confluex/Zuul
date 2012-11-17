@@ -94,6 +94,7 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
         <property name="from" value="${smtp.from}"/>
     </bean>
 
+    <task:annotation-driven />
     <task:executor id="auditExecutor" pool-size="10" queue-capacity="1000" rejection-policy="DISCARD"/>
 
 </beans>
