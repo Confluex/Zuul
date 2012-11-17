@@ -20,26 +20,64 @@
         <div class="page-header">
             <h1>Audit History</h1>
         </div>
-        <display:table name="audits" id="row" class="table table-bordered table-condensed table-striped" requestURI="/audit" >
-            <display:column property="id" title="Rev" sortable="true" sortProperty="id" />
+        <div class="stacked">
+            <c:if test="${filters.group != null}">
+                <span class="label label-warning filter" title="Filter"
+                      data-content="The results are filtered by settings group. Click the the close icon to remove the filter.">
+                    Group Filter
+                    <a href="${pageContext.request.contextPath}/audit/filter/remove/group">&times;</a>
+                </span>
+            </c:if>
+            <c:if test="${filters.modifiedBy != null}">
+                <span class="label label-warning filter" title="Filter"
+                      data-content="The results are filtered by the user who modified the revision. Click the the close icon to remove the filter.">
+                    Modified By Filter
+                    <a href="${pageContext.request.contextPath}/audit/filter/remove/modifiedBy">&times;</a>
+                </span>
+            </c:if>
+            <c:if test="${filters.key != null}">
+                <span class="label label-warning filter" title="Filter"
+                      data-content="The results are filtered by the user who modified the revision. Click the the close icon to remove the filter.">
+                    Key Filter
+                    <a href="${pageContext.request.contextPath}/audit/filter/remove/key">&times;</a>
+                </span>
+            </c:if>
+        </div>
+        <display:table name="audits" id="row" class="table table-bordered table-condensed table-striped"
+                       requestURI="/audit">
+            <display:column property="id" title="Rev" sortable="true" sortProperty="id"/>
             <display:column property="modifiedDate" title="Date" sortable="true"/>
             <display:column property="groupEnvironment" title="Environment" sortable="true"/>
-            <display:column property="groupName" title="Group" sortable="true"/>
-            <display:column property="settingsKey" title="Key" sortable="true"/>
+            <display:column sortProperty="groupName" title="Group" sortable="true">
+                <c:url var="groupUrl" value="/audit/filter/add/group">
+                    <c:param name="value" value="${row.groupName}"/>
+                </c:url>
+                <a href="${groupUrl}">${fn:escapeXml(row.groupName)}</a>
+            </display:column>
+            <display:column sortProperty="settingsKey" title="Key" sortable="true">
+                <c:url var="keyUrl" value="/audit/filter/add/key">
+                    <c:param name="value" value="${row.settingsKey}"/>
+                </c:url>
+                <a href="${keyUrl}">${fn:escapeXml(row.settingsKey)}</a>
+            </display:column>
             <display:column property="settingsValue" title="Value" sortable="true"/>
-            <display:column title="User" sortable="true" sortProperty="modifiedBy">
+            <display:column sortProperty="modifiedBy" title="User" sortable="true" >
                 <c:set var="user" value="${users[row.modifiedBy]}"/>
-                <span class="user" title="${fn:escapeXml(row.modifiedBy)}">
+                <c:url var="modifiedByUrl" value="/audit/filter/add/modifiedBy">
+                    <c:param name="value" value="${row.modifiedBy}"/>
+                </c:url>
+                <a href="${modifiedByUrl}" class="user" title="${fn:escapeXml(row.modifiedBy)}">
                     ${fn:escapeXml(user.firstName)} ${fn:escapeXml(user.lastName)}
-                </span>
+                </a>
             </display:column>
             <display:column property="type" title="Operation" sortable="true"/>
         </display:table>
     </div>
 </div>
 <script>
-    $(function() {
-       $(".user").tooltip();
+    $(function () {
+        $(".user").tooltip();
+        $(".filter").popover({trigger:'hover'})
     });
 </script>
 </body>
