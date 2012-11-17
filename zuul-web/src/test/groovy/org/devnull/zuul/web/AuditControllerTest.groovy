@@ -1,5 +1,6 @@
 package org.devnull.zuul.web
 
+import org.devnull.security.model.User
 import org.devnull.util.pagination.HttpRequestPagination
 import org.devnull.util.pagination.Pagination
 import org.devnull.util.pagination.Sort
@@ -27,6 +28,15 @@ class AuditControllerTest {
         when(controller.auditService.findSettingAudits(Matchers.any(Pagination))).thenReturn(audits)
         def results = controller.findAudits(new MockHttpServletRequest(), 25)
         assert audits == results
+    }
+
+    @Test
+    void shouldFindUsersFromAudits() {
+        def audits = [new SettingsAudit(id: 1)]
+        def users = [userA:new User(id: 1)]
+        when(controller.auditService.lookupUsersForAudits(audits)).thenReturn(users)
+        def results = controller.findUsers(audits)
+        assert users == results
     }
 
     @Test
