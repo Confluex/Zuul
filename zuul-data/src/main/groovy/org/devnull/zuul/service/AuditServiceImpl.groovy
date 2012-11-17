@@ -3,6 +3,7 @@ package org.devnull.zuul.service
 import groovy.util.logging.Slf4j
 import org.devnull.orm.util.JpaPaginationAdapter
 import org.devnull.security.model.User
+import org.devnull.security.service.SecurityService
 import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.dao.SettingsAuditDao
 import org.devnull.zuul.data.model.SettingsAudit
@@ -19,6 +20,9 @@ class AuditServiceImpl implements AuditService {
 
     @Autowired
     SettingsAuditDao settingsAuditDao
+
+    @Autowired
+    SecurityService securityService
 
 
     List<SettingsAudit> findSettingAudits(Pagination<SettingsAudit> pagination) {
@@ -51,5 +55,17 @@ class AuditServiceImpl implements AuditService {
                 log.error("Unable to save audit for entry ${entry}", e)
             }
         }
+    }
+
+    Map<String, User> lookupUsersForAudits(List<SettingsAudit> audits) {
+        def users = [:]
+        audits.collect { it.modifiedBy }.unique().each { modifiedBy ->
+            def user = securityService.findByUserName(modifiedBy)
+            if (!user) {
+                user = new User(userName: modifiedBy, firstName: "Deleted", lastName: "User")
+            }
+            users[modifiedBy] = user
+        }
+        return users
     }
 }

@@ -1,6 +1,7 @@
 package org.devnull.zuul.service
 
 import org.devnull.security.model.User
+import org.devnull.security.service.SecurityService
 import org.devnull.zuul.data.dao.SettingsAuditDao
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsAudit
@@ -18,7 +19,8 @@ class AuditServiceImplTest {
     @Before
     void createService() {
         service = new AuditServiceImpl(
-                settingsAuditDao: mock(SettingsAuditDao)
+                settingsAuditDao: mock(SettingsAuditDao),
+                securityService: mock(SecurityService)
         )
     }
 
@@ -43,4 +45,57 @@ class AuditServiceImplTest {
         assert args.value.type == SettingsAudit.AuditType.ADD
     }
 
+    @Test
+    void shouldFindUsersFromAuditUserNames() {
+        def audits = [
+                new SettingsAudit(modifiedBy: "userA"),
+                new SettingsAudit(modifiedBy: "userB"),
+                new SettingsAudit(modifiedBy: "userA"),
+                new SettingsAudit(modifiedBy: "userC"),
+                new SettingsAudit(modifiedBy: "userB"),
+        ]
+        def userA = new User(userName: "userA")
+        def userB = new User(userName: "userB")
+        def userC = new User(userName: "userC")
+
+        when(service.securityService.findByUserName("userA")).thenReturn(userA)
+        when(service.securityService.findByUserName("userB")).thenReturn(userB)
+        when(service.securityService.findByUserName("userC")).thenReturn(userC)
+
+        def users = service.lookupUsersForAudits(audits)
+
+        // ensure only 1 call per user
+        verify(service.securityService).findByUserName("userA")
+        verify(service.securityService).findByUserName("userB")
+        verify(service.securityService).findByUserName("userC")
+
+        assert users.size() == 3
+        assert users["userA"] == userA
+        assert users["userB"] == userB
+        assert users["userC"] == userC
+
+    }
+
+    @Test
+    void shouldCreateDummyUserIfRecordNoLongerExists() {
+        def audits = [
+                new SettingsAudit(modifiedBy: "userA"),
+                new SettingsAudit(modifiedBy: "userB")
+        ]
+        def userA = new User(userName: "userA")
+
+        when(service.securityService.findByUserName("userA")).thenReturn(userA)
+
+        def users = service.lookupUsersForAudits(audits)
+
+        // ensure only 1 call per user
+        verify(service.securityService).findByUserName("userA")
+        verify(service.securityService).findByUserName("userB")
+
+        assert users.size() == 2
+        assert users["userA"] == userA
+        assert users["userB"].userName == "userB"
+        assert users["userB"].firstName == "Deleted"
+        assert users["userB"].lastName == "User"
+    }
 }
