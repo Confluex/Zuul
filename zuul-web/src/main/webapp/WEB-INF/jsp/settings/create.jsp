@@ -12,46 +12,43 @@
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>Give your file a name..</h1>
+            <h1>Give your configuration a name..</h1>
         </div>
     </div>
 </div>
 <div class="row" style="min-height: 200px;">
-    <div class="span6">
-        <p>
-            Provide a file name (without an extension) and we'll get started creating a new settings
-            group. In the next step, we'll define the environments and the content of the file.
-        </p>
-
-        <form action="#" id="newSettingsForm" method="GET" class="well form-inline">
-            <input id="groupName" name="name" type="text" class="input-large" placeholder="File Name.."
-                   autocomplete="off">
-            <button type="submit" class="btn btn-primary">
-                <i class="icon-arrow-right icon-white"></i>
-                Next
-            </button>
+    <div class="span12">
+        <form action="#" id="newSettingsForm" method="GET" style="padding-left: 5em;">
+            <div class="input-append">
+                <input id="groupName" name="name" type="text" class="input-large"
+                       autocomplete="off" placeholder="Configuration Name.." title="Configuration Name"
+                       data-content="Provide a unique name for your configuration and we'll get started creating a new
+                   settings group. In the next step, we'll define the environments and the content of the configuration.">
+                <button type="submit" class="btn btn-primary">
+                    <i class="icon-arrow-right icon-white"></i>
+                    Next
+                </button>
+            </div>
         </form>
-    </div>
-    <div class="span6">
-
-        <div class="alert alert-info">
-            <button class="close" data-dismiss="alert">&times;</button>
-            <h3 class="section-header">
-                Tip
-            </h3>
-            <p>Although it is not necessary, you might want to consider using a URL friendly name since
-                it will be used as a path to retrieve the file.</p>
-
-            <p><strong>Example: </strong><br/>
-                myapp-data-config = /settings/dev/myapp-data-config.properties
-            </p>
-        </div>
     </div>
 </div>
 <script>
     $(function () {
+        $("#groupName").popover({placement:'bottom'}).popover('show');
         $("#newSettingsForm").submit(function () {
-            document.location = "${pageContext.request.contextPath}/settings/" + encodeURI($("#groupName").val());
+            var field = $("#groupName");
+            var name = field.val();
+            if (name && name.match(/^[a-zA-Z0-9\-_]+$/)) {
+                document.location = "${pageContext.request.contextPath}/settings/" + encodeURI(name);
+            }
+            else {
+                if ($("#newSettingsForm div.alert").length <= 0) {
+                    var alert = $(document.createElement('div'));
+                    alert.addClass('alert alert-error');
+                    alert.html("<strong>Invalid Name</strong> <p>Value may only contain numbers, letters, underscores and dashes.</p>");
+                    field.addClass("error").parents("form").prepend(alert);
+                }
+            }
             return false;
         })
     });
