@@ -11,18 +11,21 @@ import javax.servlet.jsp.tagext.SimpleTagSupport
 class GravatarTag extends SimpleTagSupport {
 
     Integer size = 32
+    User user
 
     @Override
     void doTag() {
-        def authentication = SecurityContextHolder.context.authentication
-        if (authentication?.principal instanceof User) {
-            def hash = authentication.principal.emailHash
+        def hash = findHash()
+        if (hash) {
             def html = new MarkupBuilder(jspContext.out)
             html.escapeAttributes = false
             html.img(src: "http://www.gravatar.com/avatar/${hash}?s=${size}&d=mm")
         }
-        else {
-            log.info("Unsupported principal: {} with type: {}", authentication?.principal, authentication?.principal?.class)
-        }
+    }
+
+    protected String findHash() {
+        if (this.user)  return user.emailHash
+        def principal = SecurityContextHolder.context?.authentication?.principal
+        return principal?.hasProperty("emailHash") ? principal.emailHash : ""
     }
 }

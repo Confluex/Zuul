@@ -5,15 +5,14 @@ import org.junit.Before
 import org.junit.Test
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.mock.web.MockJspWriter
+import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.authentication.TestingAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 
 import javax.servlet.jsp.JspContext
 
 import static org.mockito.Mockito.*
-import org.springframework.security.authentication.AnonymousAuthenticationToken
-import org.springframework.security.core.authority.GrantedAuthorityImpl
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 class GravatarTagTest {
     GravatarTag tag
@@ -55,5 +54,17 @@ class GravatarTagTest {
         when(tag.jspContext.getOut()).thenReturn(writer)
         tag.doTag()
         assert response.contentAsString == ""
+    }
+
+    @SuppressWarnings("GroovyAccessibility")
+    @Test
+    void shouldUseProvidedUserForHashIfAvailable() {
+        tag.user = new User(email: "foo@devnull.org")
+        println tag.user.emailHash
+        def response = new MockHttpServletResponse()
+        def writer = new MockJspWriter(response)
+        when(tag.jspContext.getOut()).thenReturn(writer)
+        tag.doTag()
+        assert response.contentAsString == "<img src='http://www.gravatar.com/avatar/d6dc2d6c5399b195c68f6605978d50cf?s=32&d=mm' />"
     }
 }
