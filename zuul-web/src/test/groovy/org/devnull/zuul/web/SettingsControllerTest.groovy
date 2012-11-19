@@ -58,6 +58,10 @@ public class SettingsControllerTest {
         assert mv.model.groupName == "group-1"
     }
 
+    @Test
+    void shouldRedirectToGroupEnvironmentTab() {
+        assert controller.showGroup("dev", "test-config") == "redirect:/settings/test-config#dev"
+    }
 
     @Test
     void newSettingsGroupFormShouldReturnCorrectView() {
