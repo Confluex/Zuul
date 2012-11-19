@@ -38,7 +38,7 @@ public class AuditServiceIntegrationTest extends ZuulDataIntegrationTest {
         def count = settingsAuditDao.count().toInteger() // no loss with this test data set
         def entry = settingsEntryDao.findOne(1)
         def user = userDao.findOne(1)
-        service.logAudit(user, SettingsAudit.AuditType.MOD, [entry])
+        service.logAudit(user, entry, SettingsAudit.AuditType.MOD)
 //    assert checkExecutionStatus(1, 5, 100)
         assert checkExecutionStatus(count + 1, 5, 100)
         def audit = settingsAuditDao.findAll(new Sort(Sort.Direction.DESC, "modifiedDate")).first()
