@@ -6,8 +6,12 @@ import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.dao.SettingsAuditDao
+import org.devnull.zuul.data.dao.SettingsEntryDao
+import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.SettingsAudit
+import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsAuditFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
@@ -23,6 +27,12 @@ class AuditServiceImpl implements AuditService {
     SettingsAuditDao settingsAuditDao
 
     @Autowired
+    SettingsEntryDao settingsEntryDao
+
+    @Autowired
+    SettingsGroupDao settingsGroupDao
+
+    @Autowired
     SecurityService securityService
 
 
@@ -36,26 +46,49 @@ class AuditServiceImpl implements AuditService {
 
     @Transactional(readOnly = false)
     @Async("auditExecutor")
-    void logAudit(User user, SettingsAudit.AuditType type, List<SettingsEntry> entries) {
-        def auditDate = new Date()
-        entries.each { entry ->
-            try {
-                def audit = new SettingsAudit(
-                        groupName: entry.group?.name,
-                        groupEnvironment: entry.group?.environment?.name,
-                        encrypted: entry.encrypted,
-                        modifiedBy: user?.userName,
-                        modifiedDate: auditDate,
-                        settingsKey: entry.key,
-                        settingsValue: entry.value,
-                        type: type
-                )
-                log.debug("Saving new audit entry: {}", audit)
-                settingsAuditDao.save(audit)
-            }
-            catch (Exception e) {
-                log.error("Unable to save audit for entry ${entry}", e)
-            }
+    void logAuditDeleteByEntryId(User user, Integer entryId) {
+        logAudit(user, settingsEntryDao.findOne(entryId), AuditType.DELETE)
+    }
+
+    @Transactional(readOnly = false)
+    @Async("auditExecutor")
+    void logAuditDeleteByGroupId(User user, Integer groupId) {
+        def group = settingsGroupDao.findOne(groupId)
+        group.entries.each { logAudit(user, it, AuditType.DELETE) }
+    }
+
+    @Transactional(readOnly = false)
+    @Async("auditExecutor")
+    void logAudit(User user, SettingsGroup group) {
+        group?.entries?.each { logAudit(user, it) }
+    }
+
+    @Transactional(readOnly = false)
+    @Async("auditExecutor")
+    void logAudit(User user, SettingsEntry entry) {
+        def type = entry.id ? AuditType.MOD : AuditType.ADD
+        logAudit(user, entry, type)
+    }
+
+    @Transactional(readOnly = false)
+    @Async("auditExecutor")
+    void logAudit(User user, SettingsEntry entry, AuditType type) {
+        try {
+            def audit = new SettingsAudit(
+                    groupName: entry.group?.name,
+                    groupEnvironment: entry.group?.environment?.name,
+                    encrypted: entry.encrypted,
+                    modifiedBy: user?.userName,
+                    modifiedDate: new Date(),
+                    settingsKey: entry.key,
+                    settingsValue: entry.value,
+                    type: type
+            )
+            log.debug("Saving new audit entry: {}", audit)
+            settingsAuditDao.save(audit)
+        }
+        catch (Exception e) {
+            log.error("Unable to save audit for entry ${entry}", e)
         }
     }
 

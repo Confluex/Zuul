@@ -5,6 +5,8 @@ import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.devnull.util.pagination.SimplePagination
 import org.devnull.zuul.data.dao.SettingsAuditDao
+import org.devnull.zuul.data.dao.SettingsEntryDao
+import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
@@ -21,12 +23,15 @@ import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 class AuditServiceImplTest {
+
     AuditServiceImpl service
 
     @Before
     void createService() {
         service = new AuditServiceImpl(
                 settingsAuditDao: mock(SettingsAuditDao),
+                settingsEntryDao: mock(SettingsEntryDao),
+                settingsGroupDao: mock(SettingsGroupDao),
                 securityService: mock(SecurityService)
         )
     }
@@ -51,14 +56,9 @@ class AuditServiceImplTest {
     }
 
     @Test
-    void shouldSaveAuditSettingsEntries() {
-        def group = new SettingsGroup(
-                environment: new Environment(name: "dev"),
-                name: "test group"
-        )
-        group.addToEntries(new SettingsEntry(key: "property.a", value: "1"))
-        group.addToEntries(new SettingsEntry(key: "property.b", value: "mumbojumbo", encrypted: true))
-        service.logAudit(new User(userName: "userA"), SettingsAudit.AuditType.ADD, group.entries)
+    void shouldSaveAuditSettingsEntriesByGroup() {
+        def group = createGroup()
+        service.logAudit(new User(userName: "userA"), group)
         def args = ArgumentCaptor.forClass(SettingsAudit)
         verify(service.settingsAuditDao, times(2)).save(args.capture())
         // not sure how to get a captor for each invocation.. just use the last for now
@@ -69,6 +69,64 @@ class AuditServiceImplTest {
         assert args.value.settingsValue == "mumbojumbo"
         assert args.value.modifiedBy == "userA"
         assert args.value.type == SettingsAudit.AuditType.ADD
+    }
+
+
+    @Test
+    void shouldSaveAuditSettingsByEntry() {
+        def group = createGroup()
+        service.logAudit(new User(userName: "userA"), group.entries.first())
+        def args = ArgumentCaptor.forClass(SettingsAudit)
+        verify(service.settingsAuditDao).save(args.capture())
+        assert !args.value.encrypted
+        assert args.value.groupEnvironment == "dev"
+        assert args.value.groupName == "test group"
+        assert args.value.settingsKey == "property.a"
+        assert args.value.settingsValue == "1"
+        assert args.value.modifiedBy == "userA"
+        assert args.value.type == SettingsAudit.AuditType.ADD
+    }
+
+    @Test
+    void shouldSaveAuditSettingsByEntryWithModifiedTypeIfIdPropertyIsNotNull() {
+        def entry = createGroup().entries.first()
+        entry.id = 1
+        service.logAudit(new User(userName: "userA"), entry)
+        def args = ArgumentCaptor.forClass(SettingsAudit)
+        verify(service.settingsAuditDao).save(args.capture())
+        assert args.value.type == SettingsAudit.AuditType.MOD
+    }
+
+    @Test
+    void shouldSaveAuditSettingsWhenDeletingEntryById() {
+        def group = createGroup()
+        when(service.settingsEntryDao.findOne(1)).thenReturn(group.entries.first())
+        service.logAuditDeleteByEntryId(new User(userName: "userA"), 1)
+        def args = ArgumentCaptor.forClass(SettingsAudit)
+        verify(service.settingsAuditDao).save(args.capture())
+        assert !args.value.encrypted
+        assert args.value.groupEnvironment == "dev"
+        assert args.value.groupName == "test group"
+        assert args.value.settingsKey == "property.a"
+        assert args.value.settingsValue == "1"
+        assert args.value.modifiedBy == "userA"
+        assert args.value.type == SettingsAudit.AuditType.DELETE
+    }
+
+    @Test
+    void shouldSaveAuditSettingsWhenDeletingGroupById() {
+        def group = createGroup()
+        when(service.settingsGroupDao.findOne(1)).thenReturn(group)
+        service.logAuditDeleteByGroupId(new User(userName: "userA"), 1)
+        def args = ArgumentCaptor.forClass(SettingsAudit)
+        verify(service.settingsAuditDao, times(group.entries.size())).save(args.capture())
+        assert args.value.encrypted
+        assert args.value.groupEnvironment == "dev"
+        assert args.value.groupName == "test group"
+        assert args.value.settingsKey == "property.b"
+        assert args.value.settingsValue == "mumbojumbo"
+        assert args.value.modifiedBy == "userA"
+        assert args.value.type == SettingsAudit.AuditType.DELETE
     }
 
     @Test
@@ -124,4 +182,15 @@ class AuditServiceImplTest {
         assert users["userB"].firstName == "Deleted"
         assert users["userB"].lastName == "User"
     }
+
+    protected SettingsGroup createGroup() {
+        def group = new SettingsGroup(
+                environment: new Environment(name: "dev"),
+                name: "test group"
+        )
+        group.addToEntries(new SettingsEntry(key: "property.a", value: "1"))
+        group.addToEntries(new SettingsEntry(key: "property.b", value: "mumbojumbo", encrypted: true))
+        return group
+    }
+
 }

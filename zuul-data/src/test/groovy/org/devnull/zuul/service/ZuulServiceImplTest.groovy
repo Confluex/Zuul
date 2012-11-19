@@ -12,6 +12,10 @@ import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
+import org.devnull.zuul.data.model.EncryptionKey
+import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
@@ -28,7 +32,6 @@ import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
-import org.devnull.zuul.data.model.*
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
@@ -306,7 +309,7 @@ public class ZuulServiceImplTest {
     @Test
     void shouldCreateSettingsGroupFromPropertiesFile() {
         def environment = new Environment(name: "qa")
-        def group = new SettingsGroup(environment: environment, name:"test-data-config")
+        def group = new SettingsGroup(environment: environment, name: "test-data-config")
         def stream = new ClassPathResource("/test-data-config-qa.properties")
         def user = new User(userName: "userA")
 
@@ -331,8 +334,6 @@ public class ZuulServiceImplTest {
         assert result.entries[1].key == "jdbc.zuul.url"
         assert result.entries[1].value == "jdbc:h2:file:zuul-qa"
         assert !result.entries[1].encrypted
-
-        verify(service.auditService).logAudit(user, SettingsAudit.AuditType.ADD, result.entries)
     }
 
     @Test
@@ -503,4 +504,37 @@ public class ZuulServiceImplTest {
         assert results == page.content
     }
 
+    @Test
+    void shouldLogAuditWhenSavingGroup() {
+        def group = new SettingsGroup(id: 1)
+        def user = new User(userName: "testUser")
+        when(service.securityService.currentUser).thenReturn(user)
+        service.save(group)
+        verify(service.auditService).logAudit(user, group)
+    }
+
+    @Test
+    void shouldLogAuditWhenSavingEntry() {
+        def entry = new SettingsEntry(id: 1)
+        def user = new User(userName: "testUser")
+        when(service.securityService.currentUser).thenReturn(user)
+        service.save(entry)
+        verify(service.auditService).logAudit(user, entry)
+    }
+
+    @Test
+    void shouldLogAuditWhenDeletingEntry() {
+        def user = new User(userName: "testUser")
+        when(service.securityService.currentUser).thenReturn(user)
+        service.deleteSettingsEntry(1)
+        verify(service.auditService).logAuditDeleteByEntryId(user, 1)
+    }
+
+    @Test
+    void shouldLogAuditWhenDeletingGroup() {
+        def user = new User(userName: "testUser")
+        when(service.securityService.currentUser).thenReturn(user)
+        service.deleteSettingsGroup(1)
+        verify(service.auditService).logAuditDeleteByGroupId(user, 1)
+    }
 }

@@ -10,6 +10,10 @@ import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
+import org.devnull.zuul.data.model.EncryptionKey
+import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
@@ -22,7 +26,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
-import org.devnull.zuul.data.model.*
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -66,7 +69,7 @@ class ZuulServiceImpl implements ZuulService {
         def env = environmentDao.findOne(environmentName)
         def key = findDefaultKey()
         def group = new SettingsGroup(name: groupName, environment: env, key: key)
-        return settingsGroupDao.save(group)
+        return save(group)
     }
 
     @Transactional(readOnly = false)
@@ -79,8 +82,7 @@ class ZuulServiceImpl implements ZuulService {
         properties.each {k, v ->
             group.addToEntries(new SettingsEntry(key: k, value: v))
         }
-        auditService.logAudit(securityService.currentUser, SettingsAudit.AuditType.ADD, group.entries)
-        return settingsGroupDao.save(group)
+        return save(group)
     }
 
     @Transactional(readOnly = false)
@@ -99,6 +101,7 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     void deleteSettingsGroup(Integer groupId) {
         log.info("Deleteing settings group: {} ", groupId)
+        auditService.logAuditDeleteByGroupId(securityService.currentUser, groupId)
         settingsGroupDao.delete(groupId)
     }
 
@@ -160,6 +163,7 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     void deleteSettingsEntry(Integer entryId) {
         log.info("Deleteing entry: {}", entryId)
+        auditService.logAuditDeleteByEntryId(securityService.currentUser, entryId)
         settingsEntryDao.delete(entryId)
     }
 
@@ -167,6 +171,7 @@ class ZuulServiceImpl implements ZuulService {
     SettingsEntry save(SettingsEntry entry) {
         log.info("Saving entry: {}", entry)
         errorIfInvalid(entry, "entry")
+        auditService.logAudit(securityService.currentUser, entry)
         return settingsEntryDao.save(entry)
     }
 
@@ -181,6 +186,7 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     SettingsGroup save(SettingsGroup group) {
         log.info("Saving group: {}", group)
+        auditService.logAudit(securityService.currentUser, group)
         return settingsGroupDao.save(group)
     }
 

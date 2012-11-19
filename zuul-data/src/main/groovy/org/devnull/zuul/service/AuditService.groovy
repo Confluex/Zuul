@@ -3,13 +3,23 @@ package org.devnull.zuul.service
 import org.devnull.security.model.User
 import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.model.SettingsAudit
+import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
 
 interface AuditService {
 
     List<SettingsAudit> findSettingAudits(Pagination<SettingsAudit> pagination)
 
-    void logAudit(User user, SettingsAudit.AuditType type, List<SettingsEntry> entries)
+    void logAuditDeleteByEntryId(User user, Integer entryId)
+
+    void logAuditDeleteByGroupId(User user, Integer groupId)
+
+    void logAudit(User user, SettingsGroup group)
+
+    void logAudit(User user, SettingsEntry entry)
+
+    void logAudit(User user, SettingsEntry entry, AuditType type)
 
     /**
      * The audit modified by is not coupled directly to the user object to allow for users
