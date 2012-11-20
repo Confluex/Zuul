@@ -16,8 +16,6 @@ import org.devnull.zuul.data.specs.SettingsAuditFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
-import org.springframework.transaction.annotation.Transactional
 
 //@Transactional(propagation = Propagation.REQUIRES_NEW)
 @Service("auditService")
@@ -45,12 +43,14 @@ class AuditServiceImpl implements AuditService {
         return pagination
     }
 
-    @Async("auditExecutor")
+    // Cannot do async here.. records may be deleted before they are able to be retrieved
+    // @Async("auditExecutor")
     void logAuditDeleteByEntryId(User user, Integer entryId) {
         logAudit(user, settingsEntryDao.findOne(entryId), AuditType.DELETE)
     }
 
-    @Async("auditExecutor")
+    // Cannot do async here.. records may be deleted before they are able to be retrieved
+    // @Async("auditExecutor")
     void logAuditDeleteByGroupId(User user, Integer groupId) {
         def group = settingsGroupDao.findOne(groupId)
         group.entries.each { logAudit(user, it, AuditType.DELETE) }
