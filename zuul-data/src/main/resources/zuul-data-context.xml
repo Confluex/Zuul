@@ -66,8 +66,6 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
                 <prop key="hibernate.cache.use_query_cache">true</prop>
                 <prop key="hibernate.cache.use_second_level_cache">true</prop>
                 <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
-                <prop key="org.hibernate.envers.store_data_at_delete">true</prop>
-                <prop key="org.hibernate.envers.audit_strategy">org.hibernate.envers.strategy.ValidityAuditStrategy</prop>
             </props>
         </property>
         <property name="persistenceUnitPostProcessors">
