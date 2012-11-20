@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
-//@Transactional(propagation = Propagation.REQUIRES_NEW)
 @Service("auditService")
 @Slf4j
 class AuditServiceImpl implements AuditService {
