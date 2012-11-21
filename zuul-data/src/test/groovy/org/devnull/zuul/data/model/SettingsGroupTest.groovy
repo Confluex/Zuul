@@ -49,14 +49,5 @@ public class SettingsGroupTest {
         group as List
     }
 
-    @Test
-    void shouldConvertAsMapWithoutCollections() {
-        def map = group as Map
-        assert map.name == "testGroup"
-        assert map.key.name == "testKey"
-        assert map.environment.name == "testEnv"
-        assert map.id == 1
-        assert !map.entries
-    }
 
 }

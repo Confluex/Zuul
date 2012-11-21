@@ -1,5 +1,6 @@
 package org.devnull.zuul.web
 
+import groovy.util.logging.Slf4j
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
@@ -7,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.multipart.MultipartFile
 
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import org.springframework.web.bind.annotation.*
 
 @Controller
+@Slf4j
 class SettingsServicesController {
 
     @Autowired
@@ -52,11 +55,18 @@ class SettingsServicesController {
     /**
      * View all of the settings groups as JSON
      */
-    @RequestMapping(value = "/settings.json")
+    @RequestMapping(value = "/settings.json", method = RequestMethod.GET)
     @ResponseBody
-    List<SettingsGroup> listJson(@RequestParam(required = false, value = "deepFetch", defaultValue = "false") Boolean deepFetch) {
+    List<Map> listJson(HttpServletRequest request) {
+        log.debug("Rending JSON for settings groups")
         def groups = zuulService.listSettingsGroups()
-        return deepFetch ? groups : groups.collect { it as Map } as List<SettingsGroup>
+        return groups.collect {
+            [
+                    name: it.name,
+                    environment: it.environment.name,
+                    resourceUri: "${request.contextPath}/settings/${it.environment.name}/${it.name}.json"
+            ]
+        }
     }
 
     /**

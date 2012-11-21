@@ -6,6 +6,7 @@ import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.junit.Before
 import org.junit.Test
+import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.web.multipart.MultipartFile
 
@@ -61,12 +62,12 @@ class SettingsServicesControllerTest {
 
 
     @Test
-    void listJsonShouldReturnResultsFromService() {
-        def expected = [new SettingsGroup(name: "a")]
+    void shouldRenderSettingsGroupsAsJson() {
+        def expected = [new SettingsGroup(name: "group-a", environment: new Environment(name:"dev"))]
         when(controller.zuulService.listSettingsGroups()).thenReturn(expected)
-        def results = controller.listJson(true)
+        def results = controller.listJson(new MockHttpServletRequest())
         verify(controller.zuulService).listSettingsGroups()
-        assert results.is(expected)
+        assert results == [[name:'group-a', environment:'dev', resourceUri:'/settings/dev/group-a.json']]
     }
 
     @Test
