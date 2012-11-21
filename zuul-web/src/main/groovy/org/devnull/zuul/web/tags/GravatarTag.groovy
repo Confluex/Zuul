@@ -12,6 +12,7 @@ class GravatarTag extends SimpleTagSupport {
 
     Integer size = 32
     User user
+    String cssClass = ""
 
     @Override
     void doTag() {
@@ -19,7 +20,7 @@ class GravatarTag extends SimpleTagSupport {
         if (hash) {
             def html = new MarkupBuilder(jspContext.out)
             html.escapeAttributes = false
-            html.img(src: "http://www.gravatar.com/avatar/${hash}?s=${size}&d=mm")
+            html.img(src: "http://www.gravatar.com/avatar/${hash}?s=${size}&d=mm", class:cssClass)
         }
     }
 

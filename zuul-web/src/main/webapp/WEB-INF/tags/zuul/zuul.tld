@@ -13,7 +13,9 @@
         <name>gravatar</name>
         <tag-class>org.devnull.zuul.web.tags.GravatarTag</tag-class>
         <body-content>empty</body-content>
-        <description>Will display gravatar icon if the user is logged in.</description>
+        <description>
+            Displays gravatar icon. Defaults to current user (if logged in) if user attribute is not provided.
+        </description>
         <attribute>
             <name>size</name>
             <required>false</required>
@@ -21,6 +23,11 @@
         </attribute>
         <attribute>
             <name>user</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

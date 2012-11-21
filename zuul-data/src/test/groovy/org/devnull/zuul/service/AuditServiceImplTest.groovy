@@ -181,6 +181,7 @@ class AuditServiceImplTest {
         assert users["userB"].userName == "userB"
         assert users["userB"].firstName == "Deleted"
         assert users["userB"].lastName == "User"
+        assert users["userB"].email == "deleted@devnull.org"
     }
 
     protected SettingsGroup createGroup() {

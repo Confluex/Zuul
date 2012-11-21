@@ -1,5 +1,10 @@
+<%--@elvariable id="users" type="java.util.Map<java.lang.String,org.devnull.security.model.User>"--%>
+<%--@elvariable id="audits" type="java.util.List<org.devnull.zuul.data.model.SettingsAudit>"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="zuul" uri="/WEB-INF/tags/zuul/zuul.tld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -9,75 +14,46 @@
 <body>
 
 
-<div id="features" class="row">
-    <div class="span10 offset1">
-        <h2>Features</h2>
-        <br>
-
-        <div class="row">
-            <div class="span3">
-                <h4>Centralized Management</h4>
-                <hr>
-                <p>
-                    Provision your application configuration files by environment and configure them in a
-                    single location. Let your support and operations team view and configure important
-                    resources such as database URLs and credentials.
-                </p>
-            </div>
-            <div class="span3">
-                <h4>Encryption</h4>
-                <hr>
-                <p>
-                    Encrypt sensitive values using the popular <a href="http://www.jasypt.org/">Jasypt library</a>
-                </p>
-            </div>
-            <div class="span3">
-                <h4>RESTful Services</h4>
-                <hr>
-                <p>
-                    Easily access the configuration data from within your application via RESTful services. Content
-                    can be rendered as JSON or Java Properties files.
-                </p>
-            </div>
+<div class="row">
+    <div class="span6">
+        <div class="page-header">
+            <h2>Activity</h2>
         </div>
-        <div style="margin-top: 9px;" class="row">
-            <div class="span3">
-                <h4>Role Based Access Controls</h4>
-                <hr>
-                <p>
-                    System administrators can easily control who has access to which features with user
-                    to role mappings.
-                </p>
-            </div>
+        <c:choose>
+            <c:when test="${fn:length(audits) > 0}">
+                <c:forEach var="audit" items="${audits}">
+                    <c:set var="user" value="${users[audit.modifiedBy]}"/>
+                    <div class="media">
+                        <a class="pull-left profile" href="#" title="${fn:escapeXml(audit.modifiedBy)}">
+                            <zuul:gravatar user="${user}" size="32" cssClass="media-object"/>
+                        </a>
 
-            <div class="span3">
-                <h4>Single Sign On</h4>
-                <hr>
-                <p>
-                    Integrates with popular single sign on providers such as Google and Yahoo via OpenID.
-                </p>
-            </div>
-            <div class="span3">
-                <h4>Spring Client</h4>
-                <hr>
-                <p>
-                    Seamlessly integrate your <a href="http://springframework.org/">Spring applications</a> with
-                    our custom client and spring XML namespace.
-                </p>
-            </div>
-        </div>
-        <br>
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                    ${fn:escapeXml(user.firstName)} ${fn:escapeXml(user.lastName)}
+                                <small class="muted"> - <fmt:formatDate value="${audit.modifiedDate}"/></small>
+                            </h4>
+                            <c:url var="settingsUrl" value="/settings/${audit.groupName}#${audit.groupEnvironment}"/>
+                                ${audit.type.action} key ${fn:escapeXml(audit.settingsKey)} on
+                            <a href="${settingsUrl}"">${fn:escapeXml(audit.groupEnvironment)}/${fn:escapeXml(audit.groupName)}</a>
+                        </div>
 
-        <div class="well">
-            <h3>More to Come.. <a target="_blank" href="http://github.com/mcantrell/zuul" >Visit the GitHub site</a>
-                to become involved or monitor progress.
-            </h3>
-        </div>
-
-
+                    </div>
+                </c:forEach>
+                <security:authorize access="hasRole('ROLE_ADMIN'">
+                    <a href="${pageContext.request.contextPath}/audit?sort=modifiedBy"></a>
+                </security:authorize>
+            </c:when>
+            <c:otherwise>
+                <div class="alert alert-info">
+                    No recent activity..
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
-
-
+<script>
+    $(".profile").tooltip();
+</script>
 </body>
 </html>

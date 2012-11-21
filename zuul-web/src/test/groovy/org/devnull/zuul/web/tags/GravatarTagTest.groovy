@@ -31,7 +31,7 @@ class GravatarTagTest {
         def writer = new MockJspWriter(response)
         when(tag.jspContext.getOut()).thenReturn(writer)
         tag.doTag()
-        assert response.contentAsString == "<img src='http://www.gravatar.com/avatar/9b345d5ef6f1397f6ae1e28a5794d4c1?s=32&d=mm' />"
+        assert response.contentAsString == "<img src='http://www.gravatar.com/avatar/9b345d5ef6f1397f6ae1e28a5794d4c1?s=32&d=mm' class='' />"
     }
 
     @SuppressWarnings("GroovyAccessibility")
@@ -60,11 +60,12 @@ class GravatarTagTest {
     @Test
     void shouldUseProvidedUserForHashIfAvailable() {
         tag.user = new User(email: "foo@devnull.org")
+        tag.cssClass = 'user'
         println tag.user.emailHash
         def response = new MockHttpServletResponse()
         def writer = new MockJspWriter(response)
         when(tag.jspContext.getOut()).thenReturn(writer)
         tag.doTag()
-        assert response.contentAsString == "<img src='http://www.gravatar.com/avatar/d6dc2d6c5399b195c68f6605978d50cf?s=32&d=mm' />"
+        assert response.contentAsString == "<img src='http://www.gravatar.com/avatar/d6dc2d6c5399b195c68f6605978d50cf?s=32&d=mm' class='user' />"
     }
 }

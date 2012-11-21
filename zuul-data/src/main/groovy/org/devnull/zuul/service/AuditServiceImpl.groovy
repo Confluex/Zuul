@@ -92,7 +92,7 @@ class AuditServiceImpl implements AuditService {
         audits.collect { it.modifiedBy }.unique().each { modifiedBy ->
             def user = securityService.findByUserName(modifiedBy)
             if (!user) {
-                user = new User(userName: modifiedBy, firstName: "Deleted", lastName: "User")
+                user = new User(userName: modifiedBy, firstName: "Deleted", lastName: "User", email:"deleted@devnull.org")
             }
             users[modifiedBy] = user
         }
