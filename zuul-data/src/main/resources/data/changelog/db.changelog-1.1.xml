@@ -28,6 +28,14 @@
         </createIndex>
     </changeSet>
 
+    <changeSet author="mcantrell" id="zuul-1.1-settings-group-unique-constraint">
+        <!-- missed this in 1.0... shouldn't have a settings group with the same name and environment -->
+        <createIndex indexName="UQX_SETTINGS_GROUP_1" tableName="SETTINGS_GROUP" unique="true">
+            <column name="NAME"/>
+            <column name="ENVIRONMENT"/>
+        </createIndex>
+    </changeSet>
+
     <changeSet author="mcantrell" id="zuul-1.1-load-test-data" context="test">
         <loadData tableName="settings_audit" file="/data/test/SettingsAudit.csv"/>
     </changeSet>

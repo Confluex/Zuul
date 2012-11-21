@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="span-6">
-        <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/account/permissions">Requst
+        <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/account/permissions">Request
             Permissions</a>
     </div>
 </div>

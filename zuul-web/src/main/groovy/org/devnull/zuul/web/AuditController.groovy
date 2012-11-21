@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller
 import javax.servlet.http.HttpServletRequest
 
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.ModelAndView
 
 @Controller
 @Slf4j
@@ -33,41 +34,19 @@ class AuditController {
     @Autowired
     ZuulService zuulService
 
-    @ModelAttribute("audits")
-    List<SettingsAudit> findAudits(HttpServletRequest request,
-                                   @RequestParam(required = false, value = "max", defaultValue = "10") Integer max) {
-        def pagination = new HttpRequestPagination<SettingsAudit>(request)
-        pagination.max = max
-        // account for zero based indexing on our Pagination API
-        if (pagination.page > 0) pagination.page = pagination.page - 1
-
-        applySessionFilters(request, pagination)
-
-        def audits = auditService.findSettingAudits(pagination)
-        return new DisplayTagPaginatedListAdapter(audits as Pagination)
-    }
-
-
-    @ModelAttribute("users")
-    Map<String, User> findUsers(@ModelAttribute("audits") List<SettingsAudit> audits) {
-        return auditService.lookupUsersForAudits(audits)
-    }
-
-    @ModelAttribute("filters")
-    Map findFilters(HttpServletRequest request) {
-        def filters = [:]
-        SESSION_FILTERS.each { field, attribute ->
-            def value = request.session.getAttribute(attribute)
-            if (value) {
-                filters[field] = value
-            }
-        }
-        return filters
-    }
 
     @RequestMapping(value = "/audit", method = RequestMethod.GET)
-    String index() {
-        return "/audit/index"
+    ModelAndView index(HttpServletRequest request,
+                       @RequestParam(required = false, value = "max", defaultValue = "10") Integer max) {
+        def filters = findFilters(request)
+        def audits = findAudits(request, max)
+        def users = findUsers(audits)
+        def model = [
+                filters: filters,
+                audits:audits,
+                users:users
+        ]
+        return new ModelAndView("/audit/index", model)
     }
 
     @RequestMapping(value = "/audit/filter/add", method = RequestMethod.GET)
@@ -101,6 +80,38 @@ class AuditController {
         request.session.setAttribute(SESSION_FILTERS.groupName, name)
         request.session.setAttribute(SESSION_FILTERS.groupEnvironment, env)
         return "redirect:/audit"
+    }
+
+
+
+
+
+    protected List<SettingsAudit> findAudits(HttpServletRequest request, Integer max) {
+        def pagination = new HttpRequestPagination<SettingsAudit>(request)
+        pagination.max = max
+        // account for zero based indexing on our Pagination API
+        if (pagination.page > 0) pagination.page = pagination.page - 1
+
+        applySessionFilters(request, pagination)
+
+        def audits = auditService.findSettingAudits(pagination)
+        return new DisplayTagPaginatedListAdapter(audits as Pagination)
+    }
+
+
+    protected  Map<String, User> findUsers(@ModelAttribute("audits") List<SettingsAudit> audits) {
+        return auditService.lookupUsersForAudits(audits)
+    }
+
+    protected Map findFilters(HttpServletRequest request) {
+        def filters = [:]
+        SESSION_FILTERS.each { field, attribute ->
+            def value = request.session.getAttribute(attribute)
+            if (value) {
+                filters[field] = value
+            }
+        }
+        return filters
     }
 
     /**

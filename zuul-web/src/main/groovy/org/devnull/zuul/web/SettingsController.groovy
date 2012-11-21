@@ -111,6 +111,13 @@ class SettingsController {
         return new ModelAndView("/settings/show", model)
     }
 
+    /**
+     * Redirect to correct tab for settings group
+     */
+    @RequestMapping(value = "/settings/{env}/{name}", method = RequestMethod.GET)
+    String showGroup(@PathVariable("env") String env, @PathVariable("name") String name) {
+        return "redirect:/settings/${name}#${env}"
+    }
 
 
     @RequestMapping(value = "/settings/{environment}/{groupName}/key/change", method = RequestMethod.GET)

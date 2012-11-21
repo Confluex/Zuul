@@ -142,7 +142,7 @@ class ZuulServiceImpl implements ZuulService {
         }
         entry.value = encryptionStrategy.encrypt(entry.value, entry.group.key)
         entry.encrypted = true
-        return settingsEntryDao.save(entry)
+        return save(entry)
     }
 
     @Transactional(readOnly = false)
@@ -153,7 +153,7 @@ class ZuulServiceImpl implements ZuulService {
         }
         entry.value = encryptionStrategy.decrypt(entry.value, entry.group.key)
         entry.encrypted = false
-        return settingsEntryDao.save(entry)
+        return save(entry)
     }
 
     SettingsEntry findSettingsEntry(Integer id) {

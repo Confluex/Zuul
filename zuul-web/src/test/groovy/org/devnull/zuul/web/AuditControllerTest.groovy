@@ -68,7 +68,11 @@ class AuditControllerTest {
 
     @Test
     void shouldHaveIndexPage() {
-        assert controller.index() == "/audit/index"
+        def mv = controller.index(new MockHttpServletRequest(), 10)
+        assert mv.viewName == "/audit/index"
+        assert mv.model.containsKey("filters")
+        assert mv.model.containsKey("audits")
+        assert mv.model.containsKey("users")
     }
 
 
