@@ -2,7 +2,6 @@ package org.devnull.zuul.web
 
 import groovy.util.logging.Slf4j
 import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -74,8 +73,12 @@ class SettingsServicesController {
      */
     @RequestMapping(value = "/settings/{environment}/{name}.json", method = RequestMethod.GET)
     @ResponseBody
-    SettingsGroup showByNameAndEnvJson(@PathVariable("name") String name, @PathVariable("environment") String env) {
-        return zuulService.findSettingsGroupByNameAndEnvironment(name, env)
+    List<Map> showByNameAndEnvJson(@PathVariable("name") String name, @PathVariable("environment") String env) {
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
+        return group.entries.collect { entry ->
+            def val = entry.encrypted ? "ENC(${entry.value})" : entry.value
+            [ (entry.key):val ]
+        }
     }
 
     /**

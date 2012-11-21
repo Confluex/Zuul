@@ -122,10 +122,13 @@ class SettingsServicesControllerTest {
 
     @Test
     void shouldRenderSettingsGroupForGivenNameAndEnvironment() {
-        def expected = new SettingsGroup()
+        def expected = new SettingsGroup(entries: [
+                new SettingsEntry(key: "a", value: "1"),
+                new SettingsEntry(key: "b", value: "2"),
+        ])
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "qa")).thenReturn(expected)
         def result = controller.showByNameAndEnvJson("test-config", "qa")
-        assert result.is(expected)
+        assert result ==  [[a:'1'], [b:'2']]
     }
 
 }
