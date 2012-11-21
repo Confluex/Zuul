@@ -40,8 +40,9 @@
 
                     </div>
                 </c:forEach>
-                <security:authorize access="hasRole('ROLE_ADMIN'">
-                    <a href="${pageContext.request.contextPath}/audit?sort=modifiedBy"></a>
+
+                <security:authorize access="hasRole('ROLE_ADMIN')">
+                    <a class="btn stacked" href="${pageContext.request.contextPath}/audit?sort=modifiedDate&dir=desc">More..</a>
                 </security:authorize>
             </c:when>
             <c:otherwise>
