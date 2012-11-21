@@ -124,11 +124,11 @@ class SettingsServicesControllerTest {
     void shouldRenderSettingsGroupForGivenNameAndEnvironment() {
         def expected = new SettingsGroup(entries: [
                 new SettingsEntry(key: "a", value: "1"),
-                new SettingsEntry(key: "b", value: "2"),
+                new SettingsEntry(key: "b", value: "2", encrypted: true),
         ])
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "qa")).thenReturn(expected)
         def result = controller.showByNameAndEnvJson("test-config", "qa")
-        assert result ==  [[a:'1'], [b:'2']]
+        assert result ==  [[a:'1'], [b:'ENC(2)']]
     }
 
 }
