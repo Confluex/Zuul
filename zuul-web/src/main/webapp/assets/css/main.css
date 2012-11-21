@@ -3,26 +3,6 @@ body {
     padding-bottom: 40px;
 }
 
-/* ------------ Start Bootstrap Fixes ---------------- */
-.pagination ul > li > a,
-.pagination ul > li > span {
-  padding: 4px 12px;
-  line-height: 20px;
-}
-
-
-.navbar-fixed-top .navbar-inner,
-.navbar-static-top .navbar-inner {
-  -webkit-box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 10px rgba(0, 0, 0, 0.1);
-     -moz-box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 10px rgba(0, 0, 0, 0.1);
-          box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 10px rgba(0, 0, 0, 0.1);
-}
-
-.popover {
-    z-index: 12000; /* see https://github.com/twitter/bootstrap/issues/383 */
-}
-/* ------------ End Bootstrap Fixes ---------------- */
-
 /* ------------ Start Bootstrap Extensions ------------------- */
 input.error {
     color: #b94a48;
