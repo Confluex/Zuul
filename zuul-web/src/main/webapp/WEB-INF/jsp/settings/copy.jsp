@@ -50,7 +50,7 @@
                 var files = [];
                 for (var i = 0; i < data.length; i++) {
                     var group = data[i];
-                    files.push("/" + group.environment.name + "/" + group.name + ".properties");
+                    files.push("/" + group.environment + "/" + group.name + ".properties");
                 }
                 $("#searchFiles").typeahead({source:files});
             },
