@@ -63,7 +63,7 @@ class SettingsServicesController {
             [
                     name: it.name,
                     environment: it.environment.name,
-                    resourceUri: "${request.contextPath}/settings/${it.environment.name}/${it.name}.json"
+                    resourceUri: "${request.contextPath}/settings/${it.environment.name}/${it.name}.json".toString()
             ]
         }
     }
@@ -76,8 +76,8 @@ class SettingsServicesController {
     List<Map> showByNameAndEnvJson(@PathVariable("name") String name, @PathVariable("environment") String env) {
         def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
         return group.entries.collect { entry ->
-            def val = entry.encrypted ? "ENC(${entry.value})" : entry.value
-            [ (entry.key):val ]
+            def val = entry.encrypted ? "ENC(${entry.value})".toString() : entry.value
+            [(entry.key): val]
         }
     }
 
