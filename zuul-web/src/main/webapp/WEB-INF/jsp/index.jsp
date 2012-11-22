@@ -33,16 +33,18 @@
                                     ${fn:escapeXml(user.firstName)} ${fn:escapeXml(user.lastName)}
                                 <small class="muted"> - <fmt:formatDate value="${audit.modifiedDate}"/></small>
                             </h4>
-                            <c:url var="settingsUrl" value="/settings/${audit.groupName}#${audit.groupEnvironment}"/>
-                                ${audit.type.action} key ${fn:escapeXml(audit.settingsKey)} on
-                            <a href="${settingsUrl}"">${fn:escapeXml(audit.groupEnvironment)}/${fn:escapeXml(audit.groupName)}</a>
-                        </div>
 
+                                <em>${audit.type.action} key ${fn:escapeXml(audit.settingsKey)}</em><br/>
+                            <c:url var="settingsUrl" value="/settings/${audit.groupName}#${audit.groupEnvironment}"/>
+                            <a href="${settingsUrl}">${fn:escapeXml(audit.groupEnvironment)}/${fn:escapeXml(audit.groupName)}</a>
+                        </div>
                     </div>
                 </c:forEach>
 
                 <security:authorize access="hasRole('ROLE_ADMIN')">
-                    <a class="btn stacked" href="${pageContext.request.contextPath}/audit?sort=modifiedDate&dir=desc">More..</a>
+                    <a class="btn stacked" href="${pageContext.request.contextPath}/audit?sort=modifiedDate&dir=desc">
+                        More..
+                    </a>
                 </security:authorize>
             </c:when>
             <c:otherwise>
