@@ -3,6 +3,13 @@ body {
     padding-bottom: 40px;
 }
 
+/* ------------ Bootstrap Fixes ------------------- */
+
+.popover-content {
+    font-size: 14px !important;
+}
+
+
 /* ------------ Start Bootstrap Extensions ------------------- */
 input.error {
     color: #b94a48;
