@@ -10,6 +10,9 @@
 <html>
 <head>
     <title>Home</title>
+    <script src="${pageContext.request.contextPath}/assets/ext/date.format-1.0.js"></script>
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/news.js"></script>
 </head>
 <body>
 
@@ -35,7 +38,7 @@
                             </h4>
                             <c:url var="settingsUrl" value="/settings/${audit.groupName}#${audit.groupEnvironment}"/>
                                 ${audit.type.action} key ${fn:escapeXml(audit.settingsKey)} on
-                            <a href="${settingsUrl}"">${fn:escapeXml(audit.groupEnvironment)}/${fn:escapeXml(audit.groupName)}</a>
+                            <a href="${settingsUrl}">${fn:escapeXml(audit.groupEnvironment)}/${fn:escapeXml(audit.groupName)}</a>
                         </div>
 
                     </div>
@@ -52,9 +55,19 @@
             </c:otherwise>
         </c:choose>
     </div>
+    <div class="span6">
+        <div class="page-header">
+            <h2>News &amp; Announcements</h2>
+        </div>
+        <div id="newsFeed" data-url="http://news.devnull.org/feeds/posts/default/-/zuul">
+            Loading..
+        </div>
+    </div>
 </div>
 <script>
-    $(".profile").tooltip();
+    $(function() {
+        $(".profile").tooltip();
+    });
 </script>
 </body>
 </html>
