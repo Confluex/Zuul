@@ -5,8 +5,9 @@ body {
 
 /* ------------ Bootstrap Fixes ------------------- */
 
-.popover-content {
+.popover-content p {
     font-size: 14px !important;
+    white-space: normal !important;
 }
 
 
