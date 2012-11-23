@@ -69,9 +69,10 @@ class AuditServiceImpl implements AuditService {
     @Async("auditExecutor")
     void logAudit(User user, SettingsEntry entry, AuditType type) {
         try {
+            def group = settingsGroupDao.findOne(entry.group?.id)
             def audit = new SettingsAudit(
-                    groupName: entry.group?.name,
-                    groupEnvironment: entry.group?.environment?.name,
+                    groupName: group?.name,
+                    groupEnvironment:group?.environment?.name,
                     encrypted: entry.encrypted,
                     modifiedBy: user?.userName,
                     modifiedDate: new Date(),
