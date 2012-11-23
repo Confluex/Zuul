@@ -59,7 +59,7 @@
         <div class="page-header">
             <h2>News &amp; Announcements</h2>
         </div>
-        <div id="newsFeed" data-url="http://news.devnull.org/feeds/posts/default/-/zuul">
+        <div id="newsFeed" data-url="http://news.devnull.org/feeds/posts/default/-/zuul" data-max-results="5">
             Loading..
         </div>
     </div>
@@ -67,6 +67,7 @@
 <script>
     $(function() {
         $(".profile").tooltip();
+        $("#newsFeed").newsFeed();
     });
 </script>
 </body>
