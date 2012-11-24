@@ -3,11 +3,14 @@
        xmlns:s="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+">
 
-    <context:property-placeholder location="/spring/ldap.properties"/>
-    <s:ldap-server  url="${ldap.url}"  manager-dn="${ldap.username}" manager-password="${ldap.password"/>
+    <context:property-placeholder location="classpath:/spring/ldap.properties" order="2" ignore-unresolvable="true"/>
+    <s:ldap-server url="${ldap.url}" manager-dn="${ldap.username}" manager-password="${ldap.password}"/>
     <bean id="ldapUserContextMapper" class="org.devnull.security.spring.LdapUserContextMapper">
         <constructor-arg>
             <map>
@@ -39,7 +42,6 @@
                 user-search-base="${ldap.user.search.base}"
                 user-search-filter="${ldap.user.search.filter}"/>
     </s:authentication-manager>
-
 
 
 </beans>
