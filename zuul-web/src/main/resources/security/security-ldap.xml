@@ -32,7 +32,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             </map>
         </constructor-arg>
     </bean>
-    <s:authentication-manager id="ldapAuthenticationManager" alias="authenticationManager">
+    <s:authentication-manager id="authenticationManager">
         <s:ldap-authentication-provider
                 user-context-mapper-ref="ldapUserContextMapper"
                 group-search-base="${ldap.group.search.base}"

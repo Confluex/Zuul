@@ -27,7 +27,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <property name="userDetailsService" ref="openIdUserDetailsService"/>
     </bean>
 
-    <s:authentication-manager id="authenticationManager" alias="authenticationManager">
+    <s:authentication-manager id="authenticationManager">
         <s:authentication-provider ref="openIdAuthenticationProvider"/>
     </s:authentication-manager>
 
