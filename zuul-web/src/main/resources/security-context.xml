@@ -7,54 +7,9 @@
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 
-    <b:import resource="security-common-context.xml"/>
-
-    <http use-expressions="true"
-          authentication-manager-ref="openIdAuthenticationManager"
-          access-decision-manager-ref="accessDecisionManager">
-        <intercept-url pattern="/account/**" access="hasRole('ROLE_GUEST')"/>
-        <intercept-url pattern="/settings/create**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/settings/**/*.properties" access="permitAll" method="GET"/>
-        <intercept-url pattern="/settings/**/*.json" access="permitAll" method="GET"/>
-        <intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
-        <intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
-        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/audit/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/**" access="permitAll"/>
-
-        <logout logout-url="/logout" logout-success-url="/"/>
-        <openid-login login-page="/login"
-                      authentication-failure-url="/login?login_error=true"
-                      user-service-ref="openIdUserDetailsService"
-                      authentication-failure-handler-ref="openIdRegistrationHandler">
-            <attribute-exchange>
-                <openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
-                <openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last" required="true"/>
-                <openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first" required="true"/>
-            </attribute-exchange>
-        </openid-login>
-    </http>
-
-    <b:bean id="openIdRegistrationHandler" class="org.devnull.security.spring.OpenIdRegistrationHandler">
-        <b:property name="defaultRoles">
-            <b:list>
-                <b:value>ROLE_GUEST</b:value>
-            </b:list>
-        </b:property>
-        <b:property name="firstUserRoles">
-            <b:list>
-                <b:value>ROLE_SYSTEM_ADMIN</b:value>
-            </b:list>
-        </b:property>
-    </b:bean>
-
-    <b:bean id="openIdAuthenticationProvider" class="org.springframework.security.openid.OpenIDAuthenticationProvider">
-        <b:property name="userDetailsService" ref="openIdUserDetailsService"/>
-    </b:bean>
-
-    <authentication-manager id="openIdAuthenticationManager" alias="authenticationManager">
-        <authentication-provider ref="openIdAuthenticationProvider"/>
-    </authentication-manager>
-
+    <b:import resource="spring/security-common-context.xml"/>
+    <b:import resource="spring/security-openid.xml"/>
+    <!--<b:import resource="spring/security-ldap.xml"/>-->
+    <b:import resource="spring/security-filter-chain.xml"/>
 
 </b:beans>
