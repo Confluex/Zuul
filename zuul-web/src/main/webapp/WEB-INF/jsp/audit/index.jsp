@@ -58,7 +58,7 @@
                 </c:url>
                 <a href="${filterUrl}">${fn:escapeXml(row.settingsKey)}</a>
             </display:column>
-            <display:column property="settingsValue" title="Value" sortable="true"/>
+            <display:column property="settingsValue" title="Value" sortable="true" escapeXml="true"/>
             <display:column sortProperty="modifiedBy" title="User" sortable="true">
                 <c:set var="user" value="${users[row.modifiedBy]}"/>
                 <c:url var="filterUrl" value="/audit/filter/add">
