@@ -19,7 +19,7 @@ $(function () {
 
             },
             error:function (jqXHR, textStatus, errorThrown) {
-                alert("Error encrypting value: " + errorThrown);
+                showAlert("Error encrypting value: " + errorThrown);
             }
         });
     };
@@ -32,7 +32,7 @@ $(function () {
                 onDeleteHandler();
             },
             error:function (xhr, status, error) {
-                alert("An error has occurred while deleting the record. Please check the log for more details.");
+                showAlert("An error has occurred while deleting the record. Please check the log for more details.");
             }
         });
     };
@@ -68,7 +68,7 @@ $(function () {
                 window.location.reload();
             },
             error:function (xhr, status, error) {
-                alert("An error has occurred while deleting the record. Please check the log for more details." + status);
+                showAlert("An error has occurred while deleting the record. Please check the log for more details." + status);
             }
         });
     };
@@ -107,7 +107,7 @@ $(function () {
         $.ajax({
             url:getContextPath() + "/system/keys.json",
             success:loadKeysDropDownMenu,
-            error: function() { alert("Error loading key data. Please check the logs for details.") }
+            error: function() { showAlert("Error loading key data. Please check the logs for details.") }
         });
     }
     if (window.location.hash) {

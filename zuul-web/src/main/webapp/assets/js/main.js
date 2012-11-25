@@ -3,10 +3,21 @@ function getContextPath() {
 }
 
 function createAlert(message) {
+    var closeButton = $(document.createElement("button"));
+    closeButton.addClass("close");
+    closeButton.attr("data-dismiss", "alert");
+    closeButton.html("&times;");
+
     var alertDiv = $(document.createElement("div"));
     alertDiv.addClass('alert alert-error');
     alertDiv.html(message);
+    alertDiv.prepend(closeButton);
     return alertDiv;
+}
+
+function showAlert(message) {
+    var alertDiv = createAlert(message);
+    alertDiv.insertAfter("#topNav");
 }
 
 function clearFormValidationAlerts(form, reset) {
@@ -32,7 +43,7 @@ function createFormValidationAlerts(form, globalErrors, fieldErrors) {
         $.each(fieldErrors, function (name, errors) {
             var input = form.find("input[name=" + name + "]");
             if (input.length <= 0) {
-                alert("No input by name: " + name);
+                console.log("No input by name: " + name);
             }
             input.addClass('error');
             input.attr('title', 'Validation Errors');
