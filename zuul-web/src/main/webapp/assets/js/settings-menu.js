@@ -20,7 +20,7 @@
                     if (fileNames.length > settings.max) {
                         methods.createMenuItem("More..", getContextPath() + "/settings");
                     }
-                    $("#searchInput").typeahead({source:fileNames, minLength:3,
+                    $("#navSearchInput").typeahead({source:fileNames, minLength:3,
                         updater:function (selected, context) {
                             document.location = getContextPath() + "/settings/" + encodeURI(selected);
                         }});
