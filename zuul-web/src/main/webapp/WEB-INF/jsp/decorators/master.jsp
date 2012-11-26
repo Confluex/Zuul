@@ -23,6 +23,7 @@
     <script src="${pageContext.request.contextPath}/assets/ext/jquery-1.8.2.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/ext/bootstrap-2.2.1/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/main.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/settings-menu.js"></script>
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -137,7 +138,7 @@
                         </ul>
                         <form class="navbar-search pull-right" method="GET"
                               action="${pageContext.request.contextPath}/settings/search">
-                            <input id="searchInput" name="q" type="text" data-provide="typeahead" autocomplete="off"
+                            <input id="navSearchInput" name="q" type="text" data-provide="typeahead" autocomplete="off"
                                    class="search-query" placeholder="Search.." value="${param.q}">
                         </form>
                     </security:authorize>

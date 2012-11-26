@@ -3,10 +3,21 @@ function getContextPath() {
 }
 
 function createAlert(message) {
+    var closeButton = $(document.createElement("button"));
+    closeButton.addClass("close");
+    closeButton.attr("data-dismiss", "alert");
+    closeButton.html("&times;");
+
     var alertDiv = $(document.createElement("div"));
     alertDiv.addClass('alert alert-error');
     alertDiv.html(message);
+    alertDiv.prepend(closeButton);
     return alertDiv;
+}
+
+function showAlert(message) {
+    var alertDiv = createAlert(message);
+    alertDiv.insertAfter("#topNav");
 }
 
 function clearFormValidationAlerts(form, reset) {
@@ -32,7 +43,7 @@ function createFormValidationAlerts(form, globalErrors, fieldErrors) {
         $.each(fieldErrors, function (name, errors) {
             var input = form.find("input[name=" + name + "]");
             if (input.length <= 0) {
-                alert("No input by name: " + name);
+                console.log("No input by name: " + name);
             }
             input.addClass('error');
             input.attr('title', 'Validation Errors');
@@ -41,42 +52,4 @@ function createFormValidationAlerts(form, globalErrors, fieldErrors) {
         });
     }
 }
-
-(function ($) {
-    $.fn.settingsMenu = function (options) {
-        var settings = $.extend({  nothing:'' }, options);
-        var subMenu = this;
-        $.ajax({
-            url:getContextPath() + "/settings.json",
-            success:function (data) {
-                var fileNames = distinctGroupNames(data);
-                for (var i = 0; i < fileNames.length; i++) {
-                    var name = fileNames[i];
-                    var link = $(document.createElement('a'));
-                    link.text(name);
-                    link.attr('href', getContextPath() + "/settings/" + encodeURI(name));
-                    var subMenuItem = $(document.createElement('li'));
-                    subMenuItem.append(link);
-                    subMenu.append(subMenuItem);
-                }
-                $("#searchInput").typeahead({source:fileNames, minLength:3,
-                    updater:function (selected, context) {
-                        document.location = getContextPath() + "/settings/" + encodeURI(selected);
-                    }});
-            }
-        });
-        function distinctGroupNames(data) {
-            var names = [];
-            for (var i = 0; i < data.length; i++) {
-                var group = data[i];
-                if ($.inArray(group.name, names) == -1) {
-                    names.push(group.name);
-                }
-            }
-            return names
-        }
-
-        return this;
-    };
-})(jQuery);
 

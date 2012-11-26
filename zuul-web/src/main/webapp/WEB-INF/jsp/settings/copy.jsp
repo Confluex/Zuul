@@ -55,7 +55,7 @@
                 $("#searchFiles").typeahead({source:files});
             },
             error:function (xhr, status, error) {
-                alert("Error fetching existing settings for typeahead dialog: " + error);
+                showAlert("Error fetching existing settings for typeahead dialog: " + error);
             }
         });
         $('#searchFiles').change(function () {

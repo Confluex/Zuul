@@ -48,4 +48,5 @@
     <jpa:repositories base-package="org.devnull.security.dao"/>
     <context:component-scan base-package="org.devnull.security"/>
 
+
 </beans>

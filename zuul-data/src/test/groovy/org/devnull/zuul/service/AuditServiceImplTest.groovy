@@ -88,6 +88,16 @@ class AuditServiceImplTest {
     }
 
     @Test
+    void shouldLazyLoadGroupWithAuditingNewEntries() {
+        createGroup()
+        service.logAudit(new User(userName: "userA"), new SettingsEntry(group: new SettingsGroup(id: 22)))
+        def args = ArgumentCaptor.forClass(SettingsAudit)
+        verify(service.settingsAuditDao).save(args.capture())
+        assert args.value.groupEnvironment == "dev"
+        assert args.value.groupName == "test group"
+    }
+
+    @Test
     void shouldSaveAuditSettingsByEntryWithModifiedTypeIfIdPropertyIsNotNull() {
         def entry = createGroup().entries.first()
         entry.id = 1
@@ -186,11 +196,13 @@ class AuditServiceImplTest {
 
     protected SettingsGroup createGroup() {
         def group = new SettingsGroup(
+                id: 22,
                 environment: new Environment(name: "dev"),
                 name: "test group"
         )
         group.addToEntries(new SettingsEntry(key: "property.a", value: "1"))
         group.addToEntries(new SettingsEntry(key: "property.b", value: "mumbojumbo", encrypted: true))
+        when(service.settingsGroupDao.findOne(22)).thenReturn(group)
         return group
     }
 

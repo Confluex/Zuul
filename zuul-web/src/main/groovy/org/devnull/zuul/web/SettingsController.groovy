@@ -2,20 +2,18 @@ package org.devnull.zuul.web
 
 import org.devnull.util.pagination.HttpRequestPagination
 import org.devnull.zuul.data.model.SettingsEntry
+import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
+
+import org.springframework.web.bind.annotation.*
 
 @Controller
 class SettingsController {
@@ -95,6 +93,16 @@ class SettingsController {
         }
         zuulService.save(formEntry)
         return new ModelAndView("redirect:/settings/${groupName}#${env}")
+    }
+
+    /**
+     * Show all available settings groups
+     * @return
+     */
+    @RequestMapping(value = "/settings", method = RequestMethod.GET)
+    ModelAndView index() {
+        def groups = zuulService.listSettingsGroups().collect { it.name }.unique()
+        return new ModelAndView("/settings/index", [groups: groups])
     }
 
     /**

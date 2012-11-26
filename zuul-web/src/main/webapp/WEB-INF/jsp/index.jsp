@@ -10,6 +10,9 @@
 <html>
 <head>
     <title>Home</title>
+    <script src="${pageContext.request.contextPath}/assets/ext/date.format-1.0.js"></script>
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/news.js"></script>
 </head>
 <body>
 
@@ -33,18 +36,16 @@
                                     ${fn:escapeXml(user.firstName)} ${fn:escapeXml(user.lastName)}
                                 <small class="muted"> - <fmt:formatDate value="${audit.modifiedDate}"/></small>
                             </h4>
-
-                                <em>${audit.type.action} key ${fn:escapeXml(audit.settingsKey)}</em><br/>
                             <c:url var="settingsUrl" value="/settings/${audit.groupName}#${audit.groupEnvironment}"/>
+                                ${audit.type.action} key ${fn:escapeXml(audit.settingsKey)} on
                             <a href="${settingsUrl}">${fn:escapeXml(audit.groupEnvironment)}/${fn:escapeXml(audit.groupName)}</a>
                         </div>
+
                     </div>
                 </c:forEach>
 
                 <security:authorize access="hasRole('ROLE_ADMIN')">
-                    <a class="btn stacked" href="${pageContext.request.contextPath}/audit?sort=modifiedDate&dir=desc">
-                        More..
-                    </a>
+                    <a class="btn stacked" href="${pageContext.request.contextPath}/audit?sort=modifiedDate&dir=desc">More..</a>
                 </security:authorize>
             </c:when>
             <c:otherwise>
@@ -54,9 +55,20 @@
             </c:otherwise>
         </c:choose>
     </div>
+    <div class="span6">
+        <div class="page-header">
+            <h2>News &amp; Announcements</h2>
+        </div>
+        <div id="newsFeed" data-url="http://news.devnull.org/feeds/posts/default/-/zuul" data-max-results="5">
+            Loading..
+        </div>
+    </div>
 </div>
 <script>
-    $(".profile").tooltip();
+    $(function() {
+        $(".profile").tooltip();
+        $("#newsFeed").newsFeed();
+    });
 </script>
 </body>
 </html>

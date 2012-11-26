@@ -28,7 +28,7 @@ $(function () {
                 swapPrimary(data.name);
             },
             error:function (xhr, status, error) {
-                alert("An error has occurred while removing the role. Please check the log for more details.");
+                showAlert("An error has occurred while setting the default key. Please check the log for more details.");
             }
         });
         return false;
@@ -49,7 +49,7 @@ $(function () {
         link = $(this);
         var button = link.parents("button");
         if (button.hasClass("btn-primary")) {
-            alert("Cannot delete default key");
+            showAlert("Cannot delete default key");
             return false;
         }
         var id = link.parents("tr").data("key-name");
@@ -60,7 +60,7 @@ $(function () {
                 onDeleteHandler();
             },
             error:function (xhr, status, error) {
-                alert("An error has occurred while deleting the record. Please check the log for more details.");
+                showAlert("An error has occurred while deleting the record. Please check the log for more details.");
             }
         });
     };

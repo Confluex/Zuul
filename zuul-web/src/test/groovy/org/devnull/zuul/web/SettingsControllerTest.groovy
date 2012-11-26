@@ -13,7 +13,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
 import org.springframework.mock.web.MockHttpServletRequest
 
-import static org.mockito.Matchers.*
+import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.*
 
 @Mixin(ControllerTestMixin)
@@ -26,8 +26,20 @@ public class SettingsControllerTest {
         controller = new SettingsController(zuulService: mock(ZuulService))
     }
 
-
-
+    @Test
+    void shouldListAllDistinctGroupNames() {
+        def groups = [
+                new SettingsGroup(name: "a", environment: new Environment(name: "prod")),
+                new SettingsGroup(name: "a", environment: new Environment(name: "qa")),
+                new SettingsGroup(name: "a", environment: new Environment(name: "dev")),
+                new SettingsGroup(name: "b", environment: new Environment(name: "dev")),
+                new SettingsGroup(name: "b", environment: new Environment(name: "qa"))
+        ]
+        when(controller.zuulService.listSettingsGroups()).thenReturn(groups)
+        def mv = controller.index()
+        assert mv.viewName == "/settings/index"
+        assert mv.model.groups == ["a", "b"]
+    }
 
     @Test
     void showShouldGroupResultsByEnvironment() {

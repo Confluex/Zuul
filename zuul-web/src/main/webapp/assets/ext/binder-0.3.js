@@ -234,6 +234,7 @@ Binder.FormBinder.prototype = {
     return accessor.target;
   },
   serializeField: function( element, obj ) {
+    if (!element.name) return;
     var accessor = this._getAccessor( obj );
     var value = undefined
     if( element.type == "radio" || element.type == "checkbox" )  {
@@ -271,6 +272,7 @@ Binder.FormBinder.prototype = {
     return accessor.target;
   },
   deserializeField: function( element, obj ) {
+    if (!element.name) return;
     var accessor = this._getAccessor( obj );
     var value = accessor.get( element.name );
     value = this._format( element.name, value, element );
