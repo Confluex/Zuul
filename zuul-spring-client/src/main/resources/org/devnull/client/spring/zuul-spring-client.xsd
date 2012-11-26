@@ -25,6 +25,7 @@ http://www.devnull.org/schema/zuul-spring-client http://www.devnull.org/schema/z
                     <xsd:attribute name="environment" type="xsd:string" use="optional"/>
                     <xsd:attribute name="context" type="xsd:string" use="optional"/>
                     <xsd:attribute name="port" type="xsd:int" use="optional"/>
+                    <xsd:attribute name="password" type="xsd:string" use="optional"/>
                     <xsd:attribute name="http-client-ref" type="xsd:string" use="optional"/>
                 </xsd:extension>
             </xsd:complexContent>

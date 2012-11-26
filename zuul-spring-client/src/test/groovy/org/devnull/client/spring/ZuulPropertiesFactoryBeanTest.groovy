@@ -51,6 +51,18 @@ class ZuulPropertiesFactoryBeanTest {
     }
 
     @Test
+    void shouldPreferConfiguredPasswordOverSystemEnvironmentVariable() {
+        System.setProperty(ZuulPropertiesFactoryBean.DEFAULT_PASSWORD_VARIABLE, "foo")
+        factory.password = "badpassword1"
+        def mockResponse = new ClassPathResource("/mock-server-response.properties").inputStream.text
+        def httpGet = Matchers.any(HttpGet)
+        def handler = Matchers.any(BasicResponseHandler)
+        when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenReturn(mockResponse)
+        def decrypted = factory.decrypt(factory.fetchProperties())
+        decrypted.getProperty("jdbc.zuul.password")
+    }
+
+    @Test
     void shouldUseHttpIfPortByDefault() {
         def ports = [80, 8080, 9642]
         assert factory.httpProtocol == "http"
