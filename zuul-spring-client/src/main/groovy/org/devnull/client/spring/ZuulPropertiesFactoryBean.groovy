@@ -26,7 +26,7 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
     static final String DEFAULT_PASSWORD_VARIABLE = "ZUUL_PASSWORD"
 
 
-    static final List<String> OPTIONAL_ATTRIBUTES = ["host", "port", "context", "environment", "password"]
+    static final List<String> OPTIONAL_ATTRIBUTES = ["host", "port", "context", "environment", "password", "ssl"]
 
     /**
      * Used to invoke the web service. If not supplied, a default client will be provided.
@@ -72,6 +72,13 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
      * Name of the configuration to fetch
      */
     String config
+
+    /**
+     * Use HTTPS or HTTP?
+     *
+     * default = {@value}
+     */
+    Boolean ssl = false
 
     /**
      * Used to cache requests.
@@ -122,12 +129,7 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
     }
 
     URI getUri() {
-        return new URI("${httpProtocol}://${host}:${port}${context}/settings/${environment}/${config}.properties")
-    }
-
-    String getHttpProtocol() {
-        def isSecure = port == 443 || port == 8443
-        return isSecure ? "https" : "http"
+        return new URI("${ssl ? "https" : "http"}://${host}:${port}${context}/settings/${environment}/${config}.properties")
     }
 
     void afterPropertiesSet() {

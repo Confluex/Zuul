@@ -63,25 +63,14 @@ class ZuulPropertiesFactoryBeanTest {
     }
 
     @Test
-    void shouldUseHttpIfPortByDefault() {
-        def ports = [80, 8080, 9642]
-        assert factory.httpProtocol == "http"
-        ports.each {
-            factory.port = it
-            assert factory.httpProtocol == "http"
-        }
+    void shouldUseHttpByDefault() {
+        assert factory.uri.scheme == "http"
     }
 
     @Test
-    void shouldUseHttpsIfPortIs_443() {
-        factory.port = 443
-        assert factory.httpProtocol == "https"
-    }
-
-    @Test
-    void shouldUseHttpsIfPortIs_8443() {
-        factory.port = 8443
-        assert factory.httpProtocol == "https"
+    void shouldUseHttpsIfConfigured() {
+        factory.ssl = true
+        assert factory.uri.scheme == "https"
     }
 
     @Test
@@ -151,7 +140,7 @@ class ZuulPropertiesFactoryBeanTest {
         assert results.is(expected)
     }
 
-    @Test(expected=HttpResponseException)
+    @Test(expected = HttpResponseException)
     void shouldErrorIfServiceErrorsAndNoPropertyStoreConfigured() {
         mockServerErrorResponse()
         factory.fetchProperties()
