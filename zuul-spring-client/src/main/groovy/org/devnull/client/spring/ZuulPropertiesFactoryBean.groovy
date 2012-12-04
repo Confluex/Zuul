@@ -16,15 +16,75 @@ import org.springframework.beans.factory.InitializingBean
 class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, FactoryBean<Properties> {
 
     final def log = LoggerFactory.getLogger(this.class)
-    static final String DEFAULT_PASSWORD_VARIABLE = "ZUUL_PASSWORD"
-    static final List<String> OPTIONAL_ATTRIBUTES = ["host", "port", "context", "environment"]
 
+    /**
+     * Name of the system environment variable which can be set to resolve the password to
+     * decrypt secured values.
+     *
+     * Value: @{value}
+     */
+    static final String DEFAULT_PASSWORD_VARIABLE = "ZUUL_PASSWORD"
+
+
+    static final List<String> OPTIONAL_ATTRIBUTES = ["host", "port", "context", "environment", "password", "ssl"]
+
+    /**
+     * Used to invoke the web service. If not supplied, a default client will be provided.
+     */
     HttpClient httpClient
+
+    /**
+     * Host or IP address of the zuul server
+     *
+     * default = {@value}
+     */
     String host = "localhost"
+
+    /**
+     * TCP port where the zuul application can be reached.
+     *
+     * default = {@value}
+     */
     Integer port = 80
+
+    /**
+     * Context path where the zuul application resides
+     *
+     * default = {@value}
+     */
     String context = "/zuul"
+
+    /**
+     * Environment for the configuration
+     *
+     * default = {@value}
+     */
     String environment = "dev"
+
+    /**
+     * Optional password. If not set, it will look for system property variable.
+     *
+     * @see org.devnull.client.spring.ZuulPropertiesFactoryBean#DEFAULT_PASSWORD_VARIABLE
+     */
+    String password = null
+
+    /**
+     * Name of the configuration to fetch
+     */
     String config
+
+    /**
+     * Use HTTPS or HTTP?
+     *
+     * default = {@value}
+     */
+    Boolean ssl = false
+
+    /**
+     * Used to cache requests.
+     *
+     * @see org.devnull.client.spring.cache.PropertiesObjectFileSystemStore
+     */
     PropertiesObjectStore propertiesStore
 
     ZuulPropertiesFactoryBean(String config) {
@@ -57,18 +117,19 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
 
 
     Properties decrypt(Properties properties) {
-        def config = new EnvironmentPBEConfig(passwordSysPropertyName: DEFAULT_PASSWORD_VARIABLE)
+        def config = new EnvironmentPBEConfig()
+        if (password) {
+            config.password = password
+        }
+        else {
+            config.passwordSysPropertyName = DEFAULT_PASSWORD_VARIABLE
+        }
         def encryptor = new StandardPBEStringEncryptor(config: config)
         return new EncryptableProperties(properties, encryptor)
     }
 
     URI getUri() {
-        return new URI("${httpProtocol}://${host}:${port}${context}/settings/${environment}/${config}.properties")
-    }
-
-    String getHttpProtocol() {
-        def isSecure = port == 443 || port == 8443
-        return isSecure ? "https" : "http"
+        return new URI("${ssl ? "https" : "http"}://${host}:${port}${context}/settings/${environment}/${config}.properties")
     }
 
     void afterPropertiesSet() {

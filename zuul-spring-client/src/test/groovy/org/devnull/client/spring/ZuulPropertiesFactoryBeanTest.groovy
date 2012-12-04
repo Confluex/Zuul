@@ -51,25 +51,26 @@ class ZuulPropertiesFactoryBeanTest {
     }
 
     @Test
-    void shouldUseHttpIfPortByDefault() {
-        def ports = [80, 8080, 9642]
-        assert factory.httpProtocol == "http"
-        ports.each {
-            factory.port = it
-            assert factory.httpProtocol == "http"
-        }
+    void shouldPreferConfiguredPasswordOverSystemEnvironmentVariable() {
+        System.setProperty(ZuulPropertiesFactoryBean.DEFAULT_PASSWORD_VARIABLE, "foo")
+        factory.password = "badpassword1"
+        def mockResponse = new ClassPathResource("/mock-server-response.properties").inputStream.text
+        def httpGet = Matchers.any(HttpGet)
+        def handler = Matchers.any(BasicResponseHandler)
+        when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenReturn(mockResponse)
+        def decrypted = factory.decrypt(factory.fetchProperties())
+        decrypted.getProperty("jdbc.zuul.password")
     }
 
     @Test
-    void shouldUseHttpsIfPortIs_443() {
-        factory.port = 443
-        assert factory.httpProtocol == "https"
+    void shouldUseHttpByDefault() {
+        assert factory.uri.scheme == "http"
     }
 
     @Test
-    void shouldUseHttpsIfPortIs_8443() {
-        factory.port = 8443
-        assert factory.httpProtocol == "https"
+    void shouldUseHttpsIfConfigured() {
+        factory.ssl = true
+        assert factory.uri.scheme == "https"
     }
 
     @Test
@@ -139,7 +140,7 @@ class ZuulPropertiesFactoryBeanTest {
         assert results.is(expected)
     }
 
-    @Test(expected=HttpResponseException)
+    @Test(expected = HttpResponseException)
     void shouldErrorIfServiceErrorsAndNoPropertyStoreConfigured() {
         mockServerErrorResponse()
         factory.fetchProperties()
