@@ -60,7 +60,7 @@ class SystemAdminServicesControllerTest {
 
     @Test
     void shouldChangeDefaultKeyAndRedirectWithCorrectStatus() {
-        def view = controller.setDefaultKey(new MockHttpServletResponse(), new EncryptionKey(name: "test"))
+        def view = controller.setDefaultKey(new EncryptionKey(name: "test"))
         verify(controller.zuulService).changeDefaultKey("test")
         // TODO needs feedback message
         assert view.statusCode == HttpStatus.SEE_OTHER
@@ -134,12 +134,10 @@ class SystemAdminServicesControllerTest {
 
     @Test
     void shouldCreateEnvironment() {
-        def response = new MockHttpServletResponse()
         def expected = new Environment(name: "test")
         when(controller.zuulService.createEnvironment("test")).thenReturn(expected)
-        def result = controller.addEnvironment(response, "test")
+        def result = controller.addEnvironment("test")
         verify(controller.zuulService).createEnvironment("test")
-        assert response.status == HttpServletResponse.SC_OK
         assert result.is(expected)
     }
 }

@@ -7,13 +7,10 @@ import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.view.RedirectView
 
 import javax.servlet.http.HttpServletResponse
-import javax.validation.ConstraintViolationException
-
-import org.springframework.web.bind.annotation.*
-import org.devnull.zuul.web.config.JstlFunctions
 
 @Controller
 class SystemAdminServicesController {
@@ -45,7 +42,7 @@ class SystemAdminServicesController {
     }
 
     @RequestMapping(value = "/system/keys/default.json", method = RequestMethod.PUT)
-    RedirectView setDefaultKey(HttpServletResponse response, @RequestBody EncryptionKey key) {
+    RedirectView setDefaultKey(@RequestBody EncryptionKey key) {
         zuulService.changeDefaultKey(key.name)
         def view = new RedirectView("/system/keys/default.json", true)
         view.statusCode = HttpStatus.SEE_OTHER
@@ -93,7 +90,7 @@ class SystemAdminServicesController {
 
     @RequestMapping(value = "/system/environments/{name}.json", method = RequestMethod.POST)
     @ResponseBody
-    Environment addEnvironment(HttpServletResponse response, @PathVariable("name") String name) {
+    Environment addEnvironment(@PathVariable("name") String name) {
         return zuulService.createEnvironment(name)
     }
 
