@@ -57,7 +57,7 @@ class AccountController {
   }
 
   @RequestMapping(value = "/account/register", method = RequestMethod.GET)
-  String register(RedirectAttributes attributes) {
+  String register() {
     return "/account/register"
   }
 
