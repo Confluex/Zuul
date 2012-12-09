@@ -22,9 +22,6 @@ class SystemAdminServicesControllerIntegrationTest extends ZuulWebIntegrationTes
     @Autowired
     EncryptionKeyDao encryptionKeyDao
 
-    @Autowired
-    EnvironmentDao environmentDao
-
     @Test
     void shouldDeleteKeyAndChangeEffectedGroupsToDefaultKeyAndReEncrypt() {
         loginAsUser(OPEN_ID_SYS_ADMIN)
@@ -45,16 +42,4 @@ class SystemAdminServicesControllerIntegrationTest extends ZuulWebIntegrationTes
         assert defaultKeyGroups.containsAll(effectedGroups)
     }
 
-    @Test
-    void shouldCascadeDeleteEnvironmentSettings() {
-        loginAsUser(OPEN_ID_SYS_ADMIN)
-        def env = environmentDao.findOne("prod")
-        def groups = env.groups
-        assert groups
-        controller.deleteEnvironment(new MockHttpServletResponse(), "prod")
-        assert !environmentDao.findOne("prod")
-        groups.each {
-            assert !settingsGroupDao.findOne(it.id)
-        }
-    }
 }

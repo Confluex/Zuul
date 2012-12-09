@@ -123,21 +123,4 @@ class SystemAdminServicesControllerTest {
         verify(controller.zuulService).deleteKey("test")
         assert response.status == HttpServletResponse.SC_NO_CONTENT
     }
-
-    @Test
-    void shouldDeleteEnvironmentByNameWithCorrectResponseCode() {
-        def response = new MockHttpServletResponse()
-        controller.deleteEnvironment(response, "test")
-        verify(controller.zuulService).deleteEnvironment("test")
-        assert response.status == HttpServletResponse.SC_NO_CONTENT
-    }
-
-    @Test
-    void shouldCreateEnvironment() {
-        def expected = new Environment(name: "test")
-        when(controller.zuulService.createEnvironment("test")).thenReturn(expected)
-        def result = controller.addEnvironment("test")
-        verify(controller.zuulService).createEnvironment("test")
-        assert result.is(expected)
-    }
 }

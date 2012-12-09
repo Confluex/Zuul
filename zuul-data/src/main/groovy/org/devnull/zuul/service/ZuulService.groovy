@@ -82,6 +82,16 @@ public interface ZuulService {
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     Environment createEnvironment(String name)
 
+
+    /**
+     * Toggles the environment.restriction flag between true and false
+     *
+     * @param name environment to toggle
+     * @return the newly updated restriction flag's value
+     */
+    @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
+    Boolean toggleEnvironmentRestriction(String name)
+
     /* Encryption Keys -------------------- */
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

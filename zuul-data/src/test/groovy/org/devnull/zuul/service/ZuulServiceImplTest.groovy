@@ -537,4 +537,26 @@ public class ZuulServiceImplTest {
         service.deleteSettingsGroup(1)
         verify(service.auditService).logAuditDeleteByGroupId(user, 1)
     }
+
+    @Test
+    void shouldToggleEnvironmentRestrictionFlagToFalseIfAlreadyTrue() {
+        def environment = new Environment(name: "testEnv", restricted: true)
+        when (service.environmentDao.findOne("testEnv")).thenReturn(environment)
+        def result = service.toggleEnvironmentRestriction("testEnv")
+        def arg = ArgumentCaptor.forClass(Environment)
+        verify(service.environmentDao).save(arg.capture())
+        assert !arg.value.restricted
+        assert result == arg.value.restricted
+    }
+
+    @Test
+    void shouldToggleEnvironmentRestrictionFlagToTrueIfAlreadyFalse() {
+        def environment = new Environment(name: "testEnv", restricted: false)
+        when (service.environmentDao.findOne("testEnv")).thenReturn(environment)
+        def result = service.toggleEnvironmentRestriction("testEnv")
+        def arg = ArgumentCaptor.forClass(Environment)
+        verify(service.environmentDao).save(arg.capture())
+        assert arg.value.restricted
+        assert result == arg.value.restricted
+    }
 }

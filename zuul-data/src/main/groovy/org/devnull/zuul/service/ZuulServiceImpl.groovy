@@ -130,6 +130,14 @@ class ZuulServiceImpl implements ZuulService {
         return environmentDao.save(environment)
     }
 
+    @Transactional(readOnly = false)
+    Boolean toggleEnvironmentRestriction(String name) {
+        def env = environmentDao.findOne(name)
+        env.restricted = !env.restricted
+        environmentDao.save(env)
+        return env.restricted
+    }
+
     List<SettingsGroup> listSettingsGroups() {
         return settingsGroupDao.findAll(new Sort("name")) as List<SettingsGroup>
     }

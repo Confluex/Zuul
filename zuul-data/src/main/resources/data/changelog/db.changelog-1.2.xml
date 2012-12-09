@@ -2,7 +2,12 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <include file="/data/changelog/db.changelog-1.0.xml"/>
-    <include file="/data/changelog/db.changelog-1.1.xml"/>
-    <include file="/data/changelog/db.changelog-1.2.xml"/>
+
+    <changeSet author="mcantrell" id="zuul-1.2-add-environment-restrictions">
+        <addColumn tableName="ENVIRONMENT">
+            <column name="RESTRICTED" type="BOOLEAN" defaultValue="false" value="0" >
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

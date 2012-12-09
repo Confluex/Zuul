@@ -28,5 +28,7 @@ class Environment implements Serializable {
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "environment")
     List<SettingsGroup> groups = []
 
+    Boolean restricted = false
+
 
 }

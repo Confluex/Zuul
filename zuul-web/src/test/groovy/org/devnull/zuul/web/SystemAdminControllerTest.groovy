@@ -67,13 +67,5 @@ class SystemAdminControllerTest {
         assert controller.createKey(key, mockFailureBindingResult(), redirectAttributes) == "/system/createKey"
     }
 
-    @Test
-    void shouldDisplayEnvironmentsPageWithCorrectModel() {
-        def environments = [new Environment(name: "a"), new Environment(name: "b")]
-        when(controller.zuulService.listEnvironments()).thenReturn(environments)
-        def mv = controller.displayEnvironments()
-        assert mv.model.environments == environments
-        assert mv.viewName == "/system/environments"
-    }
 
 }

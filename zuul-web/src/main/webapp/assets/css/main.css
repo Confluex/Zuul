@@ -32,6 +32,9 @@ border-color: #953b39;
 }
 
 
+.icon-move:hover {
+    cursor: move;
+}
 
 /* ------------ Start Bootstrap Extensions ------------------- */
 
