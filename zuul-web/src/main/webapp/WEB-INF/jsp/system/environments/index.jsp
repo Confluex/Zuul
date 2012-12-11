@@ -8,18 +8,20 @@
 <head>
     <title>Environments</title>
     <meta name="tab" content="admin"/>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css"/>
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/system-environments.js"></script>
     <style>
         #environments span {
             margin-left: 8px;
         }
+
         #environments .btn-block {
             width: 150px;
             padding-left: 5px;
             text-align: left;
         }
+
         #environments .caret {
             margin-right: 5px;
         }
@@ -31,12 +33,22 @@
         <div class="page-header">
             <h1>Environments</h1>
         </div>
-
+    </div>
+</div>
+<div class="row">
+    <div class="span3">
+        <form id="createEnvForm" method="POST" action="${pageContext.request.contextPath}/system/environments/create">
+            <div class="input-append">
+                <input name="name" type="text" maxlength="12" class="input-small" placeholder="Name.."/>
+                <button class="btn add-env" type="submit">New</button>
+            </div>
+        </form>
         <ul id="environments" class="unstyled sortable">
             <c:forEach var="env" items="${environments}">
                 <li class="stacked environment" data-name="${fn:escapeXml(env.name)}">
                     <div class="btn-group">
-                        <a class="btn btn-block dropdown-toggle ${env.restricted ? 'btn-danger' : 'btn-info'}" data-toggle="dropdown" href="#">
+                        <a class="btn btn-block dropdown-toggle ${env.restricted ? 'btn-danger' : 'btn-info'}"
+                           data-toggle="dropdown" href="#">
                             <i class="icon-resize-vertical icon-white"></i>
                                 ${fn:escapeXml(env.name)}
                             <span class="caret pull-right"></span>
@@ -70,17 +82,25 @@
             </c:forEach>
         </ul>
     </div>
-</div>
-<div class="row">
-    <div class="span12">
-        <form id="createEnvForm" method="POST" action="${pageContext.request.contextPath}/system/environments/create"
-              class="stacked">
-            <div class="input-append">
-                <input name="name" type="text" maxlength="12" class="input-small"  placeholder="Name.."/>
-                <button class="btn add-env" type="submit">New</button>
-            </div>
-        </form>
+    <div class="span3">
+        <img class="media-object img-polaroid descriptive" title="Context"
+             data-content="Environments appear in the settings pages as tabs on the left hand side."
+             src="${pageContext.request.contextPath}/assets/images/help/environments.png">
     </div>
+    <div class="span6">
+        <h4 class="media-heading">Scoping Your Settings</h4>
+
+        <p>
+            Use environments to scope settings and restrict access.
+        </p>
+        <ul class="stacked">
+            <li>Create new environments</li>
+            <li>Delete existing environments</li>
+            <li>Restrict environments to system administrators</li>
+            <li>Change the order in which the environments are presented</li>
+        </ul>
+    </div>
+
 </div>
 <bootstrap:validate formId="createEnvForm" modelName="environment" placement="top"/>
 </body>
