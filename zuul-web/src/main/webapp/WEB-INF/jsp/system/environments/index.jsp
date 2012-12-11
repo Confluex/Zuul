@@ -8,10 +8,20 @@
 <head>
     <title>Environments</title>
     <meta name="tab" content="admin"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/system-environments.js"></script>
     <style>
         #environments span {
             margin-left: 8px;
+        }
+        #environments .btn-block {
+            width: 150px;
+            padding-left: 5px;
+            text-align: left;
+        }
+        #environments .caret {
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -22,14 +32,14 @@
             <h1>Environments</h1>
         </div>
 
-        <ul id="environments" class="unstyled">
+        <ul id="environments" class="unstyled sortable">
             <c:forEach var="env" items="${environments}">
-                <li class="stacked">
+                <li class="stacked environment" data-name="${fn:escapeXml(env.name)}">
                     <div class="btn-group">
-                        <a class="btn  dropdown-toggle ${env.restricted ? 'btn-danger' : 'btn-success'}" data-toggle="dropdown" href="#">
-                            <i class="icon-move icon-white"></i>
+                        <a class="btn btn-block dropdown-toggle ${env.restricted ? 'btn-danger' : 'btn-info'}" data-toggle="dropdown" href="#">
+                            <i class="icon-resize-vertical icon-white"></i>
                                 ${fn:escapeXml(env.name)}
-                            <span class="caret"></span>
+                            <span class="caret pull-right"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>

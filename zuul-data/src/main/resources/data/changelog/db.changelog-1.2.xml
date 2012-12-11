@@ -10,4 +10,12 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet author="mcantrell" id="zuul-1.2-environment-ordinals">
+        <addColumn tableName="ENVIRONMENT">
+            <column name="ORDINAL" type="INT" defaultValue="0" value="0" >
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

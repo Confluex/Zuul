@@ -115,7 +115,7 @@ class ZuulServiceImpl implements ZuulService {
     }
 
     List<Environment> listEnvironments() {
-        return environmentDao.findAll() as List<Environment>
+        return environmentDao.findAll(new Sort("ordinal", "name")) as List<Environment>
     }
 
     @Transactional(readOnly = false)
@@ -136,6 +136,16 @@ class ZuulServiceImpl implements ZuulService {
         env.restricted = !env.restricted
         environmentDao.save(env)
         return env.restricted
+    }
+
+    @Transactional(readOnly = false)
+    List<Environment> sortEnvironments(List<String> names) {
+        log.info("Sorting environments in new order: {}", names)
+        def environments = environmentDao.findAll()
+        names.eachWithIndex { name, i ->
+            environments.find {it.name == name }?.ordinal = i
+        }
+        return environmentDao.save(environments)
     }
 
     List<SettingsGroup> listSettingsGroups() {

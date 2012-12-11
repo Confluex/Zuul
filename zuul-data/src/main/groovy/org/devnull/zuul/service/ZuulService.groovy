@@ -92,6 +92,15 @@ public interface ZuulService {
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     Boolean toggleEnvironmentRestriction(String name)
 
+    /**
+     * Adjust ordinals of the environments which match the names provided
+     * with its index in the collection.
+     *
+     * @param names the ordered list of environment names
+     * @return saved and re-ordered environments.
+     */
+    List<Environment> sortEnvironments(List<String> names)
+
     /* Encryption Keys -------------------- */
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -118,5 +127,6 @@ public interface ZuulService {
 
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     void deleteKey(String name)
+
 
 }

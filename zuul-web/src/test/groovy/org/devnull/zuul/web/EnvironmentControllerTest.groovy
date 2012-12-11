@@ -18,16 +18,12 @@ class EnvironmentControllerTest {
     }
 
     @Test
-    void shouldListEnvironments() {
+    void shouldListEnvironmentsForIndexPage() {
         def environments = [new Environment(name: "a"), new Environment(name: "b")]
         when(controller.zuulService.listEnvironments()).thenReturn(environments)
-        def results = controller.findEnvironments()
-        assert results == environments
-    }
-
-    @Test
-    void shouldHaveIndexView() {
-        assert controller.list() == "/system/environments/index"
+        def mv = controller.list()
+        assert mv.model.environments == environments
+        assert mv.viewName == "/system/environments/index"
     }
 
     @Test
@@ -58,5 +54,13 @@ class EnvironmentControllerTest {
         def view = controller.create(environment, mockFailureBindingResult())
         verify(controller.zuulService, never()).createEnvironment(anyString())
         assert view == "/system/environments/index"
+    }
+
+    @Test
+    void shouldSortEnvironmentsWithProvidedNames() {
+        def names = ["a", "c", "d"]
+        def view = controller.sort(names)
+        verify(controller.zuulService).sortEnvironments(names)
+        assert view == "redirect:/system/environments"
     }
 }

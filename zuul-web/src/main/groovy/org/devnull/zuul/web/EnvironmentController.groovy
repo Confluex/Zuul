@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import javax.validation.Valid
 import org.springframework.validation.BindingResult
+import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.bind.annotation.RequestBody
 
 @Controller
 class EnvironmentController {
@@ -22,14 +24,10 @@ class EnvironmentController {
     @Autowired
     ZuulService zuulService
 
-    @ModelAttribute("environments")
-    List<Environment> findEnvironments() {
-        return zuulService.listEnvironments()
-    }
 
     @RequestMapping(value = "/system/environments")
-    String list() {
-        "/system/environments/index"
+    ModelAndView list() {
+        return new ModelAndView("/system/environments/index", [environments:zuulService.listEnvironments()])
     }
 
     @RequestMapping(value = "/system/environments/delete")
@@ -54,5 +52,11 @@ class EnvironmentController {
         return "redirect:/system/environments"
     }
 
+
+    @RequestMapping(value = "/system/environments/sort.json", method=RequestMethod.PUT)
+    String sort(@RequestBody List<String> names) {
+        zuulService.sortEnvironments(names)
+        return "redirect:/system/environments"
+    }
 
 }

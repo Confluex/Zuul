@@ -393,12 +393,32 @@ public class ZuulServiceImplTest {
     }
 
     @Test
-    void listEnvironmentsShouldReturnResultsFromDao() {
+    void shouldListEnvironmentsSortedByOrdinalAndName() {
         def expected = [new Environment(name: "a"), new Environment(name: "b")]
-        when(service.environmentDao.findAll()).thenReturn(expected)
+        def sort = new Sort("ordinal", "name")
+        when(service.environmentDao.findAll(sort)).thenReturn(expected)
         def results = service.listEnvironments()
-        verify(service.environmentDao).findAll()
+        verify(service.environmentDao).findAll(sort)
         assert results.is(expected)
+    }
+
+    @Test
+    void shouldPersistSortedEnvironmentsWithProperOrdinal() {
+        def names = ["a", "d", "b"]
+        def environments = [
+                new Environment(name: "z"), // shouldn't update this one
+                new Environment(name: "d"),
+                new Environment(name: "a"),
+                new Environment(name: "b")
+        ]
+        when(service.environmentDao.findAll()).thenReturn(environments)
+        service.sortEnvironments(names)
+        verify(service.environmentDao).save(environments)
+
+        assert environments[0].name == "z" && environments[0].ordinal == 0
+        assert environments[1].name == "d" && environments[1].ordinal == 1
+        assert environments[2].name == "a" && environments[2].ordinal == 0
+        assert environments[3].name == "b" && environments[3].ordinal == 2
     }
 
     @Test

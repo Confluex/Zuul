@@ -11,7 +11,7 @@ import javax.validation.constraints.Size
 import javax.persistence.*
 
 @Entity
-@EqualsAndHashCode(includes = "name")
+@EqualsAndHashCode(excludes = "groups")
 @ToString(includeNames = true, excludes = "groups")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 class Environment implements Serializable {
@@ -29,6 +29,8 @@ class Environment implements Serializable {
     List<SettingsGroup> groups = []
 
     Boolean restricted = false
+
+    Integer ordinal = 0
 
 
 }
