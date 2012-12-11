@@ -83,17 +83,16 @@
         </ul>
     </div>
     <div class="span3">
-        <img class="media-object img-polaroid descriptive" title="Context"
-             data-content="Environments appear in the settings pages as tabs on the left hand side."
+        <h4 class="media-heading">Scoping Your Settings</h4>
+        <img class="media-object img-polaroid descriptive"
              src="${pageContext.request.contextPath}/assets/images/help/environments.png">
+        <blockquote class="stacked">
+            Environments appear in the settings pages as tabs on the left hand side.
+        </blockquote>
     </div>
     <div class="span6">
-        <h4 class="media-heading">Scoping Your Settings</h4>
-
-        <p>
-            Use environments to scope settings and restrict access.
-        </p>
-        <ul class="stacked">
+        <h4>Actions</h4>
+        <ul>
             <li>Create new environments</li>
             <li>Delete existing environments</li>
             <li>Restrict environments to system administrators</li>
