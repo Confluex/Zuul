@@ -5,7 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 
-<security:authorize var="isAdmin" access="hasRole('ROLE_ADMIN')"/>
+<security:authorize var="isAdmin" access="hasPermission(#group, 'admin')"/>
 <c:url var="downloadUrl"
        value="/settings/${fn:escapeXml(environment.name)}/${fn:escapeXml(group.name)}.properties"/>
 <c:url var="addUrl"

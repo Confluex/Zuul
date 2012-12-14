@@ -21,13 +21,16 @@
             </value>
         </property>
     </bean>
+    <bean id="settingsGroupPermissionsEvaluator" class="org.devnull.zuul.service.security.SettingsGroupPermissionsEvaluator"/>
     <bean id="methodExpressionHandler"
           class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
         <property name="roleHierarchy" ref="roleHierarchy"/>
+        <property name="permissionEvaluator" ref="settingsGroupPermissionsEvaluator"/>
     </bean>
     <bean id="webExpressionHandler"
           class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
         <property name="roleHierarchy" ref="roleHierarchy"/>
+        <property name="permissionEvaluator" ref="settingsGroupPermissionsEvaluator"/>
     </bean>
     <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
         <property name="decisionVoters">
