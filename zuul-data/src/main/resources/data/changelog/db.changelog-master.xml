@@ -5,4 +5,6 @@
     <include file="/data/changelog/db.changelog-1.0.xml"/>
     <include file="/data/changelog/db.changelog-1.1.xml"/>
     <include file="/data/changelog/db.changelog-1.2.xml"/>
+    <include file="/data/changelog/db.changelog-test-data.xml"/>
+
 </databaseChangeLog>
