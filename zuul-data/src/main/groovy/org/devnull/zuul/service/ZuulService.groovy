@@ -55,7 +55,7 @@ public interface ZuulService {
     SettingsEntry decryptSettingsEntryValue(Integer entryId)
 
     @PreAuthorize("hasPermission(#entry.group, 'admin')")
-    void deleteSettingsEntry(Integer entryId)
+    void deleteSettingsEntry(SettingsEntry entry)
 
     @PreAuthorize("hasPermission(#entry.group, 'admin')")
     SettingsEntry save(SettingsEntry entry)

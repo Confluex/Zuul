@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
+import org.devnull.zuul.data.model.SettingsAudit
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -179,10 +180,10 @@ class ZuulServiceImpl implements ZuulService {
     }
 
     @Transactional(readOnly = false)
-    void deleteSettingsEntry(Integer entryId) {
-        log.info("Deleteing entry: {}", entryId)
-        auditService.logAuditDeleteByEntryId(securityService.currentUser, entryId)
-        settingsEntryDao.delete(entryId)
+    void deleteSettingsEntry(SettingsEntry entry) {
+        log.info("Deleteing entry: {}", entry)
+        auditService.logAudit(securityService.currentUser, entry, SettingsAudit.AuditType.DELETE)
+        settingsEntryDao.delete(entry.id)
     }
 
     @Transactional(readOnly = false)

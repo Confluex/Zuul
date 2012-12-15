@@ -33,8 +33,8 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
 
-import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
+import org.devnull.zuul.data.model.SettingsAudit
 
 public class ZuulServiceImplTest {
 
@@ -486,8 +486,9 @@ public class ZuulServiceImplTest {
     }
 
     @Test
-    void deleteSettingsEntryShouldInvokeDao() {
-        service.deleteSettingsEntry(1)
+    void shouldDeleteSettingsEntry() {
+        def entry = new SettingsEntry(id:1)
+        service.deleteSettingsEntry(entry)
         verify(service.settingsEntryDao).delete(1)
     }
 
@@ -545,9 +546,10 @@ public class ZuulServiceImplTest {
     @Test
     void shouldLogAuditWhenDeletingEntry() {
         def user = new User(userName: "testUser")
+        def entry = new SettingsEntry(id: 1)
         when(service.securityService.currentUser).thenReturn(user)
-        service.deleteSettingsEntry(1)
-        verify(service.auditService).logAuditDeleteByEntryId(user, 1)
+        service.deleteSettingsEntry(entry)
+        verify(service.auditService).logAudit(user, entry, SettingsAudit.AuditType.DELETE)
     }
 
     @Test

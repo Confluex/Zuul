@@ -11,8 +11,6 @@ interface AuditService {
 
     List<SettingsAudit> findSettingAudits(Pagination<SettingsAudit> pagination)
 
-    void logAuditDeleteByEntryId(User user, Integer entryId)
-
     void logAuditDeleteByGroupId(User user, Integer groupId)
 
     void logAudit(User user, SettingsGroup group)

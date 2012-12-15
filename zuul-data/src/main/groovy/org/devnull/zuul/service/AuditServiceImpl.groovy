@@ -44,12 +44,6 @@ class AuditServiceImpl implements AuditService {
 
     // Cannot do async here.. records may be deleted before they are able to be retrieved
     // @Async("auditExecutor")
-    void logAuditDeleteByEntryId(User user, Integer entryId) {
-        logAudit(user, settingsEntryDao.findOne(entryId), AuditType.DELETE)
-    }
-
-    // Cannot do async here.. records may be deleted before they are able to be retrieved
-    // @Async("auditExecutor")
     void logAuditDeleteByGroupId(User user, Integer groupId) {
         def group = settingsGroupDao.findOne(groupId)
         group.entries.each { logAudit(user, it, AuditType.DELETE) }

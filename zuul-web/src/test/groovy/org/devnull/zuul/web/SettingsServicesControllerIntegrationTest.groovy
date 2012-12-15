@@ -6,8 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import org.devnull.zuul.data.dao.SettingsGroupDao
+import org.devnull.zuul.data.model.Environment
+import org.springframework.security.access.AccessDeniedException
 
 public class SettingsServicesControllerIntegrationTest extends ZuulWebIntegrationTest {
+
+    @Autowired
+    SettingsGroupDao settingsGroupDao
 
     @Autowired
     SettingsServicesController controller
@@ -32,6 +38,18 @@ public class SettingsServicesControllerIntegrationTest extends ZuulWebIntegratio
         properties.load(new StringReader(response.contentAsString))
         assert properties == loadTestProperties("/test-app-data-config-dev.properties")
     }
+
+
+    /* ----------- Security Tests ------------- */
+
+    @Test(expected=AccessDeniedException)
+    void shouldNotAllowRoleUserToDeleteEntry() {
+        loginAsUser(OPEN_ID_USER)
+        def group = settingsGroupDao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        controller.deleteEntryJson(group.entries.first().id, new MockHttpServletResponse())
+    }
+
+
 
     Properties loadTestProperties(String path) {
         def resource = new ClassPathResource(path)

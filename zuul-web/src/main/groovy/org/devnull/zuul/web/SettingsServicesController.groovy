@@ -107,7 +107,8 @@ class SettingsServicesController {
      */
     @RequestMapping(value = "/settings/entry/{id}.json", method = RequestMethod.DELETE)
     void deleteEntryJson(@PathVariable("id") Integer id, HttpServletResponse response) {
-        zuulService.deleteSettingsEntry(id)
+        def entry = zuulService.findSettingsEntry(id)
+        zuulService.deleteSettingsEntry(entry)
         response.status = HttpServletResponse.SC_NO_CONTENT
     }
 

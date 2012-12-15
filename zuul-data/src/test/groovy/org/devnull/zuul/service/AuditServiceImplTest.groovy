@@ -19,7 +19,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 
-import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 class AuditServiceImplTest {
@@ -111,7 +110,7 @@ class AuditServiceImplTest {
     void shouldSaveAuditSettingsWhenDeletingEntryById() {
         def group = createGroup()
         when(service.settingsEntryDao.findOne(1)).thenReturn(group.entries.first())
-        service.logAuditDeleteByEntryId(new User(userName: "userA"), 1)
+        service.logAudit(new User(userName: "userA"), group.entries.first(), SettingsAudit.AuditType.DELETE)
         def args = ArgumentCaptor.forClass(SettingsAudit)
         verify(service.settingsAuditDao).save(args.capture())
         assert !args.value.encrypted
