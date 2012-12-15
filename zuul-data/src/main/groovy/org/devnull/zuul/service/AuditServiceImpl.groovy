@@ -42,19 +42,15 @@ class AuditServiceImpl implements AuditService {
         return pagination
     }
 
-    // Cannot do async here.. records may be deleted before they are able to be retrieved
-    // @Async("auditExecutor")
     void logAuditDeleteByGroupId(User user, Integer groupId) {
         def group = settingsGroupDao.findOne(groupId)
         group.entries.each { logAudit(user, it, AuditType.DELETE) }
     }
 
-    @Async("auditExecutor")
     void logAudit(User user, SettingsGroup group) {
         group?.entries?.each { logAudit(user, it) }
     }
 
-    @Async("auditExecutor")
     void logAudit(User user, SettingsEntry entry) {
         def type = entry.id ? AuditType.MOD : AuditType.ADD
         logAudit(user, entry, type)
