@@ -1,7 +1,7 @@
 package org.devnull.zuul.web
 
 import org.junit.Test
-import org.springframework.mock.web.MockHttpServletResponse
+
 import org.devnull.zuul.web.test.ZuulWebIntegrationTest
 import org.springframework.beans.factory.annotation.Autowired
 import org.devnull.zuul.data.dao.EnvironmentDao
@@ -20,7 +20,7 @@ class EnvironmentControllerIntegrationTest extends ZuulWebIntegrationTest {
 
     @Test
     void shouldCascadeDeleteEnvironmentSettings() {
-        loginAsUser(OPEN_ID_SYS_ADMIN)
+        loginAsUser(LOGIN_ROLE_SYSTEM_ADMIN)
         def env = environmentDao.findOne("prod")
         def groups = env.groups
         assert groups

@@ -16,7 +16,7 @@ class AccountControllerIntegrationTest extends ZuulWebIntegrationTest {
 
     @Test
     void shouldSendEmailsToGreenmailWhenRequestingPermissions() {
-        loginAsUser(OPEN_ID_USER)
+        loginAsUser(LOGIN_ROLE_USER)
         controller.submitPermissionsRequest(ZuulDataConstants.ROLE_ADMIN)
         def messages = greenMailContext.greenMail.receivedMessages
         assert messages.size() == 2

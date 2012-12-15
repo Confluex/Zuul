@@ -7,7 +7,6 @@ import org.devnull.zuul.web.test.ZuulWebIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpServletResponse
-import org.devnull.zuul.data.dao.EnvironmentDao
 
 class SystemAdminServicesControllerIntegrationTest extends ZuulWebIntegrationTest {
     @Autowired
@@ -24,7 +23,7 @@ class SystemAdminServicesControllerIntegrationTest extends ZuulWebIntegrationTes
 
     @Test
     void shouldDeleteKeyAndChangeEffectedGroupsToDefaultKeyAndReEncrypt() {
-        loginAsUser(OPEN_ID_SYS_ADMIN)
+        loginAsUser(LOGIN_ROLE_SYSTEM_ADMIN)
 
         def defaultKey = zuulService.findDefaultKey()
         def key = encryptionKeyDao.findOne("Human Resources Key")
