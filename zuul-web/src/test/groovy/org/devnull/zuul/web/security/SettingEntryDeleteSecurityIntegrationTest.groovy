@@ -1,33 +1,22 @@
 package org.devnull.zuul.web.security
 
-import org.junit.Test
-import org.springframework.security.access.AccessDeniedException
-import org.devnull.zuul.data.model.Environment
-import org.springframework.mock.web.MockHttpServletResponse
-import org.devnull.zuul.web.test.ZuulWebIntegrationTest
-import org.springframework.beans.factory.annotation.Autowired
-import org.devnull.zuul.data.dao.SettingsGroupDao
-import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.web.SettingsServicesController
+import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.security.access.AccessDeniedException
 
-
-class SettingEntryDeleteSecurityIntegrationTest extends ZuulWebIntegrationTest {
+class SettingEntryDeleteSecurityIntegrationTest extends SecurityWebIntegrationTest {
 
     @Autowired
     SettingsServicesController settingsServicesController
 
-    @Autowired
-    SettingsGroupDao settingsGroupDao
 
 
-    @Autowired
-    SettingsEntryDao settingsEntryDao
-
-
-    @Test(expected=AccessDeniedException)
+    @Test(expected = AccessDeniedException)
     void shouldNotAllowRoleUserToDeleteEntry() {
         loginAsUser(LOGIN_ROLE_USER)
-        def group = settingsGroupDao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        def group = findUnRestrictedGroup()
         def entry = group.entries.first()
         settingsServicesController.deleteEntryJson(entry.id, new MockHttpServletResponse())
     }
@@ -35,16 +24,16 @@ class SettingEntryDeleteSecurityIntegrationTest extends ZuulWebIntegrationTest {
     @Test
     void shouldAllowRoleAdminToDeleteEntry() {
         loginAsUser(LOGIN_ROLE_ADMIN)
-        def group = settingsGroupDao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        def group = findUnRestrictedGroup()
         def entry = group.entries.first()
         settingsServicesController.deleteEntryJson(entry.id, new MockHttpServletResponse())
         assert !settingsEntryDao.findOne(entry.id)
     }
 
-    @Test(expected=AccessDeniedException)
+    @Test(expected = AccessDeniedException)
     void shouldNotAllowRoleAdminToDeleteEntryBelongingToRestrictedGroup() {
         loginAsUser(LOGIN_ROLE_ADMIN)
-        def group = settingsGroupDao.findByNameAndEnvironment("app-data-config", new Environment(name: "prod"))
+        def group = findRestrictedGroup()
         def entry = group.entries.first()
         settingsServicesController.deleteEntryJson(entry.id, new MockHttpServletResponse())
     }
@@ -52,7 +41,7 @@ class SettingEntryDeleteSecurityIntegrationTest extends ZuulWebIntegrationTest {
     @Test()
     void shouldAllowRoleSystemAdminToDeleteEntryBelongingToRestrictedGroup() {
         loginAsUser(LOGIN_ROLE_SYSTEM_ADMIN)
-        def group = settingsGroupDao.findByNameAndEnvironment("app-data-config", new Environment(name: "prod"))
+        def group = findRestrictedGroup()
         def entry = group.entries.first()
         settingsServicesController.deleteEntryJson(entry.id, new MockHttpServletResponse())
         assert !settingsEntryDao.findOne(entry.id)
