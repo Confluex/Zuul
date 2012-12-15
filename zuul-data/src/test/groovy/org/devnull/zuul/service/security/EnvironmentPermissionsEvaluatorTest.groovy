@@ -1,8 +1,5 @@
 package org.devnull.zuul.service.security
 
-import org.devnull.security.model.Role
-import org.devnull.security.model.User
-import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsGroup
 import org.junit.Before
@@ -14,24 +11,24 @@ import org.springframework.security.core.Authentication
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
 import org.apache.commons.lang.NotImplementedException
 
-class SettingsGroupPermissionsEvaluatorTest {
+class EnvironmentPermissionsEvaluatorTest {
 
-    SettingsGroupPermissionsEvaluator evaluator
-    SettingsGroup restrictedGroup
-    SettingsGroup nonRestrictedGroup
+    EnvironmentPermissionsEvaluator evaluator
+    Environment restrictedEnv
+    Environment nonRestrictedEnv
 
     @Before
     void createMocks() {
         def roleHierarchy = new RoleHierarchyImpl(hierarchy: "${ROLE_SYSTEM_ADMIN} > ${ROLE_ADMIN} > ${ROLE_USER} > ${ROLE_GUEST}")
-        evaluator = new SettingsGroupPermissionsEvaluator(roleHierarchy: roleHierarchy)
-        restrictedGroup = new SettingsGroup(environment: new Environment(restricted: true))
-        nonRestrictedGroup = new SettingsGroup(environment: new Environment(restricted: false))
+        evaluator = new EnvironmentPermissionsEvaluator(roleHierarchy: roleHierarchy)
+        restrictedEnv = new Environment(restricted: true)
+        nonRestrictedEnv = new Environment(restricted: false)
     }
 
     @Test(expected=NotImplementedException)
     void shouldErrorOnUnrecognizedPermission() {
         def authentication = createAuthentication([ROLE_SYSTEM_ADMIN])
-        evaluator.hasPermission(authentication, nonRestrictedGroup, 'notapermission')
+        evaluator.hasPermission(authentication, nonRestrictedEnv, 'notapermission')
     }
 
     @Test(expected=NotImplementedException)
@@ -44,32 +41,32 @@ class SettingsGroupPermissionsEvaluatorTest {
     @Test
     void shouldAllowAdminPermIfRestrictedAndUserIsSysAdmin() {
         def authentication = createAuthentication([ROLE_SYSTEM_ADMIN])
-        assert evaluator.hasPermission(authentication, restrictedGroup, PERMISSION_ADMIN)
+        assert evaluator.hasPermission(authentication, restrictedEnv, PERMISSION_ADMIN)
     }
 
     @Test
     void shouldAllowAdminPermIfNotRestrictedAndUserIsSysAdmin() {
         def authentication = createAuthentication([ROLE_SYSTEM_ADMIN])
-        assert evaluator.hasPermission(authentication, nonRestrictedGroup, PERMISSION_ADMIN)
+        assert evaluator.hasPermission(authentication, nonRestrictedEnv, PERMISSION_ADMIN)
     }
 
     @Test
     void shouldNotAllowAdminPermIfRestrictedAndUserIsAdmin() {
         def authentication = createAuthentication([ROLE_ADMIN])
-        assert !evaluator.hasPermission(authentication, restrictedGroup, PERMISSION_ADMIN)
+        assert !evaluator.hasPermission(authentication, restrictedEnv, PERMISSION_ADMIN)
     }
 
     @Test
     void shouldAllowAdminPermIfNotRestrictedAndUserIsAdmin() {
         def authentication = createAuthentication([ROLE_ADMIN])
-        assert evaluator.hasPermission(authentication, nonRestrictedGroup, PERMISSION_ADMIN)
+        assert evaluator.hasPermission(authentication, nonRestrictedEnv, PERMISSION_ADMIN)
     }
 
     @Test
     void shouldNotAllowAdminPermIfUserIsNotAnAdmin() {
         def authentication = createAuthentication([ROLE_USER])
-        assert !evaluator.hasPermission(authentication, nonRestrictedGroup, PERMISSION_ADMIN)
-        assert !evaluator.hasPermission(authentication, restrictedGroup, PERMISSION_ADMIN)
+        assert !evaluator.hasPermission(authentication, nonRestrictedEnv, PERMISSION_ADMIN)
+        assert !evaluator.hasPermission(authentication, restrictedEnv, PERMISSION_ADMIN)
     }
 
 

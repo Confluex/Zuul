@@ -21,7 +21,7 @@
             </value>
         </property>
     </bean>
-    <bean id="settingsGroupPermissionsEvaluator" class="org.devnull.zuul.service.security.SettingsGroupPermissionsEvaluator"/>
+    <bean id="settingsGroupPermissionsEvaluator" class="org.devnull.zuul.service.security.EnvironmentPermissionsEvaluator"/>
     <bean id="methodExpressionHandler"
           class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
         <property name="roleHierarchy" ref="roleHierarchy"/>
