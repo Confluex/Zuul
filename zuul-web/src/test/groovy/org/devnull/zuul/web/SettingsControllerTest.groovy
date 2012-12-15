@@ -9,7 +9,6 @@ import org.devnull.zuul.service.ZuulService
 import org.devnull.zuul.web.test.ControllerTestMixin
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
 import org.springframework.mock.web.MockHttpServletRequest
 
@@ -65,6 +64,7 @@ public class SettingsControllerTest {
         assert mv.model.environments.is(environments)
         assert mv.model.groupsByEnv instanceof Map
         environments.each { env ->
+            //noinspection GroovyAssignabilityCheck
             assert mv.model.groupsByEnv[env] == groups.find { it.environment == env }
         }
         assert mv.model.groupName == "group-1"
@@ -97,13 +97,13 @@ public class SettingsControllerTest {
         def group = new SettingsGroup(id: 1, name: groupName)
         def entry = new SettingsEntry(key: 'a', value: 'b', group: group)
 
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment(groupName, environmentName)).thenReturn(group)
         def mv = controller.addEntrySubmit(groupName, environmentName, entry, mockSuccessfulBindingResult())
-        def args = ArgumentCaptor.forClass(SettingsEntry)
-        verify(controller.zuulService).save(args.capture())
+        verify(controller.zuulService).save(group)
 
-        assert args.value.group == group
-        assert args.value.key == entry.key
-        assert args.value.value == entry.value
+        def added = group.entries.last()
+        assert added.key == entry.key
+        assert added.value == entry.value
         assert mv.viewName == "redirect:/settings/testGroup#testEnvironment"
     }
 
