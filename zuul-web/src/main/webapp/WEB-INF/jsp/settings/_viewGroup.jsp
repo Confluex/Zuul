@@ -45,20 +45,21 @@
                                 Audit Log
                             </a>
                         </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle descriptive" data-toggle="dropdown"
-                               title="Change Encryption Key"
-                               data-content="Change the encryption key for this group. This will re-encrypt any existing entries with the new key.">
-                                <i class="icon-lock"></i>
-                                    ${fn:escapeXml(group.key.name)}
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu keys-dropdown-menu" data-group="${fn:escapeXml(group.name)}"
-                                data-environment="${fn:escapeXml(environment.name)}"
-                                data-current-key="${fn:escapeXml(group.key.name)}">
-                            </ul>
-                        </li>
-
+                        <security:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle descriptive" data-toggle="dropdown"
+                                   title="Change Encryption Key"
+                                   data-content="Change the encryption key for this group. This will re-encrypt any existing entries with the new key.">
+                                    <i class="icon-lock"></i>
+                                        ${fn:escapeXml(group.key.name)}
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu keys-dropdown-menu" data-group="${fn:escapeXml(group.name)}"
+                                    data-environment="${fn:escapeXml(environment.name)}"
+                                    data-current-key="${fn:escapeXml(group.key.name)}">
+                                </ul>
+                            </li>
+                        </security:authorize>
                     </c:if>
                 </ul>
                 <c:if test="${isAdmin}">

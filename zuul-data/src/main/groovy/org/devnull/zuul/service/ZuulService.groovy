@@ -41,7 +41,7 @@ public interface ZuulService {
 
     List<SettingsGroup> listSettingsGroups()
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasPermission(#group, 'admin')")
     SettingsGroup save(SettingsGroup group)
 
     /* Settings Entry -------------------- */
@@ -54,10 +54,10 @@ public interface ZuulService {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     SettingsEntry decryptSettingsEntryValue(Integer entryId)
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasPermission(#entry.group, 'admin')")
     void deleteSettingsEntry(Integer entryId)
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasPermission(#entry.group, 'admin')")
     SettingsEntry save(SettingsEntry entry)
 
     List<SettingsEntry> search(String query, Pagination<SettingsEntry> pagination)
