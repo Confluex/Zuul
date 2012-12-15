@@ -82,15 +82,12 @@
             </c:forEach>
         </ul>
     </div>
-    <div class="span3">
-        <h4 class="media-heading">Scoping Your Settings</h4>
-        <img class="media-object img-polaroid descriptive"
-             src="${pageContext.request.contextPath}/assets/images/help/environments.png">
-        <blockquote class="stacked">
-            Environments appear in the settings pages as tabs on the left hand side.
-        </blockquote>
-    </div>
     <div class="span6">
+        <h4 class="media-heading">Scoping Your Settings</h4>
+        <blockquote class="stacked">
+            Environments are utilized to separate your settings into different groups. They appear in the
+            settings pages as tabs on the left hand side.
+        </blockquote>
         <h4>Actions</h4>
         <ul>
             <li>Create new environments</li>
@@ -98,6 +95,11 @@
             <li>Restrict environments to system administrators</li>
             <li>Change the order in which the environments are presented</li>
         </ul>
+    </div>
+    <div class="span3">
+        <img class="media-object img-polaroid descriptive" title="Example"
+             data-content="The environments are presented as tabs on the settings page"
+             src="${pageContext.request.contextPath}/assets/images/help/environments.png">
     </div>
 
 </div>

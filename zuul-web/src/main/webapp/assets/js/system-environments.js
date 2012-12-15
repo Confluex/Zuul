@@ -18,5 +18,5 @@ $(function () {
             });
         }
     });
-    $(".descriptive").popover({trigger:'hover'});
+    $(".descriptive").popover({trigger:'hover', placement: 'bottom'});
 });
