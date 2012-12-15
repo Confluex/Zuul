@@ -29,7 +29,7 @@ google.load("feeds", "1");
                         mediaIcon.attr("src", getContextPath() + "/assets/images/icons/rss.png");
 
                         mediaHeader.html(entry.title + " <small> - " + published.format("mmm dd, yyyy") + "</small>");
-                        mediaBody.html(entry.contentSnippet);
+                        mediaBody.html(entry.content);
 
                         mediaIcon.appendTo(mediaIconLink);
                         mediaIconLink.appendTo(mediaContainer);
