@@ -456,7 +456,6 @@ public class ZuulServiceImplTest {
         when(service.encryptionStrategy.encrypt(entry.value, group.key)).thenReturn("encryptedValue")
         def encryptedEntry = service.encryptSettingsEntryValue(entry.id)
         verify(service.encryptionStrategy).encrypt("foo", group.key)
-        verify(service.settingsEntryDao).save(entry)
         assert encryptedEntry.encrypted
         assert encryptedEntry.value == "encryptedValue"
     }
@@ -472,7 +471,6 @@ public class ZuulServiceImplTest {
         when(service.encryptionStrategy.decrypt(entry.value, group.key)).thenReturn("decrypted")
         def decrypted = service.decryptSettingsEntryValue(entry.id)
         verify(service.encryptionStrategy).decrypt("encrypted", group.key)
-        verify(service.settingsEntryDao).save(entry)
         assert !decrypted.encrypted
         assert decrypted.value == "decrypted"
     }

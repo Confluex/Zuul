@@ -118,7 +118,8 @@ class SettingsServicesController {
     @RequestMapping(value = "/settings/entry/encrypt.json")
     @ResponseBody
     SettingsEntry encrypt(@RequestParam("id") Integer id) {
-        return zuulService.encryptSettingsEntryValue(id)
+        def entry = zuulService.encryptSettingsEntryValue(id)
+        return zuulService.save(entry)
     }
 
     /**
@@ -127,7 +128,8 @@ class SettingsServicesController {
     @RequestMapping(value = "/settings/entry/decrypt.json")
     @ResponseBody
     SettingsEntry decrypt(@RequestParam("id") Integer id) {
-        return zuulService.decryptSettingsEntryValue(id)
+        def entry = zuulService.decryptSettingsEntryValue(id)
+        return zuulService.save(entry)
     }
 
 }

@@ -1,11 +1,9 @@
 package org.devnull.zuul.web.security
 
-import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.web.SettingsServicesController
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
-import org.junit.Ignore
 
 class SettingEntryEncryptSecurityIntegrationTest extends SecurityWebIntegrationTest {
 
@@ -30,7 +28,6 @@ class SettingEntryEncryptSecurityIntegrationTest extends SecurityWebIntegrationT
     }
 
     @Test(expected = AccessDeniedException)
-    @Ignore("Need to refactor security for this to work due to proxy issues. Aspectj weaving should be implemented or the code needs refactoring so that the proxy isn't bypassed")
     void shouldNotAllowRoleAdminToEncryptEntryBelongingToRestrictedGroup() {
         loginAsUser(LOGIN_ROLE_ADMIN)
         def entry = findRestrictedGroup().entries.first()

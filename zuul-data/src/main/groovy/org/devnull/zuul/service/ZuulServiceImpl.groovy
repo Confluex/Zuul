@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
@@ -161,7 +162,7 @@ class ZuulServiceImpl implements ZuulService {
         }
         entry.value = encryptionStrategy.encrypt(entry.value, entry.group.key)
         entry.encrypted = true
-        return save(entry)
+        return entry
     }
 
     @Transactional(readOnly = false)
@@ -172,7 +173,7 @@ class ZuulServiceImpl implements ZuulService {
         }
         entry.value = encryptionStrategy.decrypt(entry.value, entry.group.key)
         entry.encrypted = false
-        return save(entry)
+        return entry
     }
 
     SettingsEntry findSettingsEntry(Integer id) {

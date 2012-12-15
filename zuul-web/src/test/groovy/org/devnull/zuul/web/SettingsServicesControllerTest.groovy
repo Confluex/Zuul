@@ -71,20 +71,24 @@ class SettingsServicesControllerTest {
     }
 
     @Test
-    void encryptionShouldReturnResultsFromService() {
+    void shouldEncryptEntry() {
         def expected = new SettingsEntry(id: 1, key: "a.b.c", value: "foo", encrypted: false)
         when(controller.zuulService.encryptSettingsEntryValue(expected.id)).thenReturn(expected)
+        when(controller.zuulService.save(expected)).thenReturn(expected)
         def result = controller.encrypt(expected.id)
         verify(controller.zuulService).encryptSettingsEntryValue(expected.id)
+        verify(controller.zuulService).save(expected)
         assert result.is(expected)
     }
 
     @Test
-    void decryptionShouldReturnResultsFromService() {
+    void shouldDecryptEntry() {
         def expected = new SettingsEntry(id: 1, key: "a.b.c", value: "foo", encrypted: true)
         when(controller.zuulService.decryptSettingsEntryValue(expected.id)).thenReturn(expected)
+        when(controller.zuulService.save(expected)).thenReturn(expected)
         def result = controller.decrypt(expected.id)
         verify(controller.zuulService).decryptSettingsEntryValue(expected.id)
+        verify(controller.zuulService).save(expected)
         assert result.is(expected)
     }
 
