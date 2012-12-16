@@ -23,14 +23,14 @@ public interface ZuulService {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     void changeKey(SettingsGroup group, EncryptionKey key)
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasPermission(#environmentName, 'org.devnull.zuul.data.model.Environment', 'admin')")
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName)
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    SettingsGroup createSettingsGroupFromPropertiesFile(String name, String env, InputStream inputStream)
+    @PreAuthorize("hasPermission(#environmentName, 'org.devnull.zuul.data.model.Environment', 'admin')")
+    SettingsGroup createSettingsGroupFromPropertiesFile(String name, String environmentName, InputStream inputStream)
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    SettingsGroup createSettingsGroupFromCopy(String name, String env, SettingsGroup copy)
+    @PreAuthorize("hasPermission(#environmentName, 'org.devnull.zuul.data.model.Environment', 'admin')")
+    SettingsGroup createSettingsGroupFromCopy(String name, String environmentName, SettingsGroup copy)
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     void deleteSettingsGroup(Integer groupId)

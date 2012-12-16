@@ -21,7 +21,10 @@
             </value>
         </property>
     </bean>
-    <bean id="settingsGroupPermissionsEvaluator" class="org.devnull.zuul.service.security.EnvironmentPermissionsEvaluator"/>
+    <bean id="settingsGroupPermissionsEvaluator" class="org.devnull.zuul.service.security.EnvironmentPermissionsEvaluator">
+        <property name="environmentDao" ref="environmentDao"/>
+        <property name="roleHierarchy" ref="roleHierarchy"/>
+    </bean>
     <bean id="methodExpressionHandler"
           class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
         <property name="roleHierarchy" ref="roleHierarchy"/>

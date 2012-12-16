@@ -2,6 +2,7 @@ package org.devnull.zuul.service.security
 
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang.NotImplementedException
+import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsGroup
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,8 +38,11 @@ import static org.devnull.zuul.data.config.ZuulDataConstants.*
 @Slf4j
 class EnvironmentPermissionsEvaluator implements PermissionEvaluator {
 
-    @Autowired
+
     RoleHierarchy roleHierarchy
+
+
+    EnvironmentDao environmentDao
 
 
     boolean hasPermission(Authentication authentication, Object entity, Object permission) {
@@ -54,7 +58,10 @@ class EnvironmentPermissionsEvaluator implements PermissionEvaluator {
     }
 
     boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-        throw new NotImplementedException("Permission checks for domain identifiers are not supported")
+        if (targetType != Environment.class.name) {
+            throw new NotImplementedException("Unsupported type ${targetType}. Supported type: ${Environment.class.name}")
+        }
+        return hasPermission(authentication, environmentDao.findOne(targetId.toString()), permission)
     }
 
     protected Boolean hasRole(Collection<GrantedAuthority> authorities, String name) {

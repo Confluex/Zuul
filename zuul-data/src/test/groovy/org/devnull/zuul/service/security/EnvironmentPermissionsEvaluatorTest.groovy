@@ -1,7 +1,8 @@
 package org.devnull.zuul.service.security
 
+import org.apache.commons.lang.NotImplementedException
+import org.devnull.zuul.data.dao.EnvironmentDao
 import org.devnull.zuul.data.model.Environment
-import org.devnull.zuul.data.model.SettingsGroup
 import org.junit.Before
 import org.junit.Test
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
@@ -9,7 +10,8 @@ import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
-import org.apache.commons.lang.NotImplementedException
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.verify
 
 class EnvironmentPermissionsEvaluatorTest {
 
@@ -20,21 +22,28 @@ class EnvironmentPermissionsEvaluatorTest {
     @Before
     void createMocks() {
         def roleHierarchy = new RoleHierarchyImpl(hierarchy: "${ROLE_SYSTEM_ADMIN} > ${ROLE_ADMIN} > ${ROLE_USER} > ${ROLE_GUEST}")
-        evaluator = new EnvironmentPermissionsEvaluator(roleHierarchy: roleHierarchy)
+        evaluator = new EnvironmentPermissionsEvaluator(roleHierarchy: roleHierarchy, environmentDao: mock(EnvironmentDao))
         restrictedEnv = new Environment(restricted: true)
         nonRestrictedEnv = new Environment(restricted: false)
     }
 
-    @Test(expected=NotImplementedException)
+    @Test(expected = NotImplementedException)
     void shouldErrorOnUnrecognizedPermission() {
         def authentication = createAuthentication([ROLE_SYSTEM_ADMIN])
         evaluator.hasPermission(authentication, nonRestrictedEnv, 'notapermission')
     }
 
-    @Test(expected=NotImplementedException)
-    void shouldErrorWhenCheckingDomainIdentifiers() {
+    @Test(expected = NotImplementedException)
+    void shouldErrorWhenCheckingDomainIdentifiersForInvalidClasses() {
         def authentication = createAuthentication([ROLE_SYSTEM_ADMIN])
         evaluator.hasPermission(authentication, 123, 'DomainEntity', PERMISSION_ADMIN)
+    }
+
+    @Test
+    void shouldQueryForEnvironmentWhenIdentifierIsSupplied() {
+        def authentication = createAuthentication([ROLE_SYSTEM_ADMIN])
+        assert evaluator.hasPermission(authentication, "dev", Environment.class.name, PERMISSION_ADMIN)
+        verify(evaluator.environmentDao).findOne("dev")
     }
 
     // --------- PERMISSION_ADMIN
