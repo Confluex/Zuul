@@ -92,8 +92,7 @@ class SettingsController {
             return addEntryForm(groupName, env)
         }
         def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, env)
-        group.addToEntries(formEntry)
-        zuulService.save(group)
+        zuulService.createEntry(group, formEntry)
         return new ModelAndView("redirect:/settings/${groupName}#${env}")
     }
 

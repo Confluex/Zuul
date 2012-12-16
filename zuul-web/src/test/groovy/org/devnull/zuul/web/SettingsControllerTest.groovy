@@ -91,7 +91,7 @@ public class SettingsControllerTest {
     }
 
     @Test
-    void addEntrySubmitShouldSaveRecord() {
+    void shouldCreateNewEntriesForGroup() {
         def environmentName = 'testEnvironment'
         def groupName = 'testGroup'
         def group = new SettingsGroup(id: 1, name: groupName)
@@ -99,11 +99,7 @@ public class SettingsControllerTest {
 
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment(groupName, environmentName)).thenReturn(group)
         def mv = controller.addEntrySubmit(groupName, environmentName, entry, mockSuccessfulBindingResult())
-        verify(controller.zuulService).save(group)
-
-        def added = group.entries.last()
-        assert added.key == entry.key
-        assert added.value == entry.value
+        verify(controller.zuulService).createEntry(group, entry)
         assert mv.viewName == "redirect:/settings/testGroup#testEnvironment"
     }
 

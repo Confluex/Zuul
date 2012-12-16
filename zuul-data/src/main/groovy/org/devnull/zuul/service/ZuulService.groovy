@@ -60,6 +60,9 @@ public interface ZuulService {
     @PreAuthorize("hasPermission(#entry.group.environment, 'admin')")
     SettingsEntry save(SettingsEntry entry)
 
+    @PreAuthorize("hasPermission(#group.environment, 'admin')")
+    SettingsEntry createEntry(SettingsGroup group, SettingsEntry entry)
+
     List<SettingsEntry> search(String query, Pagination<SettingsEntry> pagination)
 
     /* Environments -------------------- */

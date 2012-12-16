@@ -491,6 +491,17 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldCreateEntriesForGroup() {
+        def group = new SettingsGroup()
+        def entry = new SettingsEntry()
+        service.createEntry(group, entry)
+        def arg = ArgumentCaptor.forClass(SettingsEntry)
+        verify(service.settingsEntryDao).save(arg.capture())
+        assert arg.value.group == group
+        assert group.entries.contains(arg.value)
+    }
+
+    @Test
     void saveSettingsEntryShouldReturnResultsFromDao() {
         def expected = new SettingsEntry(id: 1, key: "a", value: 1)
         when(service.settingsEntryDao.save(expected)).thenReturn(expected)

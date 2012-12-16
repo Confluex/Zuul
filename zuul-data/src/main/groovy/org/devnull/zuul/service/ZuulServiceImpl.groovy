@@ -194,6 +194,12 @@ class ZuulServiceImpl implements ZuulService {
         return settingsEntryDao.save(entry)
     }
 
+    @Transactional(readOnly = false)
+    SettingsEntry createEntry(SettingsGroup group, SettingsEntry entry) {
+        group.addToEntries(entry)
+        return save(entry)
+    }
+
     List<SettingsEntry> search(String query, Pagination<SettingsEntry> pagination) {
         log.info("Searching with query: {}, pagination: {}", query, pagination)
         def results = settingsEntryDao.findAll(new SettingsEntrySearch(query), new JpaPaginationAdapter(pagination))
