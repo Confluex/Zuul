@@ -59,8 +59,8 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <s:intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
         <s:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <s:intercept-url pattern="/audit/**" access="hasRole('ROLE_ADMIN')"/>
-        <s:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
-        <s:http-basic/>
+        <s:intercept-url pattern="/**" access="permitAll"/>
+        <s:form-login login-page="/login" authentication-failure-url="/login?login_error=authentication"/>
         <s:logout logout-url="/logout" logout-success-url="/"/>
     </s:http>
 

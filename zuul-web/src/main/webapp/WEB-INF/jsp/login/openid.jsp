@@ -1,7 +1,7 @@
+<%--suppress HtmlUnknownTarget --%>
 <%@ taglib prefix='c' uri='http://java.sun.com/jstl/core_rt' %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="z" tagdir="/WEB-INF/tags/zuul" %>
-<%--@elvariable id="SPRING_SECURITY_LAST_EXCEPTION" type="org.springframework.security.core.AuthenticationException"--%>
 
 <html>
 <head>
@@ -9,20 +9,7 @@
 </head>
 
 <body>
-
-
-<c:if test="${not empty param.login_error}">
-    <div class="row">
-        <div class="alert alert-error">
-            Your login attempt was not successful, try again.
-            <ul>
-                <li>
-                    <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/></li>
-            </ul>
-        </div>
-    </div>
-</c:if>
-
+<jsp:include page="_errorCheck.jsp"/>
 <div class="row">
     <div class="span6">
         <div class="page-header">
@@ -46,7 +33,8 @@
                 <small>(any other provider)</small>
             </h1>
         </div>
-        <form class="form-horizontal" action="${pageContext.request.contextPath}/j_spring_openid_security_check" method="POST">
+        <form class="form-horizontal" action="${pageContext.request.contextPath}/j_spring_openid_security_check"
+              method="POST">
             <fieldset>
                 <div class="control-group">
                     <label class="control-label" for="customOpenIdUrl">URL</label>
