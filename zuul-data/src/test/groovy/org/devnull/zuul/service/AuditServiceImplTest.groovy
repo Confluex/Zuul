@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 
+import static org.mockito.Matchers.any
 import static org.mockito.Mockito.*
 
 class AuditServiceImplTest {
@@ -54,6 +55,7 @@ class AuditServiceImplTest {
         assert results == audits
     }
 
+
     @Test
     void shouldSaveAuditSettingsEntriesByGroup() {
         def group = createGroup()
@@ -87,14 +89,11 @@ class AuditServiceImplTest {
     }
 
     @Test
-    void shouldLazyLoadGroupWithAuditingNewEntries() {
-        createGroup()
-        service.logAudit(new User(userName: "userA"), new SettingsEntry(group: new SettingsGroup(id: 22)))
-        def args = ArgumentCaptor.forClass(SettingsAudit)
-        verify(service.settingsAuditDao).save(args.capture())
-        assert args.value.groupEnvironment == "dev"
-        assert args.value.groupName == "test group"
-    }
+    void shouldNotThrowExceptionIfErrorOccursSavingAudit() {
+        when(service.settingsAuditDao.save(any(SettingsAudit))).thenThrow(new RuntimeException("test"))
+        service.logAudit(new User(userName: "userA"), new SettingsEntry())
+        verify(service.settingsAuditDao).save(any(SettingsAudit))    }
+
 
     @Test
     void shouldSaveAuditSettingsByEntryWithModifiedTypeIfIdPropertyIsNotNull() {
