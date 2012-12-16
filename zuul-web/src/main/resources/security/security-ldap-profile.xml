@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans profile="security-ldap"
+       xmlns="http://www.springframework.org/schema/beans"
        xmlns:s="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -12,7 +13,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <!--suppress SpringModelInspection -->
     <context:property-placeholder location="classpath:/ldap.properties" order="2" ignore-unresolvable="true"/>
 
-    <s:ldap-server url="${ldap.url}" manager-dn="${ldap.username}" manager-password="${ldap.password}"/>
     <bean id="ldapUserContextMapper" class="org.devnull.security.spring.LdapUserContextMapper">
         <constructor-arg>
             <map>
@@ -34,6 +34,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             </map>
         </constructor-arg>
     </bean>
+
+    <s:ldap-server url="${ldap.url}" manager-dn="${ldap.username}" manager-password="${ldap.password}"/>
+
     <s:authentication-manager id="authenticationManager">
         <s:ldap-authentication-provider
                 user-context-mapper-ref="ldapUserContextMapper"
@@ -45,5 +48,20 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                 user-search-filter="${ldap.user.search.filter}"/>
     </s:authentication-manager>
 
+    <s:http use-expressions="true" realm="Zuul Configuration Management"
+            authentication-manager-ref="authenticationManager"
+            access-decision-manager-ref="accessDecisionManager">
+        <s:intercept-url pattern="/account/**" access="hasRole('ROLE_GUEST')"/>
+        <s:intercept-url pattern="/settings/create**" access="hasRole('ROLE_ADMIN')"/>
+        <s:intercept-url pattern="/settings/**/*.properties" access="permitAll" method="GET"/>
+        <s:intercept-url pattern="/settings/**/*.json" access="permitAll" method="GET"/>
+        <s:intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
+        <s:intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
+        <s:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <s:intercept-url pattern="/audit/**" access="hasRole('ROLE_ADMIN')"/>
+        <s:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+        <s:http-basic/>
+        <s:logout logout-url="/logout" logout-success-url="/"/>
+    </s:http>
 
 </beans>

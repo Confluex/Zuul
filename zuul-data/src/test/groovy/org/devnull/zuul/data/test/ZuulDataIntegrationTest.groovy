@@ -11,4 +11,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional('transactionManager')
 abstract class ZuulDataIntegrationTest {
 
+    @BeforeClass
+    static void enableSpringProfiles() {
+        System.setProperty("spring.profiles.active", "security-openid")
+    }
 }

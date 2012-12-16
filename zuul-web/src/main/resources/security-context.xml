@@ -4,47 +4,60 @@
        xmlns:s="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-">
+http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-    <import resource="security/security-common-context.xml"/>
-    <import resource="security/security-openid.xml"/>
-    <!--<import resource="security/security-ldap.xml"/>-->
+    <s:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"
+                              authentication-manager-ref="authenticationManager">
+        <s:expression-handler ref="methodExpressionHandler"/>
+    </s:global-method-security>
 
-    <s:http use-expressions="true" realm="Zuul Configuration Management"
-            authentication-manager-ref="authenticationManager"
-            access-decision-manager-ref="accessDecisionManager">
-        <s:intercept-url pattern="/account/**" access="hasRole('ROLE_GUEST')"/>
-        <s:intercept-url pattern="/settings/create**" access="hasRole('ROLE_ADMIN')"/>
-        <s:intercept-url pattern="/settings/**/*.properties" access="permitAll" method="GET"/>
-        <s:intercept-url pattern="/settings/**/*.json" access="permitAll" method="GET"/>
-        <s:intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
-        <s:intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
-        <s:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <s:intercept-url pattern="/audit/**" access="hasRole('ROLE_ADMIN')"/>
+    <jpa:repositories base-package="org.devnull.security.dao"/>
 
+    <context:component-scan base-package="org.devnull.security"/>
 
-        <!-- LDAP Configuration
-        <s:http-basic/>
-        <s:intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')"/>
-        -->
+    <bean id="roleHierarchy"
+          class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <property name="hierarchy">
+            <value>
+                ROLE_SYSTEM_ADMIN > ROLE_ADMIN
+                ROLE_ADMIN > ROLE_USER
+                ROLE_USER > ROLE_GUEST
+                ROLE_GUEST > ROLE_ANONYMOUS
+            </value>
+        </property>
+    </bean>
+    <bean id="permissionsEvaluator"
+          class="org.devnull.zuul.service.security.EnvironmentPermissionsEvaluator">
+        <property name="environmentDao" ref="environmentDao"/>
+        <property name="roleHierarchy" ref="roleHierarchy"/>
+    </bean>
+    <bean id="methodExpressionHandler"
+          class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="roleHierarchy" ref="roleHierarchy"/>
+        <property name="permissionEvaluator" ref="permissionsEvaluator"/>
+    </bean>
+    <bean id="webExpressionHandler"
+          class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+        <property name="roleHierarchy" ref="roleHierarchy"/>
+        <property name="permissionEvaluator" ref="permissionsEvaluator"/>
+    </bean>
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                    <property name="expressionHandler" ref="webExpressionHandler"/>
+                </bean>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </list>
+        </constructor-arg>
+    </bean>
 
-        <!-- Open ID Configuration -->
-        <s:intercept-url pattern="/**" access="permitAll"/>
-        <s:logout logout-url="/logout" logout-success-url="/"/>
-        <s:openid-login login-page="/login"
-                        authentication-failure-url="/login?login_error=true"
-                        user-service-ref="openIdUserDetailsService"
-                        authentication-failure-handler-ref="openIdRegistrationHandler">
-            <s:attribute-exchange>
-                <s:openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
-                <s:openid-attribute name="lastName" type="http://schema.openid.net/namePerson/last" required="true"/>
-                <s:openid-attribute name="firstName" type="http://schema.openid.net/namePerson/first" required="true"/>
-            </s:attribute-exchange>
-        </s:openid-login>
-    </s:http>
-
+    <!-- imports enabled by profiles -->
+    <import resource="security/security-openid-profile.xml"/>
+    <import resource="security/security-ldap-profile.xml"/>
 </beans>

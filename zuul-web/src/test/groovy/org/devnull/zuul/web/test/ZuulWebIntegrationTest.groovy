@@ -2,6 +2,7 @@ package org.devnull.zuul.web.test
 
 import org.devnull.security.service.SecurityService
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.ProviderManager
@@ -21,6 +22,11 @@ import org.junit.After
 ])
 @Transactional('transactionManager')
 abstract class ZuulWebIntegrationTest {
+
+    @BeforeClass
+    static void enableSpringProfiles() {
+        System.setProperty("spring.profiles.active", "security-openid")
+    }
 
     @Autowired
     ProviderManager authenticationManager
