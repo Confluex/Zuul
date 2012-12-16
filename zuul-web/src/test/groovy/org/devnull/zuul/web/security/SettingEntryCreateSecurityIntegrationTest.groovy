@@ -47,6 +47,20 @@ class SettingEntryCreateSecurityIntegrationTest extends SecurityWebIntegrationTe
         attemptToAddNewEntry(group)
     }
 
+    @Test
+    void shouldNotPersistChangesIfAccessIsDenied() {
+        loginAsUser(LOGIN_ROLE_ADMIN)
+        def group = findRestrictedGroup()
+        def deniedMessage = false
+        try {
+            attemptToAddNewEntry(group)
+        } catch (AccessDeniedException e) {
+            deniedMessage = e.message
+        }
+        assert deniedMessage == "Access is denied"
+        assert findRestrictedGroup().entries.find { it.key == "a" } == null
+    }
+
     protected void attemptToAddNewEntry(SettingsGroup group) {
         controller.addEntrySubmit(group.name, group.environment.name, new SettingsEntry(key: "a", value: "b"), mockSuccessfulBindingResult())
     }
