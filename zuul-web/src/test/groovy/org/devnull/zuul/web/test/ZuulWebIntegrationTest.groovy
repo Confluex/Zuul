@@ -9,6 +9,7 @@ import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.TestingAuthenticationProvider
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.transaction.annotation.Transactional
@@ -21,12 +22,9 @@ import org.junit.After
 'classpath:security-context.xml'
 ])
 @Transactional('transactionManager')
+@ActiveProfiles("security-openid")
 abstract class ZuulWebIntegrationTest {
 
-    @BeforeClass
-    static void enableSpringProfiles() {
-        System.setProperty("spring.profiles.active", "security-openid")
-    }
 
     @Autowired
     ProviderManager authenticationManager
