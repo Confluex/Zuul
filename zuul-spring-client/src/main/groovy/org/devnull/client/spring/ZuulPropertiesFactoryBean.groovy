@@ -21,7 +21,7 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
      * Name of the system environment variable which can be set to resolve the password to
      * decrypt secured values.
      *
-     * Value: @{value}
+     * Value: ZUUL_PASSWORD
      */
     static final String DEFAULT_PASSWORD_VARIABLE = "ZUUL_PASSWORD"
 
@@ -36,28 +36,28 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
     /**
      * Host or IP address of the zuul server
      *
-     * default = {@value}
+     * default = localhost
      */
     String host = "localhost"
 
     /**
      * TCP port where the zuul application can be reached.
      *
-     * default = {@value}
+     * default = 80
      */
     Integer port = 80
 
     /**
      * Context path where the zuul application resides
      *
-     * default = {@value}
+     * default = "/zuul"
      */
     String context = "/zuul"
 
     /**
      * Environment for the configuration
      *
-     * default = {@value}
+     * default = "dev"
      */
     String environment = "dev"
 
@@ -76,7 +76,7 @@ class ZuulPropertiesFactoryBean implements InitializingBean, DisposableBean, Fac
     /**
      * Use HTTPS or HTTP?
      *
-     * default = {@value}
+     * default = false
      */
     Boolean ssl = false
 
