@@ -32,8 +32,8 @@ public interface ZuulService {
     @PreAuthorize("hasPermission(#environmentName, 'org.devnull.zuul.data.model.Environment', 'admin')")
     SettingsGroup createSettingsGroupFromCopy(String name, String environmentName, SettingsGroup copy)
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    void deleteSettingsGroup(Integer groupId)
+    @PreAuthorize("hasPermission(#group.environment, 'admin')")
+    void deleteSettingsGroup(SettingsGroup group)
 
     List<SettingsGroup> findSettingsGroupByName(String name)
 

@@ -42,13 +42,12 @@ class AuditServiceImpl implements AuditService {
         return pagination
     }
 
-    void logAuditDeleteByGroupId(User user, Integer groupId) {
-        def group = settingsGroupDao.findOne(groupId)
-        group.entries.each { logAudit(user, it, AuditType.DELETE) }
-    }
-
     void logAudit(User user, SettingsGroup group) {
         group?.entries?.each { logAudit(user, it) }
+    }
+
+    void logAudit(User user, SettingsGroup group, AuditType type) {
+        group?.entries?.each { logAudit(user, it, type) }
     }
 
     void logAudit(User user, SettingsEntry entry) {

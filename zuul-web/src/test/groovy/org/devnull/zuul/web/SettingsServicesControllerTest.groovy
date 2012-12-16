@@ -56,7 +56,7 @@ class SettingsServicesControllerTest {
         def group = new SettingsGroup(id: 123)
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "dev")).thenReturn(group)
         controller.deletePropertiesByNameAndEnv(response, "test-config", "dev")
-        verify(controller.zuulService).deleteSettingsGroup(123)
+        verify(controller.zuulService).deleteSettingsGroup(group)
         assert response.status == 204
     }
 

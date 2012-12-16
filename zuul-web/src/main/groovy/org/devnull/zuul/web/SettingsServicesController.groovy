@@ -47,7 +47,7 @@ class SettingsServicesController {
     @RequestMapping(value = "/settings/{environment}/{name}.properties", method = RequestMethod.DELETE)
     void deletePropertiesByNameAndEnv(HttpServletResponse response, @PathVariable("name") String name, @PathVariable("environment") String env) {
         def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
-        zuulService.deleteSettingsGroup(group.id)
+        zuulService.deleteSettingsGroup(group)
         response.status = HttpServletResponse.SC_NO_CONTENT
     }
 

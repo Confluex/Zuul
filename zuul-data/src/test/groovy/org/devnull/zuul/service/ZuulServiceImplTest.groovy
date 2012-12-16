@@ -510,7 +510,7 @@ public class ZuulServiceImplTest {
 
     @Test
     void deleteSettingsGroupShouldInvokeDao() {
-        service.deleteSettingsGroup(1)
+        service.deleteSettingsGroup(new SettingsGroup(id: 1))
         verify(service.settingsGroupDao).delete(1)
     }
 
@@ -554,8 +554,9 @@ public class ZuulServiceImplTest {
     void shouldLogAuditWhenDeletingGroup() {
         def user = new User(userName: "testUser")
         when(service.securityService.currentUser).thenReturn(user)
-        service.deleteSettingsGroup(1)
-        verify(service.auditService).logAuditDeleteByGroupId(user, 1)
+        def group = new SettingsGroup(id: 1)
+        service.deleteSettingsGroup(group)
+        verify(service.auditService).logAudit(user, group, SettingsAudit.AuditType.DELETE)
     }
 
     @Test

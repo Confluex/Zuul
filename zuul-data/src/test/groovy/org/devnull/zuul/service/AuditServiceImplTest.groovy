@@ -57,7 +57,7 @@ class AuditServiceImplTest {
     @Test
     void shouldSaveAuditSettingsEntriesByGroup() {
         def group = createGroup()
-        service.logAudit(new User(userName: "userA"), group)
+        service.logAudit(new User(userName: "userA"), group, SettingsAudit.AuditType.ADD)
         def args = ArgumentCaptor.forClass(SettingsAudit)
         verify(service.settingsAuditDao, times(2)).save(args.capture())
         // not sure how to get a captor for each invocation.. just use the last for now
@@ -118,22 +118,6 @@ class AuditServiceImplTest {
         assert args.value.groupName == "test group"
         assert args.value.settingsKey == "property.a"
         assert args.value.settingsValue == "1"
-        assert args.value.modifiedBy == "userA"
-        assert args.value.type == SettingsAudit.AuditType.DELETE
-    }
-
-    @Test
-    void shouldSaveAuditSettingsWhenDeletingGroupById() {
-        def group = createGroup()
-        when(service.settingsGroupDao.findOne(1)).thenReturn(group)
-        service.logAuditDeleteByGroupId(new User(userName: "userA"), 1)
-        def args = ArgumentCaptor.forClass(SettingsAudit)
-        verify(service.settingsAuditDao, times(group.entries.size())).save(args.capture())
-        assert args.value.encrypted
-        assert args.value.groupEnvironment == "dev"
-        assert args.value.groupName == "test group"
-        assert args.value.settingsKey == "property.b"
-        assert args.value.settingsValue == "mumbojumbo"
         assert args.value.modifiedBy == "userA"
         assert args.value.type == SettingsAudit.AuditType.DELETE
     }

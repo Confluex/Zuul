@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
@@ -97,14 +96,14 @@ class ZuulServiceImpl implements ZuulService {
             log.debug("appending entry: {}", entry)
             group.addToEntries(entry)
         }
-        return settingsGroupDao.save(group)
+        return save(group)
     }
 
     @Transactional(readOnly = false)
-    void deleteSettingsGroup(Integer groupId) {
-        log.info("Deleteing settings group: {} ", groupId)
-        auditService.logAuditDeleteByGroupId(securityService.currentUser, groupId)
-        settingsGroupDao.delete(groupId)
+    void deleteSettingsGroup(SettingsGroup group) {
+        log.info("Deleteing settings group: {} ", group)
+        auditService.logAudit(securityService.currentUser, group, SettingsAudit.AuditType.DELETE)
+        settingsGroupDao.delete(group.id)
     }
 
     List<SettingsGroup> findSettingsGroupByName(String name) {
