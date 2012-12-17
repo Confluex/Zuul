@@ -42,7 +42,7 @@ class ZuulPropertiesFactoryBeanTest {
     @Test(expected = EncryptionOperationNotPossibleException)
     void shouldFailToDecryptWithIncorrectPassword() {
         System.setProperty(ZuulPropertiesFactoryBean.DEFAULT_PASSWORD_VARIABLE, "foo")
-        def mockResponse = new ClassPathResource("/mock-server-response.properties").inputStream.text
+        def mockResponse = new ClassPathResource("/responses/mock-server-response-prod.properties").inputStream.text
         def httpGet = Matchers.any(HttpGet)
         def handler = Matchers.any(BasicResponseHandler)
         when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenReturn(mockResponse)
@@ -54,7 +54,7 @@ class ZuulPropertiesFactoryBeanTest {
     void shouldPreferConfiguredPasswordOverSystemEnvironmentVariable() {
         System.setProperty(ZuulPropertiesFactoryBean.DEFAULT_PASSWORD_VARIABLE, "foo")
         factory.password = "badpassword1"
-        def mockResponse = new ClassPathResource("/mock-server-response.properties").inputStream.text
+        def mockResponse = new ClassPathResource("/responses/mock-server-response-prod.properties").inputStream.text
         def httpGet = Matchers.any(HttpGet)
         def handler = Matchers.any(BasicResponseHandler)
         when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenReturn(mockResponse)
@@ -148,7 +148,7 @@ class ZuulPropertiesFactoryBeanTest {
 
 
     protected void mockResponseFromFile() {
-        def mockResponse = new ClassPathResource("/mock-server-response.properties").inputStream.text
+        def mockResponse = new ClassPathResource("/responses/mock-server-response-prod.properties").inputStream.text
         def httpGet = Matchers.any(HttpGet)
         def handler = Matchers.any(BasicResponseHandler)
         when(factory.httpClient.execute(httpGet as HttpGet, handler as BasicResponseHandler)).thenReturn(mockResponse)
