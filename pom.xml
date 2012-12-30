@@ -38,7 +38,6 @@
     <modules>
         <module>zuul-data</module>
         <module>zuul-web</module>
-        <module>zuul-spring-client</module>
     </modules>
     <dependencyManagement>
         <dependencies>
