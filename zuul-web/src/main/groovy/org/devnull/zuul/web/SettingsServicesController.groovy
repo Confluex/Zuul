@@ -73,8 +73,14 @@ class SettingsServicesController {
      */
     @RequestMapping(value = "/settings/{environment}/{name}.json", method = RequestMethod.GET)
     @ResponseBody
-    Map showByNameAndEnvJson(@PathVariable("name") String name, @PathVariable("environment") String env) {
-        return zuulService.findSettingsGroupByNameAndEnvironment(name, env) as Map
+    Map showByNameAndEnvJson(@PathVariable("name") String name, @PathVariable("environment") String env, HttpServletResponse response) {
+        def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
+        if (!group) {
+            response.status = HttpServletResponse.SC_NOT_FOUND
+            response.outputStream << "No configuration found for ${env}/${name}"
+            return null
+        }
+        return group as Map
     }
 
     /**

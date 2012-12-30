@@ -132,9 +132,20 @@ class SettingsServicesControllerTest {
                 new SettingsEntry(key: "a", value: "1"),
                 new SettingsEntry(key: "b", value: "2", encrypted: true),
         ])
+        def response = new MockHttpServletResponse()
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "qa")).thenReturn(expected)
-        def result = controller.showByNameAndEnvJson("test-config", "qa")
+        def result = controller.showByNameAndEnvJson("test-config", "qa", response)
         assert result ==  [a:'1', b:'ENC(2)']
+        assert response.status == MockHttpServletResponse.SC_OK
+    }
+
+    @Test
+    void shouldErrorWithProperStatusCodeWhenRendingSettingsAndResultsAreNotFound() {
+        def response = new MockHttpServletResponse()
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "qa")).thenReturn(null)
+        def result = controller.showByNameAndEnvJson("test-config", "qa", response)
+        assert response.status == MockHttpServletResponse.SC_NOT_FOUND
+        assert result ==  null
     }
 
 }
