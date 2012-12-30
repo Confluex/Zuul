@@ -60,6 +60,12 @@ class SettingsGroup implements Serializable {
                     properties.put(it.key, it.encrypted ? "ENC(${it.value})".toString() : it.value)
                 }
                 return properties
+            case Map:
+                def map = [:]
+                entries.each {
+                    map[it.key] = it.encrypted ? "ENC(${it.value})".toString() : it.value
+                }
+                return map
             default:
                 throw new GroovyCastException("Hmm... ${this.class} cannot be converted to ${type}")
         }

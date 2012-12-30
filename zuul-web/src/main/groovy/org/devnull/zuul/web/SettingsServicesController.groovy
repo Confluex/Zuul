@@ -73,12 +73,8 @@ class SettingsServicesController {
      */
     @RequestMapping(value = "/settings/{environment}/{name}.json", method = RequestMethod.GET)
     @ResponseBody
-    List<Map> showByNameAndEnvJson(@PathVariable("name") String name, @PathVariable("environment") String env) {
-        def group = zuulService.findSettingsGroupByNameAndEnvironment(name, env)
-        return group.entries.collect { entry ->
-            def val = entry.encrypted ? "ENC(${entry.value})".toString() : entry.value
-            [(entry.key): val]
-        }
+    Map showByNameAndEnvJson(@PathVariable("name") String name, @PathVariable("environment") String env) {
+        return zuulService.findSettingsGroupByNameAndEnvironment(name, env) as Map
     }
 
     /**

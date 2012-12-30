@@ -17,23 +17,24 @@ public class SettingsGroupTest {
         )
         group.entries.add(new SettingsEntry(key: 'a.b.c', value: 'foo'))
         group.entries.add(new SettingsEntry(key: 'd.e.f', value: 'bar'))
+        group.entries.add(new SettingsEntry(key: 'h.i.j', value: 'rot13', encrypted: true))
     }
 
     @Test
     void shouldConvertToPropertiesWithCorrectKeyVals() {
         def props = group as Properties
-        assert props.size() == 2
+        assert props.size() == 3
         assert props['a.b.c'] == 'foo'
         assert props['d.e.f'] == 'bar'
+        assert props['h.i.j'] == 'ENC(rot13)'
     }
 
     @Test
-    void shouldFormatEncryptedValuesWhenConvertingToProperties() {
-        group.entries.each {it.encrypted = true }
-        def props = group as Properties
-        assert props.size() == 2
-        assert props['a.b.c'] == 'ENC(foo)'
-        assert props['d.e.f'] == 'ENC(bar)'
+    void shouldConvertToMap() {
+        def map = group as Map
+        assert map['a.b.c'] == 'foo'
+        assert map['d.e.f'] == 'bar'
+        assert map['h.i.j'] == 'ENC(rot13)'
     }
 
     @Test

@@ -134,7 +134,7 @@ class SettingsServicesControllerTest {
         ])
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "qa")).thenReturn(expected)
         def result = controller.showByNameAndEnvJson("test-config", "qa")
-        assert result ==  [[a:'1'], [b:'ENC(2)']]
+        assert result ==  [a:'1', b:'ENC(2)']
     }
 
 }
