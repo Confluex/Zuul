@@ -16,6 +16,11 @@ import javax.validation.constraints.Size
 @ToString(includeNames = true, excludes = "password")
 @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 class EncryptionKey implements Serializable {
+    static final Map configurations = [
+           "PBEWITHSHA256AND256BITAES-CBC-BC" : [
+                   description : "AES cipher with 256"
+           ]
+    ]
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
@@ -32,4 +37,7 @@ class EncryptionKey implements Serializable {
     String password
 
     Boolean defaultKey = false
+
+    String algorithm = "PBEWITHSHA256AND128BITAES-CBC-BC"
+
 }

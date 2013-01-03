@@ -14,4 +14,4 @@ id,group_id,key_name,value,encrypted
 13,3,jdbc.zuul.password,GsC6gO78e6ShyGYrD6k05tkgNdioeR0K,true
 14,4,sftp.bank.url,sftp://devnull.org,false
 15,4,sftp.bank.username,acme,false
-16,4,sftp.bank.password,H6zWnMlBVakyglXUh4+/UXFgn/yxePd7,true
+16,4,sftp.bank.password,uQOYJsUVSGuFtQELnvk+S6XAjU33TD+rOQ78BCSrsmw=,true
