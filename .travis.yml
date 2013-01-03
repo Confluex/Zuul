@@ -1,6 +1,6 @@
 language: java
 before_install:
-    - "sudo unzip zuul-data/src/test/resources/UnlimitedJCEPolicyJDK7.zip *.jar -d $JAVA_HOME/jre/lib/security"
+    - "sudo unzip zuul-data/src/test/resources/UnlimitedJCEPolicyJDK7.zip *.jar $JAVA_HOME/jre/lib/security"
     - "ls -la $JAVA_HOME/jre/lib/security"
 install: "mvn install -P ci -U --quiet -DskipTests=true"
 script: "mvn -U -P ci test"
