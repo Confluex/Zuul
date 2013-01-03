@@ -2,6 +2,7 @@ package org.devnull.zuul.web.config
 
 import groovy.mock.interceptor.MockFor
 import org.devnull.security.model.User
+import org.devnull.zuul.service.security.KeyConfiguration
 import org.junit.Test
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.web.context.support.ServletContextResource
@@ -61,5 +62,19 @@ class JstlFunctionsTest {
         def join = JstlFunctions.join(list, " - ")
         assert join == "abc - def"
     }
+
+    @Test
+    void shouldFindEntryInCollectionByPropertyNameAndValue() {
+        def configs = [
+                new KeyConfiguration(algorithm: "BPE-ABC"),
+                new KeyConfiguration(algorithm: "BPE-DEF"),
+                new KeyConfiguration(algorithm: "BPE-HIJ")
+        ]
+        assert JstlFunctions.find(configs, 'algorithm', 'BPE-DEF') == configs[1]
+        assert JstlFunctions.find(configs, 'algorithm', 'NOTVALID') == null
+        assert JstlFunctions.find(configs, 'algorithm', null) == null
+        assert JstlFunctions.find(configs, 'badproperty', 'BPE-DEF') == null
+    }
+
 
 }
