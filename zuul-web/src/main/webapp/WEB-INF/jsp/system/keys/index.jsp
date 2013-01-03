@@ -72,7 +72,7 @@
                         </div>
                     </td>
                     <td class="key-name">${fn:escapeXml(key.name)}</td>
-                    <td class="key-name">${fn:escapeXml(config.description)}</td>
+                    <td class="key-algorithm">${fn:escapeXml(config.description)}</td>
                     <td class="key-description">${fn:escapeXml(key.description)}</td>
                 </tr>
             </c:forEach>
@@ -113,6 +113,20 @@
                             <span id="toggleShowPassword" class="add-on" title="Toggle show password">
                                 <i class="icon-lock"></i>
                             </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Algorithm</label>
+
+                    <div class="controls">
+                        <div class="btn-group" data-toggle="buttons-radio">
+                            <c:forEach var="config" items="${keyMetaData}">
+                                <label class="radio">
+                                    <input type="radio" name="algorithm" value="${fn:escapeXml(config.key)}">
+                                        ${fn:escapeXml(config.value.description)}
+                                </label>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>

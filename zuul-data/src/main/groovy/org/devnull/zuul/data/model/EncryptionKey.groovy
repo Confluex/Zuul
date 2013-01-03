@@ -14,12 +14,12 @@ import javax.validation.constraints.Size
 @Entity
 @EqualsAndHashCode(includes = "name")
 @ToString(includeNames = true, excludes = "password")
-@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 class EncryptionKey implements Serializable {
     static final Map configurations = [
-           "PBEWITHSHA256AND256BITAES-CBC-BC" : [
-                   description : "AES cipher with 256"
-           ]
+            "PBEWITHSHA256AND256BITAES-CBC-BC": [
+                    description: "AES cipher with 256"
+            ]
     ]
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
@@ -41,4 +41,8 @@ class EncryptionKey implements Serializable {
     @Column(nullable = false, length = 255)
     String algorithm = "PBEWITHSHA256AND128BITAES-CBC-BC"
 
+    Boolean compatibleWith(EncryptionKey otherKey) {
+        return this.password == otherKey?.password &&
+                this.algorithm == otherKey?.algorithm
+    }
 }

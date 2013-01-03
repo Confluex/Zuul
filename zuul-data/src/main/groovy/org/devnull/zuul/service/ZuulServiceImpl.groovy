@@ -274,7 +274,7 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     EncryptionKey saveKey(EncryptionKey key) {
         def existingKey = encryptionKeyDao.findOne(key.name)
-        if (existingKey && existingKey.password != key.password) {
+        if (!existingKey.compatibleWith(key)) {
             reEncryptEntriesWithMatchingKey(existingKey, key)
         }
         return encryptionKeyDao.save(key)

@@ -39,6 +39,7 @@ $(function () {
         row.fadeOut('slow', function () {
             row.children(".key-description").text(entry.description);
             row.children(".key-name").text(entry.name);
+            row.children(".key-algorithm").text(entry.algorithm);
         });
         row.fadeIn('slow');
     };
