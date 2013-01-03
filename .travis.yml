@@ -1,6 +1,7 @@
 language: java
 before_install:
-    - "sudo unzip -j -o zuul-data/src/test/resources/UnlimitedJCEPolicyJDK7.zip *.jar -d $JAVA_HOME/jre/lib/security"
+    - "curl http://s3.amazonaws.com/devnull.org/lib/policy.zip -o policy.zip"
+    - "sudo unzip -j -o policy.zip *.jar -d $JAVA_HOME/jre/lib/security"
     - "ls -la $JAVA_HOME/jre/lib/security"
 install: "mvn install -P ci -U --quiet -DskipTests=true"
 script: "mvn -U -P ci test"
