@@ -100,32 +100,40 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <!-- Key Configurations -->
     <util:map id="keyMetaData" map-class="java.util.LinkedHashMap"
               key-type="java.lang.String" value-type="org.devnull.zuul.service.security.KeyConfiguration">
-        <entry key="PBEWITHSHA256AND128BITAES-CBC-BC" value-ref="aesBouncyCastle"/>
-        <entry key="PBEWithSHAAnd2-KeyTripleDES-CBC" value-ref="tripleDesBouncyCastle"/>
-        <entry key="PBEWithMD5AndTripleDES" value-ref="tripleDesJce"/>
-        <entry key="PBEWithMD5AndDES" value-ref="desJce"/>
+        <entry key="PBEWITHSHA256AND128BITAES-CBC-BC">
+            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                <property name="algorithm" value="PBEWITHSHA256AND128BITAES-CBC-BC"/>
+                <property name="description" value="AES (Bouncy Castle)"/>
+                <property name="provider" value="BC"/>
+                <property name="hashIterations" value="1000"/>
+            </bean>
+        </entry>
+        <entry key="PBEWithSHAAnd2-KeyTripleDES-CBC">
+            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                <property name="algorithm" value="PBEWithSHAAnd2-KeyTripleDES-CBC"/>
+                <property name="description" value="Triple DES (Bouncy Castle)"/>
+                <property name="provider" value="BC"/>
+                <property name="hashIterations" value="1000"/>
+            </bean>
+        </entry>
+        <entry key="PBEWithMD5AndTripleDES">
+            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                <property name="algorithm" value="PBEWithMD5AndTripleDES"/>
+                <property name="description" value="Triple DES (JCE)"/>
+                <property name="hashIterations" value="1000"/>
+            </bean>
+        </entry>
+        <entry key="PBEWithMD5AndDES">
+            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                <property name="algorithm" value="PBEWithMD5AndDES"/>
+                <property name="description" value="DES (JCE)"/>
+                <property name="hashIterations" value="1000"/>
+            </bean>
+        </entry>
     </util:map>
-    <bean id="aesBouncyCastle" class="org.devnull.zuul.service.security.KeyConfiguration">
-        <property name="algorithm" value="PBEWITHSHA256AND128BITAES-CBC-BC"/>
-        <property name="description" value="AES (Bouncy Castle)"/>
-        <property name="provider" value="BC"/>
-        <property name="hashIterations" value="1000"/>
-    </bean>
-    <bean id="tripleDesBouncyCastle" class="org.devnull.zuul.service.security.KeyConfiguration">
-        <property name="algorithm" value="PBEWithSHAAnd2-KeyTripleDES-CBC"/>
-        <property name="description" value="Triple DES (Bouncy Castle)"/>
-        <property name="provider" value="BC"/>
-        <property name="hashIterations" value="1000"/>
-    </bean>
-    <bean id="tripleDesJce" class="org.devnull.zuul.service.security.KeyConfiguration">
-        <property name="algorithm" value="PBEWithMD5AndTripleDES"/>
-        <property name="description" value="Triple DES (JCE)"/>
-        <property name="hashIterations" value="1000"/>
-    </bean>
-    <bean id="desJce" class="org.devnull.zuul.service.security.KeyConfiguration">
-        <property name="algorithm" value="PBEWithMD5AndDES"/>
-        <property name="description" value="DES (JCE)"/>
-        <property name="hashIterations" value="1000"/>
-    </bean>
+
+
+
+
 
 </beans>

@@ -13,13 +13,13 @@ class EncryptionStrategyIntegrationTest extends ZuulDataIntegrationTest {
     @Autowired
     EncryptionStrategy strategy
 
-    @Resource
-    List<KeyConfiguration> keyConfigurations
+    @Resource(name='keyMetaData')
+    Map<String, KeyConfiguration> keyMetData
 
     @Test
     void shouldEncryptAndDecryptTextByKey() {
-        assert keyConfigurations
-        keyConfigurations.each { config ->
+        assert keyMetData
+        keyMetData.each { name, config ->
             def key = new EncryptionKey(password: "test", algorithm: config.algorithm)
             def encrypted = strategy.encrypt("abc", key)
             assert encrypted != "abc"
