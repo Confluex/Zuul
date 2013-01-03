@@ -30,6 +30,7 @@ class EncryptionStrategyIntegrationTest extends ZuulDataIntegrationTest {
                 assert decrypted == "abc"
             } catch (EncryptionOperationNotPossibleException e) {
                 // I hate doing this but Travis CI does not have these installed
+                // Opened request to install policy files: https://github.com/travis-ci/travis-ci/issues/832
                 if (e.message.contains("Unlimited Strength Jurisdiction Policy Files")) {
                     log.error("Ignoring test failure because JCE policy files might not be installed", e)
                 }
