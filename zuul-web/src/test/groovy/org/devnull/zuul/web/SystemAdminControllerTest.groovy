@@ -5,14 +5,15 @@ import org.devnull.security.model.User
 import org.devnull.security.service.SecurityService
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.service.ZuulService
+import org.devnull.zuul.service.security.KeyConfiguration
 import org.devnull.zuul.web.test.ControllerTestMixin
 import org.junit.Before
 import org.junit.Test
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
-import static org.devnull.zuul.web.config.ZuulWebConstants.*
+import static org.devnull.zuul.web.config.ZuulWebConstants.FLASH_ALERT_MESSAGE
+import static org.devnull.zuul.web.config.ZuulWebConstants.FLASH_ALERT_TYPE
 import static org.mockito.Mockito.*
-import org.devnull.zuul.data.model.Environment
 
 @Mixin(ControllerTestMixin)
 class SystemAdminControllerTest {
@@ -20,7 +21,15 @@ class SystemAdminControllerTest {
 
     @Before
     void createController() {
-        controller = new SystemAdminController(securityService: mock(SecurityService), zuulService: mock(ZuulService))
+        def keyConfigurations = [
+                new KeyConfiguration(algorithm: "PBE-ABC", description: "ABC Test"),
+                new KeyConfiguration(algorithm: "PBE-DEF", description: "DEF Test")
+        ]
+        controller = new SystemAdminController(
+                securityService: mock(SecurityService),
+                zuulService: mock(ZuulService),
+                keyConfigurations: keyConfigurations
+        )
     }
 
     @Test
@@ -47,14 +56,17 @@ class SystemAdminControllerTest {
 
     @Test
     void shouldRenderCreateKeyForm() {
-        assert controller.displayCreateKeyForm() == "/system/createKey"
+        def mv = controller.displayCreateKeyForm()
+        assert mv.viewName == "/system/createKey"
+        assert mv.model.keyConfigurations == controller.keyConfigurations
     }
 
     @Test
     void shouldCreateNewKey() {
         def redirectAttributes = mock(RedirectAttributes)
         def key = new EncryptionKey(name: "test")
-        assert controller.createKey(key, mockSuccessfulBindingResult(), redirectAttributes) == "redirect:/system/keys"
+        def mv = controller.createKey(key, mockSuccessfulBindingResult(), redirectAttributes)
+        assert mv.viewName == "redirect:/system/keys"
         verify(controller.zuulService).saveKey(key)
         verify(redirectAttributes).addFlashAttribute(FLASH_ALERT_MESSAGE, "Key ${key.name} Created")
         verify(redirectAttributes).addFlashAttribute(FLASH_ALERT_TYPE, "success")
@@ -64,7 +76,9 @@ class SystemAdminControllerTest {
     void shouldDisplayErrorFormWhenCreatingInvalidKey() {
         def redirectAttributes = mock(RedirectAttributes)
         def key = new EncryptionKey(name: "test")
-        assert controller.createKey(key, mockFailureBindingResult(), redirectAttributes) == "/system/createKey"
+        def mv = controller.createKey(key, mockFailureBindingResult(), redirectAttributes)
+        assert mv.viewName == "/system/createKey"
+        assert mv.model.keyConfigurations == controller.keyConfigurations
     }
 
 

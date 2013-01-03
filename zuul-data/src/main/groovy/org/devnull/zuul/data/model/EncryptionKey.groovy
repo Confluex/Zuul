@@ -38,6 +38,7 @@ class EncryptionKey implements Serializable {
 
     Boolean defaultKey = false
 
+    @Column(nullable = false, length = 255)
     String algorithm = "PBEWITHSHA256AND128BITAES-CBC-BC"
 
 }

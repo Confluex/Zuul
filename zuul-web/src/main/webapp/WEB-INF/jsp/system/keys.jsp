@@ -34,6 +34,7 @@
             <tr>
                 <th>Actions</th>
                 <th>Name</th>
+                <th>Algorithm</th>
                 <th>Description</th>
             </tr>
             </thead>
@@ -68,6 +69,7 @@
                         </div>
                     </td>
                     <td class="key-name">${fn:escapeXml(key.name)}</td>
+                    <td class="key-name">${fn:escapeXml(key.algorithm)}</td>
                     <td class="key-description">${fn:escapeXml(key.description)}</td>
                 </tr>
             </c:forEach>
