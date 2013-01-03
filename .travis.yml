@@ -2,3 +2,5 @@ language: java
 install: "mvn install -P ci -U --quiet -DskipTests=true"
 script: "mvn -U -P ci test"
 env: MAVEN_OPTS="-Dhttps.protocols=SSLv3 -Dforce.http.jre.executor=true"
+before_install:
+    - "sudo unzip $JAVA_HOME/jre/lib/security zuul-data/src/test/resources/UnlimitedJCEPolicyJDK7.zip
