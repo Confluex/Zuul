@@ -32,4 +32,11 @@
             java.lang.String join(java.util.List,java.lang.String)
         </function-signature>
     </function>
+    <function>
+        <name>findInCollection</name>
+        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-signature>
+            T find(java.util.Collection,java.lang.String,java.lang.Object)
+        </function-signature>
+    </function>
 </taglib>
