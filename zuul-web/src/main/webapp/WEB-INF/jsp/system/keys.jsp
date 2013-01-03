@@ -1,7 +1,9 @@
 <%--@elvariable id="keys" type="java.util.List<org.devnull.zuul.data.model.EncryptionKey>"--%>
+<%--@elvariable id="keyMetaData" type="java.util.Map<java.lang.String, org.devnull.zuul.service.security.KeyConfiguration>"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="zfn" uri="/WEB-INF/tags/functions.tld" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,6 +42,7 @@
             </thead>
             <tbody>
             <c:forEach var="key" items="${keys}">
+                <c:set var="config" value="${keyMetaData[key.algorithm]}"/>
                 <tr data-key-name="${fn:escapeXml(key.name)}">
                     <td>
                         <c:choose>
@@ -69,7 +72,7 @@
                         </div>
                     </td>
                     <td class="key-name">${fn:escapeXml(key.name)}</td>
-                    <td class="key-name">${fn:escapeXml(key.algorithm)}</td>
+                    <td class="key-name">${fn:escapeXml(config.description)}</td>
                     <td class="key-description">${fn:escapeXml(key.description)}</td>
                 </tr>
             </c:forEach>

@@ -27,8 +27,9 @@ class SystemAdminController {
     @Autowired
     ZuulService zuulService
 
-    @Resource(name = "keyConfigurations")
-    List<KeyConfiguration> keyConfigurations
+    @Resource(name = "keyMetaData")
+    Map<String, KeyConfiguration> keyMetaData
+
 
     @RequestMapping("/system/users")
     ModelAndView listUsers() {
@@ -40,14 +41,13 @@ class SystemAdminController {
 
     @RequestMapping("/system/keys")
     ModelAndView listKeys() {
-        def model = [:]
-        model.keys = zuulService.listEncryptionKeys()
-        return new ModelAndView("/system/keys", model)
+        def keys = zuulService.listEncryptionKeys()
+        return new ModelAndView("/system/keys", [keys:keys, keyMetaData:keyMetaData])
     }
 
     @RequestMapping(value = "/system/keys/create", method = RequestMethod.GET)
     ModelAndView displayCreateKeyForm() {
-        return new ModelAndView("/system/createKey", [keyConfigurations:keyConfigurations])
+        return new ModelAndView("/system/createKey", [keyMetaData: keyMetaData])
     }
 
     @RequestMapping(value = "/system/keys/create", method = RequestMethod.POST)

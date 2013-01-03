@@ -1,6 +1,7 @@
 package org.devnull.zuul.service.security
 
 import groovy.mock.interceptor.MockFor
+import groovy.mock.interceptor.StubFor
 import org.devnull.zuul.data.model.EncryptionKey
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor
 import org.junit.Before
@@ -12,21 +13,16 @@ class JasyptEncryptionStrategyTest {
 
     @Before
     void createStrategy() {
-        def keyConfigurations = [
-                new KeyConfiguration(algorithm: "ROT-13", hashIterations: 13, provider: "FacePalm"),
-                new KeyConfiguration(algorithm: "Hefty H3", hashIterations: 1500)
+        def keyMetaData = [
+                'ROT-13': new KeyConfiguration(algorithm: "ROT-13", hashIterations: 13, provider: "FacePalm"),
+                'PBE-ABC': new KeyConfiguration(algorithm: "PBE-ABC", hashIterations: 1500)
         ]
-        strategy = new JasyptEncryptionStrategy(keyConfigurations: keyConfigurations)
-    }
-
-    @Test
-    void shouldLookupKeyConfigurationByAlgorithmName() {
-        assert strategy.findKeyConfigurationByAlgorithm("Hefty H3") == strategy.keyConfigurations[1]
+        strategy = new JasyptEncryptionStrategy(keyMetaData: keyMetaData)
     }
 
     @Test(expected = IllegalArgumentException)
     void shouldThrowErrorIfAlgorithmIsNotConfigured() {
-        strategy.findKeyConfigurationByAlgorithm("404")
+        strategy.encrypt("abc", new EncryptionKey(algorithm: 'NOT_VALID'))
     }
 
     @Test

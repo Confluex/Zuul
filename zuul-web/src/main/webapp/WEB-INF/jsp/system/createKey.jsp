@@ -1,5 +1,5 @@
 <%--@elvariable id="environments" type="java.util.List<org.devnull.zuul.data.model.Environment>"--%>
-<%--@elvariable id="keyConfigurations" type="java.util.List<org.devnull.zuul.service.security.KeyConfiguration>"--%>
+<%--@elvariable id="keyMetaData" type="java.util.Map<java.lang.String, org.devnull.zuul.service.security.KeyConfiguration>"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
@@ -54,10 +54,10 @@
 
                     <div class="controls">
                         <div class="btn-group" data-toggle="buttons-radio">
-                            <c:forEach var="config" items="${keyConfigurations}">
+                            <c:forEach var="config" items="${keyMetaData}">
                                 <label class="radio">
-                                    <input type="radio" name="algorithm" value="${fn:escapeXml(config.algorithm)}">
-                                        ${fn:escapeXml(config.description)}
+                                    <input type="radio" name="algorithm" value="${fn:escapeXml(config.key)}">
+                                        ${fn:escapeXml(config.value.description)}
                                 </label>
                             </c:forEach>
                         </div>

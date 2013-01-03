@@ -21,14 +21,15 @@ class SystemAdminControllerTest {
 
     @Before
     void createController() {
-        def keyConfigurations = [
-                new KeyConfiguration(algorithm: "PBE-ABC", description: "ABC Test"),
-                new KeyConfiguration(algorithm: "PBE-DEF", description: "DEF Test")
+        def keyMetaData = [
+                'PBE-ABC': new KeyConfiguration(algorithm: "PBE-ABC", description: "ABC Test"),
+                'PBE-DEF': new KeyConfiguration(algorithm: "PBE-DEF", description: "DEF Test"),
+                'PBE-XYZ': new KeyConfiguration(algorithm: "PBE-XYZ", description: "XYZ Test")
         ]
         controller = new SystemAdminController(
                 securityService: mock(SecurityService),
                 zuulService: mock(ZuulService),
-                keyConfigurations: keyConfigurations
+                keyMetaData: keyMetaData
         )
     }
 
@@ -51,6 +52,7 @@ class SystemAdminControllerTest {
         when(controller.zuulService.listEncryptionKeys()).thenReturn(expected)
         def mv = controller.listKeys()
         assert mv.model.keys == expected
+        assert mv.model.keyMetaData == controller.keyMetaData
         assert mv.viewName == "/system/keys"
     }
 
@@ -58,7 +60,7 @@ class SystemAdminControllerTest {
     void shouldRenderCreateKeyForm() {
         def mv = controller.displayCreateKeyForm()
         assert mv.viewName == "/system/createKey"
-        assert mv.model.keyConfigurations == controller.keyConfigurations
+        assert mv.model.keyMetaData == controller.keyMetaData
     }
 
     @Test
@@ -78,8 +80,7 @@ class SystemAdminControllerTest {
         def key = new EncryptionKey(name: "test")
         def mv = controller.createKey(key, mockFailureBindingResult(), redirectAttributes)
         assert mv.viewName == "/system/createKey"
-        assert mv.model.keyConfigurations == controller.keyConfigurations
+        assert mv.model.keyMetaData == controller.keyMetaData
     }
-
 
 }

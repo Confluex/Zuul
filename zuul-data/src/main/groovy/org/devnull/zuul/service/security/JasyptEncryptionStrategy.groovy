@@ -18,8 +18,8 @@ class JasyptEncryptionStrategy implements EncryptionStrategy {
         Security.addProvider(new BouncyCastleProvider())
     }
 
-    @Resource(name='keyConfigurations')
-    List<KeyConfiguration> keyConfigurations
+    @Resource(name='keyMetaData')
+    Map<String, KeyConfiguration> keyMetaData
 
     String encrypt(String value, EncryptionKey key) {
         return createEncryptor(key).encrypt(value)
@@ -30,7 +30,11 @@ class JasyptEncryptionStrategy implements EncryptionStrategy {
     }
 
     StandardPBEStringEncryptor createEncryptor(EncryptionKey key) {
-        def config = findKeyConfigurationByAlgorithm(key.algorithm)
+        def config = keyMetaData[key.algorithm]
+        if (!config) {
+            log.info("Configured algorithms: {}", keyMetaData.keySet())
+            throw new IllegalArgumentException("Algorithm ${key.algorithm} is not supported")
+        }
         def encryptor = new StandardPBEStringEncryptor()
         encryptor.algorithm = config.algorithm
         encryptor.password = key.password
@@ -40,13 +44,5 @@ class JasyptEncryptionStrategy implements EncryptionStrategy {
         return encryptor
     }
 
-    KeyConfiguration findKeyConfigurationByAlgorithm(String algorithm) {
-        def config = keyConfigurations.find { it.algorithm == algorithm }
-        if (!config) {
-            log.info("Configured algorithms: {}", keyConfigurations?.collect { it.algorithm})
-            throw new IllegalArgumentException("Algorithm ${algorithm} is not supported")
-        }
-        return config
-    }
 
 }
