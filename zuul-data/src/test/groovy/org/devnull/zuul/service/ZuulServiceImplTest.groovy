@@ -123,6 +123,17 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldCreateNewKeys() {
+        def key = new EncryptionKey(name: "test", password: "abc")
+        when(service.encryptionKeyDao.save(key)).thenReturn(key)
+        def result = service.saveKey(key)
+        verify(service.encryptionKeyDao).findOne("test")
+        verify(service.encryptionKeyDao).save(key)
+        verify(service.settingsEntryDao, never()).save(Matchers.any(SettingsEntry))
+        assert result.is(key)
+    }
+
+    @Test
     void shouldSaveKey() {
         def key = new EncryptionKey(name: "test", password: "abc")
         when(service.encryptionKeyDao.findOne("test")).thenReturn(key)
