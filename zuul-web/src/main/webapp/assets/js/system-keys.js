@@ -49,7 +49,7 @@ $(function () {
 
     var deleteEntry = function () {
         link = $(this);
-        var button = link.parents("button");
+        var button = link.parents("div.btn-group").find(".edit-key-action");
         if (button.hasClass("btn-primary")) {
             showAlert("Cannot delete default key");
             return false;
@@ -58,6 +58,7 @@ $(function () {
         $.ajax({
             url:getContextPath() + '/system/keys/' + encodeURI(id) + ".json",
             type:'DELETE',
+            contentType:'application/json',
             success:function (data, status, xhr) {
                 onDeleteHandler();
             },
