@@ -57,7 +57,9 @@
                             <c:forEach var="config" items="${keyMetaData}">
                                 <label class="radio">
                                     <input type="radio" name="algorithm" value="${fn:escapeXml(config.key)}">
-                                        ${fn:escapeXml(config.value.description)}
+                                        <span title="${fn:escapeXml(config.value.algorithm)}">
+                                            ${fn:escapeXml(config.value.description)}
+                                        </span>
                                 </label>
                             </c:forEach>
                         </div>

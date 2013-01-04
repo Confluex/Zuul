@@ -37,10 +37,11 @@ $(function () {
 
     var onSaveHandler = function (entry) {
         var row = link.parents("tr");
+        var keyConfig = keyMetaData[entry.algorithm];
         row.fadeOut('slow', function () {
             row.children(".key-description").text(entry.description);
             row.children(".key-name").text(entry.name);
-            row.children(".key-algorithm").text(keyMetaData[entry.algorithm].description);
+            row.children(".key-algorithm").text(keyConfig.description).attr('title', entry.algorithm);
         });
         row.fadeIn('slow');
     };
