@@ -72,7 +72,9 @@
                         </div>
                     </td>
                     <td class="key-name">${fn:escapeXml(key.name)}</td>
-                    <td class="key-algorithm">${fn:escapeXml(config.description)}</td>
+                    <td class="key-algorithm" data-algorithm="${fn:escapeXml(key.algorithm)}">
+                        ${fn:escapeXml(config.description)}
+                    </td>
                     <td class="key-description">${fn:escapeXml(key.description)}</td>
                 </tr>
             </c:forEach>
@@ -121,10 +123,10 @@
 
                     <div class="controls">
                         <div class="btn-group" data-toggle="buttons-radio">
-                            <c:forEach var="config" items="${keyMetaData}">
+                            <c:forEach var="metaData" items="${keyMetaData}">
                                 <label class="radio">
-                                    <input type="radio" name="algorithm" value="${fn:escapeXml(config.key)}">
-                                        ${fn:escapeXml(config.value.description)}
+                                    <input type="radio" name="algorithm" value="${fn:escapeXml(metaData.key)}">
+                                        ${fn:escapeXml(metaData.value.description)}
                                 </label>
                             </c:forEach>
                         </div>

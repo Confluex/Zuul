@@ -66,5 +66,10 @@ class KeyControllerTest {
         assert mv.viewName == "/system/keys/createKey"
         assert mv.model.keyMetaData == controller.keyMetaData
     }
+    
+    @Test
+    void shouldRenderKeyMetaData() {
+        assert controller.renderKeyMetaData() == controller.keyMetaData
+    }
 
 }

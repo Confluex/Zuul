@@ -1,6 +1,7 @@
 $(function () {
     var dialog = $('#editEntryDialog').modal({show:false});
     var link = null;
+    var keyMetaData = {};
 
     function swapPrimary(newKey) {
         var oldButton = $(".btn-group").find(".btn-primary");
@@ -39,7 +40,7 @@ $(function () {
         row.fadeOut('slow', function () {
             row.children(".key-description").text(entry.description);
             row.children(".key-name").text(entry.name);
-            row.children(".key-algorithm").text(entry.algorithm);
+            row.children(".key-algorithm").text(keyMetaData[entry.algorithm].description);
         });
         row.fadeIn('slow');
     };
@@ -64,6 +65,7 @@ $(function () {
                 showAlert("An error has occurred while deleting the record. Please check the log for more details.");
             }
         });
+        return true;
     };
 
     var onDeleteHandler = function () {
@@ -99,5 +101,16 @@ $(function () {
     $(".edit-key-action").click(showEditDialog);
     $(".delete-key-action").click(deleteEntry);
     $("#toggleShowPassword").tooltip().click(toggleShowPassword);
-    $("#password").popover({placement:'bottom', trigger:'focus'})
+    $("#password").popover({placement:'bottom', trigger:'focus'});
+    $.ajax({
+        url:getContextPath() + "/system/keys/metadata.json",
+        contentType:'application/json',
+        type:'GET',
+        success:function (data) {
+            keyMetaData = data;
+        },
+        error:function (jqXHR, textStatus, errorThrown) {
+            showAlert("Error finding key meta-data: " + errorThrown);
+        }
+    });
 });
