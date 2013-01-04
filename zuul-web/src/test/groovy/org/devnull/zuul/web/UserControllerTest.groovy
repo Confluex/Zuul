@@ -12,17 +12,12 @@ import org.junit.Test
 import static org.mockito.Mockito.*
 
 @Mixin(ControllerTestMixin)
-class SystemAdminControllerTest {
-    SystemAdminController controller
+class UserControllerTest {
+    UserController controller
 
     @Before
     void createController() {
-        def keyMetaData = [
-                'PBE-ABC': new KeyConfiguration(algorithm: "PBE-ABC", description: "ABC Test"),
-                'PBE-DEF': new KeyConfiguration(algorithm: "PBE-DEF", description: "DEF Test"),
-                'PBE-XYZ': new KeyConfiguration(algorithm: "PBE-XYZ", description: "XYZ Test")
-        ]
-        controller = new SystemAdminController(
+        controller = new UserController(
                 securityService: mock(SecurityService),
                 zuulService: mock(ZuulService)
         )
@@ -36,7 +31,7 @@ class SystemAdminControllerTest {
         when(controller.securityService.listRoles()).thenReturn(roles)
         def mv = controller.listUsers()
         verify(controller.securityService).listUsers()
-        assert mv.viewName == "/system/users"
+        assert mv.viewName == "/system/users/index"
         assert mv.model.users.is(users)
         assert mv.model.roles.is(roles)
     }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-class SystemAdminController {
+class UserController {
 
     @Autowired
     SecurityService securityService
@@ -22,7 +22,7 @@ class SystemAdminController {
         def model = [:]
         model.users = securityService.listUsers()
         model.roles = securityService.listRoles()
-        return new ModelAndView("/system/users", model)
+        return new ModelAndView("/system/users/index", model)
     }
 
 
