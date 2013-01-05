@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="mcantrell" id="zuul-1.4-add-settings-mixin">
+        <createTable tableName="SETTINGS_MIXIN">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_MIXIN"/>
+            </column>
+            <column name="PARENT_GROUP_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TARGET_GROUP_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDINAL" type="INT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex indexName="UQX_SETTINGS_MIXIN_1" tableName="SETTINGS_MIXIN" unique="true">
+            <column name="PARENT_GROUP_NAME"/>
+            <column name="TARGET_GROUP_NAME"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

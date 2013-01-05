@@ -21,7 +21,7 @@ class SettingsEntry implements Serializable {
     Integer id
 
     @ManyToOne
-    @JoinColumn(name = "groupId")
+    @JoinColumn(name = "group_id")
     @JsonBackReference
     @NotNull
     SettingsGroup group

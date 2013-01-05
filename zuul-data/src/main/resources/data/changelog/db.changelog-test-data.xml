@@ -11,6 +11,7 @@
         <loadData tableName="environment" file="/data/test/Environment.csv"/>
         <loadData tableName="settings_group" file="/data/test/SettingsGroup.csv"/>
         <loadData tableName="settings_entry" file="/data/test/SettingsEntry.csv"/>
+        <loadData tableName="settings_mixin" file="/data/test/SettingsMixin.csv"/>
     </changeSet>
 
 </databaseChangeLog>
