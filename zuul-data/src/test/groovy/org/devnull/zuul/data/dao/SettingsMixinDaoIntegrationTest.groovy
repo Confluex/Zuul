@@ -12,5 +12,8 @@ class SettingsMixinDaoIntegrationTest extends ZuulDataIntegrationTest {
     void shouldFindByIdAndMapCorrectly() {
         def mixin = settingsMixinDao.findOne(1)
         assert mixin.id == 1
+        assert mixin.parent == "hr-service-config"
+        assert mixin.target == "app-data-config"
+        assert mixin.ordinal == 1
     }
 }
