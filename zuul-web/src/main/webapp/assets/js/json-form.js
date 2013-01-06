@@ -23,6 +23,7 @@
             $.ajax({
                 url:resourceUri + "/" + encodeURI(resourceId) + ".json",
                 type:'GET',
+                contentType:'application/json',
                 success:function (data, status, xhr) {
                     var binder = Binder.FormBinder.bind(form.get(0), data);
                     binder.deserialize();
@@ -72,6 +73,7 @@
         $.ajax({
             url:resourceUri + '/' + encodeURI(resourceId) + ".json",
             type:'DELETE',
+            contentType:'application/json',
             success:function (data, status, xhr) {
                 dialog.modal('hide');
                 if (onDelete) {

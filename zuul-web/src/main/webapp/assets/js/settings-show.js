@@ -9,6 +9,7 @@ $(function () {
         $.ajax({
             url:getContextPath() + "/settings/entry/" + operation + ".json",
             data:{id:id},
+            contentType:'application/json',
             success:function (data) {
                 link.data('encrypted', data.encrypted);
                 link.text(data.encrypted ? 'Decrypt ' : 'Encrypt ');
@@ -19,7 +20,12 @@ $(function () {
 
             },
             error:function (jqXHR, textStatus, errorThrown) {
-                showAlert("Error encrypting value: " + errorThrown);
+                try {
+                    var json = JSON.parse(jqXHR.responseText);
+                    showAlert(json.messages.join(". "));
+                } catch (e) {
+                    showAlert("Error encrypting value: " + textStatus)
+                }
             }
         });
     };
@@ -28,6 +34,7 @@ $(function () {
         $.ajax({
             url:getContextPath() + '/settings/entry/' + link.data('id') + ".json",
             type:'DELETE',
+            contentType:'application/json',
             success:function (data, status, xhr) {
                 onDeleteHandler();
             },
@@ -62,6 +69,7 @@ $(function () {
         $.ajax({
             url:getContextPath() + "/settings/" + encodeURI(env) + "/" + encodeURI(group) + ".properties",
             type:'DELETE',
+            contentType:'application/json',
             success:function (data, status, xhr) {
                 var location = getContextPath() + "/settings/" + encodeURI(group) + "#" + encodeURI(env);
                 window.location = location;
@@ -106,6 +114,7 @@ $(function () {
     if ($(".keys-dropdown-menu").length) {
         $.ajax({
             url:getContextPath() + "/system/keys.json",
+            contentType:'application/json',
             success:loadKeysDropDownMenu,
             error: function() { showAlert("Error loading key data. Please check the logs for details.") }
         });
