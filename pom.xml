@@ -81,6 +81,11 @@
                 <artifactId>bcprov-ext-jdk15on</artifactId>
                 <version>1.47</version>
             </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpg-jdk15on</artifactId>
+                <version>1.47</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
