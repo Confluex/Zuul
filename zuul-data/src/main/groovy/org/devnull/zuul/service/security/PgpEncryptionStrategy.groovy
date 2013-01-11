@@ -17,10 +17,6 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
 
     private final static int BUFFER_SIZE = 1 << 16;
 
-    static {
-        Security.addProvider(new BouncyCastleProvider());
-    }
-
     String encrypt(String value, EncryptionKey key) {
         def publicKey = readPublicKeyFromCollection(new ByteArrayInputStream(new String(key.password).bytes))
         def generator = new PGPEncryptedDataGenerator(PGPEncryptedData.CAST5, true, new SecureRandom(), "BC")

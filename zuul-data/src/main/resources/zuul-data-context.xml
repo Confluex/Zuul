@@ -97,7 +97,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <task:annotation-driven />
     <task:executor id="auditExecutor" pool-size="10" queue-capacity="1000" rejection-policy="DISCARD"/>
 
-    <!-- Key Configurations -->
+    <!-- Security Configurations -->
+    <bean class="org.devnull.zuul.service.security.SecurityProvidersRegistrar">
+        <property name="providers">
+            <util:list>
+                <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
+            </util:list>
+        </property>
+    </bean>
     <util:map id="keyMetaData" map-class="java.util.LinkedHashMap"
               key-type="java.lang.String" value-type="org.devnull.zuul.service.security.KeyConfiguration">
         <entry key="PBEWITHSHA256AND128BITAES-CBC-BC">

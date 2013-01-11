@@ -14,9 +14,7 @@ import java.security.Security
 @Service("jasyptEncryptionService")
 @Slf4j
 class JasyptEncryptionStrategy implements EncryptionStrategy {
-    static {
-        Security.addProvider(new BouncyCastleProvider())
-    }
+
 
     @Resource(name='keyMetaData')
     Map<String, KeyConfiguration> keyMetaData
