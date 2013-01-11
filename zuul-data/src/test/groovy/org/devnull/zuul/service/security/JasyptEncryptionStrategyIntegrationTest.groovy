@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import javax.annotation.Resource
 
 @Slf4j
-class EncryptionStrategyIntegrationTest extends ZuulDataIntegrationTest {
+class JasyptEncryptionStrategyIntegrationTest extends ZuulDataIntegrationTest {
     @Autowired
-    EncryptionStrategy strategy
+    JasyptEncryptionStrategy strategy
 
     @Resource(name = 'keyMetaData')
     Map<String, KeyConfiguration> keyMetData
