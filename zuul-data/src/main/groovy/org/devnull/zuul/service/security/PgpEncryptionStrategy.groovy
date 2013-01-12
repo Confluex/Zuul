@@ -29,13 +29,28 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
 
     String encrypt(String value, EncryptionKey key) {
         def publicKey = readPublicKeyFromCollection(new ByteArrayInputStream(key.password.bytes))
-        def generator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
-        generator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
         def baos = new ByteArrayOutputStream()
-        writeLiteralData(new ByteArrayInputStream(value.bytes), wrapOutputStreamForEncryption(baos, generator))
-        generator.close()
+        encrypt(new ByteArrayInputStream(value.bytes), baos, publicKey)
         return new String(baos.toByteArray())
     }
+
+    void encrypt(InputStream input, OutputStream output, PGPPublicKey publicKey) {
+        def pgpGenerator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
+        pgpGenerator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
+
+        def armoredOut = new ArmoredOutputStream(output);
+        def pgpOut = pgpGenerator.open(armoredOut, BUFFER_SIZE)
+        def compressedGenerator = new PGPCompressedDataGenerator(PGPCompressedData.ZIP)
+        def compressedOut = compressedGenerator.open(pgpOut)
+
+        writeLiteralData(input, compressedOut)
+
+        compressedGenerator.close()
+        compressedOut.close()
+        pgpOut.close()
+        armoredOut.close()
+    }
+
 
     String decrypt(String value, EncryptionKey key) {
         throw new InvalidOperationException("Cannot decrypt data encrypted with public key. No secret key is available.")
@@ -60,13 +75,5 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         def ring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(input))
         return ring.publicKeys?.find { it.encryptionKey } as PGPPublicKey
     }
-
-    protected OutputStream wrapOutputStreamForEncryption(OutputStream out, PGPEncryptedDataGenerator generator) {
-        def armoredOutputStream = new ArmoredOutputStream(out)
-        def encryptedOut = generator.open(armoredOutputStream, new byte[BUFFER_SIZE])
-        def compressedDataGenerator = new PGPCompressedDataGenerator(PGPCompressedData.ZIP)
-        return compressedDataGenerator.open(encryptedOut)
-    }
-
 
 }
