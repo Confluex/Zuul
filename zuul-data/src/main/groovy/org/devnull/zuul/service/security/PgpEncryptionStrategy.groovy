@@ -33,6 +33,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         generator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
         def baos = new ByteArrayOutputStream()
         writeLiteralData(new ByteArrayInputStream(value.bytes), wrapOutputStreamForEncryption(baos, generator))
+        generator.close()
         return new String(baos.toByteArray())
     }
 
