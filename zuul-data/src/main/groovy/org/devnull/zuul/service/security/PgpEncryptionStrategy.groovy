@@ -1,29 +1,35 @@
 package org.devnull.zuul.service.security
 
 import groovy.util.logging.Slf4j
-import org.apache.commons.lang.NotImplementedException
 import org.bouncycastle.bcpg.ArmoredOutputStream
 import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.bouncycastle.openpgp.*
-import org.bouncycastle.openpgp.operator.PGPKeyEncryptionMethodGenerator
+import org.bouncycastle.openpgp.PGPCompressedData
+import org.bouncycastle.openpgp.PGPCompressedDataGenerator
+import org.bouncycastle.openpgp.PGPEncryptedData
+import org.bouncycastle.openpgp.PGPEncryptedDataGenerator
+import org.bouncycastle.openpgp.PGPLiteralData
+import org.bouncycastle.openpgp.PGPLiteralDataGenerator
+import org.bouncycastle.openpgp.PGPPublicKey
+import org.bouncycastle.openpgp.PGPPublicKeyRing
+import org.bouncycastle.openpgp.PGPUtil
 import org.bouncycastle.openpgp.operator.bc.BcPublicKeyKeyEncryptionMethodGenerator
-import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.service.error.InvalidOperationException
 import org.springframework.stereotype.Component
 
 import java.security.SecureRandom
-import java.security.Security
 
 @Component("pgpEncryptionStrategy")
 @Slf4j
 class PgpEncryptionStrategy implements EncryptionStrategy {
 
-    private final static int BUFFER_SIZE = 1 << 16;
+    static final int BUFFER_SIZE = 1024;
+    static final String PROVIDER = BouncyCastleProvider.PROVIDER_NAME
+    static final int SYM_ALGORITHM_TYPE = PGPEncryptedData.CAST5
 
     String encrypt(String value, EncryptionKey key) {
-        def publicKey = readPublicKeyFromCollection(new ByteArrayInputStream(new String(key.password).bytes))
-        def generator = new PGPEncryptedDataGenerator(PGPEncryptedData.CAST5, true, new SecureRandom(), "BC")
+        def publicKey = readPublicKeyFromCollection(new ByteArrayInputStream(key.password.bytes))
+        def generator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
         generator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
 
         def baos = new ByteArrayOutputStream()
@@ -33,11 +39,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         def compressedOut = compressedDataGenerator.open(encryptedOut);
 
         writeLiteralData(new ByteArrayInputStream(value.bytes), compressedOut)
-
-        compressedOut.close()
-        encryptedOut.close()
         armoredOutputStream.close()
-        baos.close()
 
         return new String(baos.toByteArray())
     }
@@ -54,7 +56,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
 
     void writeLiteralData(InputStream is, OutputStream out) {
         PGPLiteralDataGenerator generator = new PGPLiteralDataGenerator()
-        OutputStream pgpOut = generator.open(out, PGPLiteralData.BINARY, "test.pgp", is.available(), new Date())
+        OutputStream pgpOut = generator.open(out, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE, is.available(), new Date())
         out << is
         generator.close()
         pgpOut.close()
