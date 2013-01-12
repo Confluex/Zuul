@@ -1,22 +1,18 @@
 package org.devnull.zuul.service.security
 
 import groovy.util.logging.Slf4j
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.devnull.zuul.data.model.EncryptionKey
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor
-import org.jasypt.util.text.BasicTextEncryptor
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 
 import javax.annotation.Resource
-import java.security.Security
 
-@Service("jasyptEncryptionService")
+@Component("pbeEncryptionStrategy")
 @Slf4j
 class JasyptEncryptionStrategy implements EncryptionStrategy {
 
 
-    @Resource(name='keyMetaData')
+    @Resource(name = 'keyMetaData')
     Map<String, KeyConfiguration> keyMetaData
 
     String encrypt(String value, EncryptionKey key) {
@@ -25,6 +21,10 @@ class JasyptEncryptionStrategy implements EncryptionStrategy {
 
     String decrypt(String value, EncryptionKey key) {
         return createEncryptor(key).decrypt(value)
+    }
+
+    Boolean supports(EncryptionKey key) {
+        return key?.isPbeKey()
     }
 
     StandardPBEStringEncryptor createEncryptor(EncryptionKey key) {
@@ -41,6 +41,5 @@ class JasyptEncryptionStrategy implements EncryptionStrategy {
             encryptor.providerName = config.provider
         return encryptor
     }
-
 
 }

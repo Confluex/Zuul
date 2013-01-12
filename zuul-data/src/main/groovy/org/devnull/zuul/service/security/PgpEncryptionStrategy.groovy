@@ -7,11 +7,15 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.openpgp.*
 import org.bouncycastle.openpgp.operator.PGPKeyEncryptionMethodGenerator
 import org.bouncycastle.openpgp.operator.bc.BcPublicKeyKeyEncryptionMethodGenerator
+import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.model.EncryptionKey
+import org.devnull.zuul.service.error.InvalidOperationException
+import org.springframework.stereotype.Component
 
 import java.security.SecureRandom
 import java.security.Security
 
+@Component("pgpEncryptionStrategy")
 @Slf4j
 class PgpEncryptionStrategy implements EncryptionStrategy {
 
@@ -40,8 +44,12 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
 
 
     String decrypt(String value, EncryptionKey key) {
-        log.error("Cannot decrypt {} because key {} is public", value, key)
-        return null
+        throw new InvalidOperationException("Cannot decrypt data encrypted with public key. No secret key is available.")
+    }
+
+    @Override
+    Boolean supports(EncryptionKey key) {
+        return key?.isPgpKey()
     }
 
     void writeLiteralData(InputStream is, OutputStream out) {

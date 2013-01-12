@@ -11,6 +11,8 @@ import javax.persistence.Entity
 import javax.persistence.Id
 import javax.validation.constraints.Size
 
+import static org.devnull.zuul.data.config.ZuulDataConstants.*
+
 @Entity
 @EqualsAndHashCode(includes = "name")
 @ToString(includeNames = true, excludes = "password")
@@ -39,10 +41,18 @@ class EncryptionKey implements Serializable {
     Boolean defaultKey = false
 
     @Column(nullable = false, length = 255)
-    String algorithm = "PBEWITHSHA256AND128BITAES-CBC-BC"
+    String algorithm = KEY_ALGORITHM_AES
 
     Boolean compatibleWith(EncryptionKey otherKey) {
         return this.password == otherKey?.password &&
                 this.algorithm == otherKey?.algorithm
+    }
+
+    Boolean isPgpKey() {
+        return PGP_KEY_ALGORITHMS.find { it == algorithm } != null
+    }
+
+    Boolean isPbeKey() {
+        return PBE_KEY_ALGORITHMS.find { it == algorithm} != null
     }
 }

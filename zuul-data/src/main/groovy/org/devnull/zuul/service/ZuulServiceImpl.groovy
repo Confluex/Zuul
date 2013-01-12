@@ -19,6 +19,7 @@ import org.devnull.zuul.data.specs.SettingsEntrySearch
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.domain.Sort
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
@@ -47,6 +48,7 @@ class ZuulServiceImpl implements ZuulService {
     EnvironmentDao environmentDao
 
     @Autowired
+    @Qualifier("keyTypeEncryptionStrategy")
     EncryptionStrategy encryptionStrategy
 
     @Autowired

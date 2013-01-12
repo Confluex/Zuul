@@ -1,5 +1,6 @@
 package org.devnull.zuul.data.model
 
+import org.devnull.zuul.data.config.ZuulDataConstants
 import org.junit.Before
 import org.junit.Test
 
@@ -38,5 +39,23 @@ class EncryptionKeyTest {
     void shouldBeCompatibleIfNameChangesButAlgorithmAndPasswordAreTheSame() {
         def newKey = new EncryptionKey(name: "new key", algorithm: key.algorithm, password: key.password)
         assert key.compatibleWith(newKey)
+    }
+
+    @Test
+    void shouldKnowIfItIsAPgpKey() {
+        ZuulDataConstants.PGP_KEY_ALGORITHMS.each {
+            def key = new EncryptionKey(algorithm: it)
+            assert key.isPgpKey()
+            assert !key.isPbeKey()
+        }
+    }
+
+    @Test
+    void shouldKnowIfItIsAPbeKey() {
+        ZuulDataConstants.PBE_KEY_ALGORITHMS.each {
+            def key = new EncryptionKey(algorithm: it)
+            assert !key.isPgpKey()
+            assert key.isPbeKey()
+        }
     }
 }
