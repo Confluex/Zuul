@@ -2,11 +2,10 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <include file="/data/changelog/db.changelog-1.0.xml"/>
-    <include file="/data/changelog/db.changelog-1.1.xml"/>
-    <include file="/data/changelog/db.changelog-1.2.xml"/>
-    <include file="/data/changelog/db.changelog-1.3.xml"/>
-    <include file="/data/changelog/db.changelog-1.4.xml"/>
-    <include file="/data/changelog/db.changelog-test-data.xml"/>
+
+    <changeSet author="mcantrell" id="zuul-1.4-pgp-keys">
+        <modifyDataType tableName="ENCRYPTION_KEY" columnName="PASSWORD" newDataType="varchar(2000)"/>
+        <modifyDataType tableName="SETTINGS_ENTRY" columnName="VALUE" newDataType="varchar(2000)"/>
+    </changeSet>
 
 </databaseChangeLog>
