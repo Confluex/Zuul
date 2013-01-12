@@ -34,6 +34,7 @@ class PgpEncryptionStrategyIntegrationTest {
             def time = stopWatch { encrypted =  strategy.encrypt("abc", new EncryptionKey(password: publicKey)) }
             // pretty crappy assertion but I'm not going to implement PGP decrypt (yet)
             assert encrypted.startsWith("-----BEGIN PGP MESSAGE")
+            assert encrypted.trim().endsWith("-----END PGP MESSAGE-----")
             log.info("Results:\n{}", encrypted)
             log.info("Encryption to {}ms" , time)
         }
