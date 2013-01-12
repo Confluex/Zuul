@@ -10,4 +10,11 @@ class ZuulDataConstants {
     static final String ROLE_SYSTEM_ADMIN = "ROLE_SYSTEM_ADMIN"
 
     static final String PERMISSION_ADMIN = 'admin'
+
+    static final String KEY_ALGORITHM_PGP = "PGP-BC"
+    static final String KEY_ALGORITHM_AES = "PBEWITHSHA256AND128BITAES-CBC-BC"
+    static final String KEY_ALGORITHM_3DES_BC = "PBEWithSHAAnd2-KeyTripleDES-CBC"
+    static final String KEY_ALGORITHM_3DES_JCE = "PBEWithMD5AndTripleDES"
+    static final String KEY_ALGORITHM_DES = "PBEWithMD5AndDES"
+
 }
