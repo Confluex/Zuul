@@ -37,10 +37,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         def encryptedOut = generator.open(armoredOutputStream, new byte[BUFFER_SIZE]);
         def compressedDataGenerator = new PGPCompressedDataGenerator(PGPCompressedData.ZIP);
         def compressedOut = compressedDataGenerator.open(encryptedOut);
-
         writeLiteralData(new ByteArrayInputStream(value.bytes), compressedOut)
-        armoredOutputStream.close()
-
         return new String(baos.toByteArray())
     }
 
@@ -60,6 +57,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         out << is
         generator.close()
         pgpOut.close()
+        out.close()
         is.close()
     }
 
