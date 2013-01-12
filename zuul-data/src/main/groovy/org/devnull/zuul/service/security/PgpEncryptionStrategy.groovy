@@ -32,7 +32,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         def generator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
         generator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
         def baos = new ByteArrayOutputStream()
-        writeLiteralData(new ByteArrayInputStream(value.bytes),  wrapOutputStreamForEncryption(baos, generator))
+        writeLiteralData(new ByteArrayInputStream(value.bytes), wrapOutputStreamForEncryption(baos, generator))
         return new String(baos.toByteArray())
     }
 
@@ -46,11 +46,10 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
     }
 
     void writeLiteralData(InputStream is, OutputStream out) {
-        PGPLiteralDataGenerator generator = new PGPLiteralDataGenerator()
-        OutputStream pgpOut = generator.open(out, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE, is.available(), new Date())
-        out << is
+        def generator = new PGPLiteralDataGenerator()
+        def pgpOut = generator.open(out, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE, is.available(), new Date())
+        pgpOut << is
         generator.close()
-        pgpOut.close()
         out.close()
         is.close()
     }
