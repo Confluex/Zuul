@@ -44,30 +44,24 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
     }
 
     protected void encrypt(InputStream input, OutputStream output, PGPPublicKey publicKey) {
+        def compressedGenerator = new PGPCompressedDataGenerator(PGPCompressedData.ZIP)
         def pgpGenerator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
         pgpGenerator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
 
         def armoredOut = new ArmoredOutputStream(output);
         def pgpOut = pgpGenerator.open(armoredOut, BUFFER_SIZE)
-        def compressedGenerator = new PGPCompressedDataGenerator(PGPCompressedData.ZIP)
         def compressedOut = compressedGenerator.open(pgpOut)
 
         writeLiteralData(input, compressedOut)
 
-        pgpGenerator.close()
-        compressedGenerator.close()
-        compressedOut.close()
-        pgpOut.close()
-        armoredOut.close()
+        [pgpGenerator, compressedGenerator, compressedGenerator, compressedOut, pgpOut, armoredOut]*.close()
     }
 
     protected void writeLiteralData(InputStream is, OutputStream out) {
         def generator = new PGPLiteralDataGenerator()
         def pgpOut = generator.open(out, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE, is.available(), new Date())
         pgpOut << is
-        generator.close()
-        out.close()
-        is.close()
+        [generator, out, is]*.close()
     }
 
 
