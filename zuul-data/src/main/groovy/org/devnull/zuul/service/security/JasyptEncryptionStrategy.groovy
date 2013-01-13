@@ -24,7 +24,7 @@ class JasyptEncryptionStrategy implements EncryptionStrategy {
     }
 
     Boolean supports(EncryptionKey key) {
-        return key?.isPbeKey()
+        return key?.isPbeKey
     }
 
     StandardPBEStringEncryptor createEncryptor(EncryptionKey key) {

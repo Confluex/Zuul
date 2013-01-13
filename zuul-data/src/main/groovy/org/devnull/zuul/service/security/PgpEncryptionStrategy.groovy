@@ -37,7 +37,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
 
     @Override
     Boolean supports(EncryptionKey key) {
-        return key?.isPgpKey()
+        return key?.isPgpKey
     }
 
     protected void encrypt(InputStream input, OutputStream output, PGPPublicKey publicKey) {

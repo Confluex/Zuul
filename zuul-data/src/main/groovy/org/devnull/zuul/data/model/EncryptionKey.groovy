@@ -52,17 +52,17 @@ class EncryptionKey implements Serializable {
                 this.algorithm == otherKey?.algorithm
     }
 
-    Boolean isPgpKey() {
+    Boolean getIsPgpKey() {
         return PGP_KEY_ALGORITHMS.find { it == algorithm } != null
     }
 
-    Boolean isPbeKey() {
+    Boolean getIsPbeKey() {
         return PBE_KEY_ALGORITHMS.find { it == algorithm} != null
     }
 
     @AssertTrue
     Boolean isValidIfPublicKeyAlgorithm() {
-        if (isPgpKey()) {
+        if (isPgpKey) {
             try {
                 def publicKey = this as PGPPublicKey
                 log.debug("Public Key Fingerprint: {}", publicKey.fingerprint.encodeHex())
@@ -79,7 +79,7 @@ class EncryptionKey implements Serializable {
             case EncryptionKey:
                 return this
             case PGPPublicKey:
-                if (!isPgpKey()) {
+                if (!isPgpKey) {
                     throw new GroovyCastException("${algorithm} is not compatible with PGPPublicKey")
                 }
                 def ring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(new ByteArrayInputStream(password.bytes)))

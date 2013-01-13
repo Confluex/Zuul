@@ -48,8 +48,8 @@ class EncryptionKeyTest {
     void shouldKnowIfItIsAPgpKey() {
         ZuulDataConstants.PGP_KEY_ALGORITHMS.each {
             def key = new EncryptionKey(algorithm: it)
-            assert key.isPgpKey()
-            assert !key.isPbeKey()
+            assert key.isPgpKey
+            assert !key.isPbeKey
         }
     }
 
@@ -57,8 +57,8 @@ class EncryptionKeyTest {
     void shouldKnowIfItIsAPbeKey() {
         ZuulDataConstants.PBE_KEY_ALGORITHMS.each {
             def key = new EncryptionKey(algorithm: it)
-            assert !key.isPgpKey()
-            assert key.isPbeKey()
+            assert !key.isPgpKey
+            assert key.isPbeKey
         }
     }
 
