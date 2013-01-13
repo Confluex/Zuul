@@ -45,6 +45,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
 
         writeLiteralData(input, compressedOut)
 
+        pgpGenerator.close()
         compressedGenerator.close()
         compressedOut.close()
         pgpOut.close()
