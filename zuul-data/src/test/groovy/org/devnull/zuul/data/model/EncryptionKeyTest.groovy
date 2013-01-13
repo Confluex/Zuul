@@ -85,4 +85,9 @@ class EncryptionKeyTest {
         key.password = "not a valid key"
         assert !key.isValidIfPublicKeyAlgorithm()
     }
+
+    @Test
+    void shouldNotEnsurePublicKeyIsValidIfNotPgpAlgorithm() {
+        assert key.isValidIfPublicKeyAlgorithm()
+    }
 }
