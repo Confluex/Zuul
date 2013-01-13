@@ -6,6 +6,7 @@
     <changeSet author="mcantrell" id="zuul-1.4-pgp-keys">
         <modifyDataType tableName="ENCRYPTION_KEY" columnName="PASSWORD" newDataType="varchar(2000)"/>
         <modifyDataType tableName="SETTINGS_ENTRY" columnName="VALUE" newDataType="varchar(2000)"/>
+        <modifyDataType tableName="SETTINGS_AUDIT" columnName="SETTINGS_VALUE" newDataType="varchar(2000)"/>
     </changeSet>
 
 </databaseChangeLog>
