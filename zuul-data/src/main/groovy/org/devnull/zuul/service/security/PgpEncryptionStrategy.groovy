@@ -34,7 +34,16 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         return new String(baos.toByteArray())
     }
 
-    void encrypt(InputStream input, OutputStream output, PGPPublicKey publicKey) {
+    String decrypt(String value, EncryptionKey key) {
+        throw new InvalidOperationException("Cannot decrypt data encrypted with public key. No secret key is available.")
+    }
+
+    @Override
+    Boolean supports(EncryptionKey key) {
+        return key?.isPgpKey()
+    }
+
+    protected void encrypt(InputStream input, OutputStream output, PGPPublicKey publicKey) {
         def pgpGenerator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
         pgpGenerator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
 
@@ -52,17 +61,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         armoredOut.close()
     }
 
-
-    String decrypt(String value, EncryptionKey key) {
-        throw new InvalidOperationException("Cannot decrypt data encrypted with public key. No secret key is available.")
-    }
-
-    @Override
-    Boolean supports(EncryptionKey key) {
-        return key?.isPgpKey()
-    }
-
-    void writeLiteralData(InputStream is, OutputStream out) {
+    protected void writeLiteralData(InputStream is, OutputStream out) {
         def generator = new PGPLiteralDataGenerator()
         def pgpOut = generator.open(out, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE, is.available(), new Date())
         pgpOut << is
