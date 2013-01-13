@@ -98,6 +98,25 @@ $(function () {
     };
 
 
+    var toggleSecretKeyInput = function(isSecret) {
+        if (isSecret == true) {
+            $('#passwordGroup').show();
+            $('#publicKeyGroup').hide();
+            $("#publicKey").prop('disabled', true);
+            $("#password").prop('disabled', false);
+        }
+        else {
+            $('#passwordGroup').hide();
+            $('#publicKeyGroup').show();
+            $("#publicKey").prop('disabled', false);
+            $("#password").prop('disabled', true);
+        }
+    };
+
+    var keyAlgorithmClickHandler = function() {
+        toggleSecretKeyInput($(this).data('key-secret'));
+    };
+
     $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
     $(".default-key-action").click(toggleDefaultKey);
     $(".edit-key-action").click(showEditDialog);
@@ -115,4 +134,5 @@ $(function () {
             showAlert("Error finding key meta-data: " + errorThrown);
         }
     });
+    $("input[name='algorithm']").click(keyAlgorithmClickHandler);
 });

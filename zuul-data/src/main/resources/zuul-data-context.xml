@@ -107,6 +107,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     </bean>
     <util:map id="keyMetaData" map-class="java.util.LinkedHashMap"
               key-type="java.lang.String" value-type="org.devnull.zuul.service.security.KeyConfiguration">
+        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}">
+            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}"/>
+                <property name="description" value="PGP Public Key"/>
+                <property name="provider" value="BC"/>
+                <property name="secret" value="false"/>
+            </bean>
+        </entry>
         <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}">
             <bean class="org.devnull.zuul.service.security.KeyConfiguration">
                 <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}"/>

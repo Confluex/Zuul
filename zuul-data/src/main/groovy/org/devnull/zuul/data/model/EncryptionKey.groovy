@@ -34,8 +34,8 @@ class EncryptionKey implements Serializable {
     @Column(length = 64)
     String description
 
-    @Size(min = 8, max = 32)
-    @Column(nullable = false, length = 32)
+    @Size(min = 8, max = 2000)
+    @Column(nullable = false, length = 2000)
     String password
 
     Boolean defaultKey = false
