@@ -10,8 +10,6 @@ import org.bouncycastle.openpgp.PGPEncryptedDataGenerator
 import org.bouncycastle.openpgp.PGPLiteralData
 import org.bouncycastle.openpgp.PGPLiteralDataGenerator
 import org.bouncycastle.openpgp.PGPPublicKey
-import org.bouncycastle.openpgp.PGPPublicKeyRing
-import org.bouncycastle.openpgp.PGPUtil
 import org.bouncycastle.openpgp.operator.bc.BcPublicKeyKeyEncryptionMethodGenerator
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.service.error.InvalidOperationException
@@ -28,9 +26,8 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
     static final int SYM_ALGORITHM_TYPE = PGPEncryptedData.CAST5
 
     String encrypt(String value, EncryptionKey key) {
-        def publicKey = readPublicKeyFromCollection(new ByteArrayInputStream(key.password.bytes))
         def baos = new ByteArrayOutputStream()
-        encrypt(new ByteArrayInputStream(value.bytes), baos, publicKey)
+        encrypt(new ByteArrayInputStream(value.bytes), baos, key as PGPPublicKey)
         return new String(baos.toByteArray())
     }
 
@@ -63,11 +60,4 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
         pgpOut << is
         [generator, out, is]*.close()
     }
-
-
-    protected PGPPublicKey readPublicKeyFromCollection(InputStream input) throws Exception {
-        def ring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(input))
-        return ring.publicKeys?.find { it.encryptionKey } as PGPPublicKey
-    }
-
 }

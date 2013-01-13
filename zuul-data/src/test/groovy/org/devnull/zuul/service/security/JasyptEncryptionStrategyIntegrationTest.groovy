@@ -21,7 +21,9 @@ class JasyptEncryptionStrategyIntegrationTest extends ZuulDataIntegrationTest {
     @Test
     void shouldEncryptAndDecryptTextByKey() {
         assert keyMetData
-        keyMetData.each { name, config ->
+        def secretKeys = keyMetData.findAll { it.value.secret }
+        assert secretKeys
+        secretKeys.each { name, config ->
             def key = new EncryptionKey(password: "test", algorithm: config.algorithm)
             def encrypted = null
             def time = stopWatch { encrypted = strategy.encrypt("abc", key)   }

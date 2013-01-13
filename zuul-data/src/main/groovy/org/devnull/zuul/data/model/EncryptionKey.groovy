@@ -2,6 +2,10 @@ package org.devnull.zuul.data.model
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import org.bouncycastle.openpgp.PGPPublicKey
+import org.bouncycastle.openpgp.PGPPublicKeyRing
+import org.bouncycastle.openpgp.PGPUtil
+import org.codehaus.groovy.runtime.typehandling.GroovyCastException
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
@@ -54,5 +58,17 @@ class EncryptionKey implements Serializable {
 
     Boolean isPbeKey() {
         return PBE_KEY_ALGORITHMS.find { it == algorithm} != null
+    }
+
+    def asType(Class type) {
+        switch (type) {
+            case EncryptionKey:
+                return this
+            case PGPPublicKey:
+                def ring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(new ByteArrayInputStream(password.bytes)))
+                return ring.publicKeys?.find { it.encryptionKey } as PGPPublicKey
+            default:
+                throw new GroovyCastException("Hmm... ${this.class} cannot be converted to ${type}")
+        }
     }
 }

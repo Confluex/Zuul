@@ -1,8 +1,10 @@
 package org.devnull.zuul.data.model
 
+import org.bouncycastle.openpgp.PGPPublicKey
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.junit.Before
 import org.junit.Test
+import org.springframework.core.io.ClassPathResource
 
 class EncryptionKeyTest {
     EncryptionKey key
@@ -57,5 +59,13 @@ class EncryptionKeyTest {
             assert !key.isPgpKey()
             assert key.isPbeKey()
         }
+    }
+
+    @Test
+    void shouldCastToPgpKey() {
+        def publicKeyText = new ClassPathResource("/test-public-key.asc").inputStream.text
+        def key = new EncryptionKey(password: publicKeyText)
+        def pgpKey = key as PGPPublicKey
+        assert pgpKey.getFingerprint().encodeHex().toString() == "47d7c29b78a4dc89b5cb01dc686c5c5352710b1e"
     }
 }
