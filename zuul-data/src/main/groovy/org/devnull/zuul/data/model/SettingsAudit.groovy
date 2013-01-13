@@ -29,7 +29,9 @@ class SettingsAudit implements Serializable {
     AuditType type
 
     enum AuditType {
-        ADD("Add", "added"), MOD("Modify", "modified"), DELETE("Delete", "deleted")
+        ADD("Add", "added"), MOD("Modify", "modified"), DELETE("Delete", "deleted"),
+        ENCRYPT("Encrypt", "encrypted"),DECRYPT("Decrypt", "decrypted")
+
         String label
         String action
         AuditType(String label, String action) {
