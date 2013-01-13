@@ -2,6 +2,7 @@ package org.devnull.zuul.service.security
 
 import groovy.util.logging.Slf4j
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.test.DataUnitTestMixin
 import org.junit.Before
@@ -31,7 +32,10 @@ class PgpEncryptionStrategyIntegrationTest {
         def publicKey = new ClassPathResource("/test-public-key.asc").inputStream.text
         def encrypted = null
         3.times {
-            def time = stopWatch { encrypted =  strategy.encrypt("abc", new EncryptionKey(password: publicKey)) }
+            def time = stopWatch {
+                def key = new EncryptionKey(algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP, password: publicKey)
+                encrypted =  strategy.encrypt("abc", key)
+            }
             // pretty crappy assertion but I'm not going to implement PGP decrypt (yet)
             assert encrypted.startsWith("-----BEGIN PGP MESSAGE")
             assert encrypted.trim().endsWith("-----END PGP MESSAGE-----")
