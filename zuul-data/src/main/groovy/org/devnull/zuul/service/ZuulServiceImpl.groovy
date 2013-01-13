@@ -12,6 +12,8 @@ import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsAudit
+import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
@@ -27,7 +29,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
-import org.devnull.zuul.data.model.SettingsAudit
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -190,9 +191,15 @@ class ZuulServiceImpl implements ZuulService {
 
     @Transactional(readOnly = false)
     SettingsEntry save(SettingsEntry entry) {
+        def type = entry.id ? AuditType.MOD : AuditType.ADD
+        return save(entry, type)
+    }
+
+    @Transactional(readOnly = false)
+    SettingsEntry save(SettingsEntry entry, AuditType type) {
         log.info("Saving entry: {}", entry)
         errorIfInvalid(entry, "entry")
-        auditService.logAudit(securityService.currentUser, entry)
+        auditService.logAudit(securityService.currentUser, entry, type)
         return settingsEntryDao.save(entry)
     }
 

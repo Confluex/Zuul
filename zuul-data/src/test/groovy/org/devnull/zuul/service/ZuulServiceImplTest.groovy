@@ -14,6 +14,7 @@ import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
@@ -33,8 +34,8 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
 
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
-import org.devnull.zuul.data.model.SettingsAudit
 
 public class ZuulServiceImplTest {
 
@@ -555,12 +556,21 @@ public class ZuulServiceImplTest {
     }
 
     @Test
-    void shouldLogAuditWhenSavingEntry() {
+    void shouldLogAuditAsModifyWhenSavingExistingEntry() {
         def entry = new SettingsEntry(id: 1)
         def user = new User(userName: "testUser")
         when(service.securityService.currentUser).thenReturn(user)
         service.save(entry)
-        verify(service.auditService).logAudit(user, entry)
+        verify(service.auditService).logAudit(user, entry, SettingsAudit.AuditType.MOD)
+    }
+
+    @Test
+    void shouldLogAuditAsModifyWhenSavingNewEntry() {
+        def entry = new SettingsEntry(id: null)
+        def user = new User(userName: "testUser")
+        when(service.securityService.currentUser).thenReturn(user)
+        service.save(entry)
+        verify(service.auditService).logAudit(user, entry, SettingsAudit.AuditType.ADD)
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.devnull.zuul.web
 
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
@@ -74,10 +75,10 @@ class SettingsServicesControllerTest {
     void shouldEncryptEntry() {
         def expected = new SettingsEntry(id: 1, key: "a.b.c", value: "foo", encrypted: false)
         when(controller.zuulService.encryptSettingsEntryValue(expected.id)).thenReturn(expected)
-        when(controller.zuulService.save(expected)).thenReturn(expected)
+        when(controller.zuulService.save(expected, SettingsAudit.AuditType.ENCRYPT)).thenReturn(expected)
         def result = controller.encrypt(expected.id)
         verify(controller.zuulService).encryptSettingsEntryValue(expected.id)
-        verify(controller.zuulService).save(expected)
+        verify(controller.zuulService).save(expected, SettingsAudit.AuditType.ENCRYPT)
         assert result.is(expected)
     }
 
@@ -85,10 +86,10 @@ class SettingsServicesControllerTest {
     void shouldDecryptEntry() {
         def expected = new SettingsEntry(id: 1, key: "a.b.c", value: "foo", encrypted: true)
         when(controller.zuulService.decryptSettingsEntryValue(expected.id)).thenReturn(expected)
-        when(controller.zuulService.save(expected)).thenReturn(expected)
+        when(controller.zuulService.save(expected, SettingsAudit.AuditType.DECRYPT)).thenReturn(expected)
         def result = controller.decrypt(expected.id)
         verify(controller.zuulService).decryptSettingsEntryValue(expected.id)
-        verify(controller.zuulService).save(expected)
+        verify(controller.zuulService).save(expected, SettingsAudit.AuditType.DECRYPT)
         assert result.is(expected)
     }
 

@@ -1,16 +1,21 @@
 package org.devnull.zuul.web
 
 import groovy.util.logging.Slf4j
+import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.service.ZuulService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-
-import org.springframework.web.bind.annotation.*
 
 @Controller
 @Slf4j
@@ -121,7 +126,7 @@ class SettingsServicesController {
     @ResponseBody
     SettingsEntry encrypt(@RequestParam("id") Integer id) {
         def entry = zuulService.encryptSettingsEntryValue(id)
-        return zuulService.save(entry)
+        return zuulService.save(entry, SettingsAudit.AuditType.ENCRYPT)
     }
 
     /**
@@ -131,7 +136,7 @@ class SettingsServicesController {
     @ResponseBody
     SettingsEntry decrypt(@RequestParam("id") Integer id) {
         def entry = zuulService.decryptSettingsEntryValue(id)
-        return zuulService.save(entry)
+        return zuulService.save(entry, SettingsAudit.AuditType.DECRYPT)
     }
 
 }

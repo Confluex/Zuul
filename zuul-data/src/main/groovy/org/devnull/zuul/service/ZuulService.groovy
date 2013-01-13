@@ -3,6 +3,7 @@ package org.devnull.zuul.service
 import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.springframework.security.access.prepost.PreAuthorize
@@ -59,6 +60,9 @@ public interface ZuulService {
 
     @PreAuthorize("hasPermission(#entry.group.environment, 'admin')")
     SettingsEntry save(SettingsEntry entry)
+
+    @PreAuthorize("hasPermission(#entry.group.environment, 'admin')")
+    SettingsEntry save(SettingsEntry entry, AuditType type)
 
     @PreAuthorize("hasPermission(#group.environment, 'admin')")
     SettingsEntry createEntry(SettingsGroup group, SettingsEntry entry)
