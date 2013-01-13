@@ -76,4 +76,13 @@ class EncryptionKeyTest {
         def key = new EncryptionKey(password: publicKeyText)
         key as PGPPublicKey
     }
+
+    @Test
+    void shouldEnsurePublicKeyIsValid() {
+        def publicKeyText = new ClassPathResource("/test-public-key.asc").inputStream.text
+        def key = new EncryptionKey(algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP , password: publicKeyText)
+        assert key.isValidIfPublicKeyAlgorithm()
+        key.password = "not a valid key"
+        assert !key.isValidIfPublicKeyAlgorithm()
+    }
 }

@@ -2,6 +2,7 @@ package org.devnull.zuul.data.model
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import groovy.util.logging.Slf4j
 import org.bouncycastle.openpgp.PGPPublicKey
 import org.bouncycastle.openpgp.PGPPublicKeyRing
 import org.bouncycastle.openpgp.PGPUtil
@@ -13,6 +14,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.validation.constraints.AssertTrue
 import javax.validation.constraints.Size
 
 import static org.devnull.zuul.data.config.ZuulDataConstants.*
@@ -21,12 +23,10 @@ import static org.devnull.zuul.data.config.ZuulDataConstants.*
 @EqualsAndHashCode(includes = "name")
 @ToString(includeNames = true, excludes = "password")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Slf4j
 class EncryptionKey implements Serializable {
-    static final Map configurations = [
-            "PBEWITHSHA256AND256BITAES-CBC-BC": [
-                    description: "AES cipher with 256"
-            ]
-    ]
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
@@ -58,6 +58,20 @@ class EncryptionKey implements Serializable {
 
     Boolean isPbeKey() {
         return PBE_KEY_ALGORITHMS.find { it == algorithm} != null
+    }
+
+    @AssertTrue
+    Boolean isValidIfPublicKeyAlgorithm() {
+        if (isPgpKey()) {
+            try {
+                def publicKey = this as PGPPublicKey
+                log.info("Public Key Fingerprint: {}", publicKey.fingerprint.encodeHex())
+            } catch (Exception e) {
+                log.warn("Invalid public key", e)
+                return false
+            }
+        }
+        return true
     }
 
     def asType(Class type) {
