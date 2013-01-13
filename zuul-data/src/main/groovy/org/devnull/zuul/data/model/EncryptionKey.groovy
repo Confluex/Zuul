@@ -65,6 +65,9 @@ class EncryptionKey implements Serializable {
             case EncryptionKey:
                 return this
             case PGPPublicKey:
+                if (!isPgpKey()) {
+                    throw new GroovyCastException("${algorithm} is not compatible with PGPPublicKey")
+                }
                 def ring = new PGPPublicKeyRing(PGPUtil.getDecoderStream(new ByteArrayInputStream(password.bytes)))
                 return ring.publicKeys?.find { it.encryptionKey } as PGPPublicKey
             default:
