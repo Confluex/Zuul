@@ -90,6 +90,8 @@ tr .discoverable  {
     margin-bottom: 1em;
 }
 
+.ellipsis { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
 footer {
     text-align: center;
 }

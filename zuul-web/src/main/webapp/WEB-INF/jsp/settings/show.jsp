@@ -14,6 +14,11 @@
     <script src="${pageContext.request.contextPath}/assets/ext/binder-0.3.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/json-form.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/settings-show.js"></script>
+    <style>
+        td.value {
+            max-width: 250px;
+        }
+    </style>
 </head>
 <body>
 <div class="row">

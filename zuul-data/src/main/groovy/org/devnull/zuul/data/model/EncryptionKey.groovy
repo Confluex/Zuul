@@ -65,7 +65,7 @@ class EncryptionKey implements Serializable {
         if (isPgpKey()) {
             try {
                 def publicKey = this as PGPPublicKey
-                log.info("Public Key Fingerprint: {}", publicKey.fingerprint.encodeHex())
+                log.debug("Public Key Fingerprint: {}", publicKey.fingerprint.encodeHex())
             } catch (Exception e) {
                 log.warn("Invalid public key", e)
                 return false
