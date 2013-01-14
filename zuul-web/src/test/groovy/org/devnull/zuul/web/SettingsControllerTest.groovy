@@ -1,6 +1,7 @@
 package org.devnull.zuul.web
 
 import org.devnull.util.pagination.Pagination
+import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
 import org.devnull.zuul.data.model.SettingsEntry
@@ -12,7 +13,7 @@ import org.junit.Test
 import org.mockito.Matchers
 import org.springframework.mock.web.MockHttpServletRequest
 
-import static org.mockito.Matchers.eq
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 @Mixin(ControllerTestMixin)
@@ -151,15 +152,50 @@ public class SettingsControllerTest {
 
 
     @Test
-    void shouldChangeGroupKeyAnAndRedirect() {
-        def group = new SettingsGroup(id: 1, environment: new Environment(name: "dev"))
-        def key = new EncryptionKey(name: "test-key")
+    void shouldChangeGroupKeyAndRedirect() {
+        def group = new SettingsGroup(id: 1, environment: new Environment(name: "dev"), key: new EncryptionKey(name: "old-key"))
+        def newKey = new EncryptionKey(name: "test-key")
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-app", "dev")).thenReturn(group)
-        when(controller.zuulService.findKeyByName("test-key")).thenReturn(key)
-        def view = controller.changeGroupKey("dev", "test-app", "test-key")
+        when(controller.zuulService.findKeyByName("test-key")).thenReturn(newKey)
+        def view = controller.changeGroupKey("dev", "test-app", "test-key", null)
         verify(controller.zuulService).findSettingsGroupByNameAndEnvironment("test-app", "dev")
         verify(controller.zuulService).findKeyByName("test-key")
-        verify(controller.zuulService).changeKey(group, key)
+        verify(controller.zuulService).changeKey(group, newKey)
+        assert view == "redirect:/settings/test-app#dev"
+    }
+
+    @Test
+    void shouldReturnConfirmPageWhenChangingToPgpKeyIfNotConfirmed() {
+        def group = new SettingsGroup(id: 1, environment: new Environment(name: "dev"), key: new EncryptionKey(name: "old-key"))
+        def newKey = new EncryptionKey(name: "test-key", algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP)
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-app", "dev")).thenReturn(group)
+        when(controller.zuulService.findKeyByName("test-key")).thenReturn(newKey)
+
+        def view = controller.changeGroupKey("dev", "test-app", "test-key", false)
+        verify(controller.zuulService, never()).changeKey(any(SettingsGroup), any(EncryptionKey))
+        assert view == "/settings/pgpKeyConfirm"
+
+        view = controller.changeGroupKey("dev", "test-app", "test-key", true)
+        verify(controller.zuulService).changeKey(any(SettingsGroup), any(EncryptionKey))
+        assert view == "redirect:/settings/test-app#dev"
+    }
+
+    @Test
+    void shouldReturnErrorPageWhenChangingToPgpKeyAndValuesAreEncrypted() {
+        def oldKey = new EncryptionKey(name: "old-key", algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP)
+        def newKey = new EncryptionKey(name: "test-key", algorithm: ZuulDataConstants.KEY_ALGORITHM_AES)
+        def group = new SettingsGroup(id: 1, environment: new Environment(name: "dev"), key: oldKey)
+        group.addToEntries(new SettingsEntry(encrypted: true))
+        when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-app", "dev")).thenReturn(group)
+        when(controller.zuulService.findKeyByName("test-key")).thenReturn(newKey)
+
+        def view = controller.changeGroupKey("dev", "test-app", "test-key", false)
+        verify(controller.zuulService, never()).changeKey(any(SettingsGroup), any(EncryptionKey))
+        assert view == "/error/pgpKeyChange"
+
+        group.entries.each { it.encrypted = false }
+        view = controller.changeGroupKey("dev", "test-app", "test-key", true)
+        verify(controller.zuulService).changeKey(any(SettingsGroup), any(EncryptionKey))
         assert view == "redirect:/settings/test-app#dev"
     }
 

@@ -2,6 +2,16 @@ function getContextPath() {
     return $('meta[name=contextPath]').attr('content');
 }
 
+function createCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    }
+    document.cookie = encodeURI(name) + "=" + encodeURI(value) + expires + "; path=/";
+}
+
 function createAlert(message) {
     var closeButton = $(document.createElement("button"));
     closeButton.addClass("close");
