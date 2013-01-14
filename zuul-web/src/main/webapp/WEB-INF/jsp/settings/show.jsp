@@ -16,7 +16,7 @@
     <script src="${pageContext.request.contextPath}/assets/js/settings-show.js"></script>
     <style>
         td.value {
-            max-width: 250px;
+            max-width: 500px;
         }
     </style>
 </head>
