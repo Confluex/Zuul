@@ -38,6 +38,7 @@ $(function () {
     var onSaveHandler = function (entry) {
         var row = link.parents("tr");
         var keyConfig = keyMetaData[entry.algorithm];
+        link.data("key-secret", keyConfig.secret);
         row.fadeOut('slow', function () {
             row.children(".key-description").text(entry.description);
             row.children(".key-name").text(entry.name);
