@@ -60,7 +60,7 @@ class EncryptionKey implements Serializable {
         return PBE_KEY_ALGORITHMS.find { it == algorithm} != null
     }
 
-    @AssertTrue
+    @AssertTrue(message = "Invalid Public Key")
     Boolean isValidIfPublicKeyAlgorithm() {
         if (isPgpKey) {
             try {
