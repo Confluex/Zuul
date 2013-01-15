@@ -80,6 +80,7 @@ $(function () {
     var showEditDialog = function () {
         link = $(this);
         var id = link.parents("tr").data("key-name");
+        toggleSecretKeyInput(link.data("key-secret"));
         $('#editEntryDialog').modal('show');
         $('#editEntryForm').jsonForm('loadResourceById', id);
     };

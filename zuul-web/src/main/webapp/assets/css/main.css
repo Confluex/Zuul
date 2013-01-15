@@ -36,8 +36,12 @@ textarea.code, input.code {
     font-size: 12px;
 }
 
-/* ------------ Start Bootstrap Extensions ------------------- */
+.modal-wide {
+    width: 750px;
+    margin-left: -375px;
+}
 
+/* ------------ Stop Bootstrap Extensions ------------------- */
 
 
 .label {
@@ -91,6 +95,7 @@ tr .discoverable  {
 }
 
 .ellipsis { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
 
 footer {
     text-align: center;

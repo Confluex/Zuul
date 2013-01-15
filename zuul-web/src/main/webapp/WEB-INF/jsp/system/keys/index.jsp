@@ -57,7 +57,7 @@
                         </c:choose>
 
                         <div class="btn-group">
-                            <button class="btn ${buttonClass} edit-key-action">
+                            <button class="btn ${buttonClass} edit-key-action" data-key-secret="${config.secret}">
                                 <i class="${iconClass}"></i>
                                 Edit
                             </button>
@@ -82,7 +82,7 @@
         </table>
     </div>
 </div>
-<div class="modal hide" id="editEntryDialog">
+<div class="modal modal-wide hide" id="editEntryDialog">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3>Edit Entry</h3>
@@ -106,6 +106,22 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label">Algorithm</label>
+                    <div class="controls">
+                        <div class="btn-group" data-toggle="buttons-radio">
+                            <c:forEach var="metaData" items="${keyMetaData}">
+                                <label class="radio">
+                                    <input type="radio" name="algorithm" value="${fn:escapeXml(metaData.key)}"
+                                           data-key-secret="${metaData.value.secret}">
+                                        <span title="${fn:escapeXml(metaData.value.algorithm)}">
+                                                ${fn:escapeXml(metaData.value.description)}
+                                        </span>
+                                </label>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+                <div id="passwordGroup" class="control-group">
                     <label class="control-label" for="password">Password</label>
 
                     <div class="controls">
@@ -118,19 +134,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">Algorithm</label>
+                <div id="publicKeyGroup" class="control-group hide">
+                    <label class="control-label" for="publicKey">Public Key</label>
 
                     <div class="controls">
-                        <div class="btn-group" data-toggle="buttons-radio">
-                            <c:forEach var="metaData" items="${keyMetaData}">
-                                <label class="radio">
-                                    <input type="radio" name="algorithm" value="${fn:escapeXml(metaData.key)}">
-                                        <span title="${fn:escapeXml(metaData.value.algorithm)}">
-                                                ${fn:escapeXml(metaData.value.description)}
-                                        </span>
-                                </label>
-                            </c:forEach>
+                        <div class="input-append">
+                            <textarea id="publicKey" name="password" class="span4 code"
+                                      style="width: 470px; min-height: 250px;"
+                                      placeholder="Paste ASCII Armored Public Key"></textarea>
                         </div>
                     </div>
                 </div>
