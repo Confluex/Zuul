@@ -5,6 +5,27 @@
     var dialog = null;
     var onSave = null;
     var onDelete = null;
+    var onError = function(xhr, status, error) {
+        try {
+            var json = $.parseJSON(xhr.responseText);
+            switch (xhr.status) {
+                case 422:
+                    createFormValidationAlerts(form, json.messages, json.fieldMessages);
+                    break;
+                default:
+                    var errors = json.messages;
+                    if (errors[0] == "Unhandled server error") errors.splice(0, 1);
+                    createAlert(errors.join(".")).prependTo(form).fadeIn();
+
+            }
+        } catch (e) {
+            if (window.console) {
+                console.log("Error handling error: " + e);
+            }
+            alert("An unhandled error has occurred. Please check the log for more details.");
+        }
+    };
+
     var methods = {
         init:function (options) {
             form = this;
@@ -27,7 +48,8 @@
                 success:function (data, status, xhr) {
                     var binder = Binder.FormBinder.bind(form.get(0), data);
                     binder.deserialize();
-                }
+                },
+                error: onError
             });
             return this;
         }
@@ -55,16 +77,7 @@
                     onSave(data)
                 }
             },
-            error:function (xhr, status, error) {
-                switch (xhr.status) {
-                    case 422:
-                        var json = $.parseJSON(xhr.responseText);
-                        createFormValidationAlerts(form, json.messages, json.fieldMessages);
-                        break;
-                    default:
-                        alert("An error has occurred while creating the saving the record. Please check the log for more details.");
-                }
-            }
+            error:onError
         });
         return false;
     }
@@ -80,15 +93,14 @@
                     onDelete()
                 }
             },
-            error:function (xhr, status, error) {
-                alert("An error has occurred while deleting the record. Please check the log for more details.");
-            }
+            error:onError
         });
     }
 
     function resetForm() {
         clearFormValidationAlerts(form, true);
     }
+
 
 
     $.fn.jsonForm = function (method) {
