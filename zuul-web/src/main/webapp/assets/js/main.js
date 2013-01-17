@@ -30,6 +30,21 @@ function showAlert(message) {
     alertDiv.insertAfter("#topNav");
 }
 
+function showJsonErrors(xhr, status, error) {
+    try {
+        var json = $.parseJSON(xhr.responseText);
+        var errors = json.messages;
+        if (errors[0] == "Unhandled server error") errors.splice(0, 1);
+        showAlert(errors.join(". "));
+
+    } catch (e) {
+        if (window.console) {
+            console.log("Error handling error: " + e);
+        }
+        alert("An unhandled error has occurred. Please check the log for more details.");
+    }
+}
+
 function clearFormValidationAlerts(form, reset) {
     if (reset) {
         form.get(0).reset();

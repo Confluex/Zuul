@@ -19,6 +19,7 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
+import org.devnull.zuul.service.error.InvalidOperationException
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.junit.After
 import org.junit.Before
@@ -187,10 +188,31 @@ public class ZuulServiceImplTest {
         verify(service.encryptionKeyDao).delete("test")
     }
 
-    @Test(expected = ConflictingOperationException)
+    @Test(expected = InvalidOperationException)
     void shouldThrowExceptionWhenDeletingDefaultKey() {
         when(service.encryptionKeyDao.findOne("test")).thenReturn(new EncryptionKey(defaultKey: true))
         service.deleteKey("test")
+    }
+
+    @Test(expected = InvalidOperationException)
+    void shouldThrowExceptionWhenDeletingPgpKeysAssignedToSettingsWithEncryptedValues() {
+        def key = new EncryptionKey(name: "test", algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP)
+        def entries = [new SettingsEntry(encrypted: false), new SettingsEntry(encrypted: true)]
+        def group = new SettingsGroup(key:key, entries: entries)
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(key)
+        when(service.settingsGroupDao.findByKey(key)).thenReturn([group])
+        service.deleteKey("test")
+    }
+
+    @Test
+    void shouldDeletePgpKeysAssignedSettingsWithNoEncryptedValues() {
+        def key = new EncryptionKey(name: "test", algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP)
+        def entries = [new SettingsEntry(encrypted: false), new SettingsEntry(encrypted: false)]
+        def group = new SettingsGroup(key:key, entries: entries)
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(key)
+        when(service.settingsGroupDao.findByKey(key)).thenReturn([group])
+        service.deleteKey("test")
+        verify(service.encryptionKeyDao).delete(key.name)
     }
 
 

@@ -18,6 +18,7 @@ import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
+import org.devnull.zuul.service.error.InvalidOperationException
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -293,10 +294,17 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     void deleteKey(String name) {
         def key = encryptionKeyDao.findOne(name)
-        if (key.defaultKey) {
-            throw new ConflictingOperationException("Cannot delete default key")
-        }
         def existingGroups = settingsGroupDao.findByKey(key)
+        if (key.defaultKey) {
+            throw new InvalidOperationException("Cannot delete default key")
+        }
+        if (key.isPgpKey) {
+            existingGroups.each {
+                if (it.entries.find { it.encrypted }) {
+                    throw new InvalidOperationException("Cannot delete PGP keys which are associated to encrypted values.")
+                }
+            }
+        }
         def defaultKey = findDefaultKey()
         existingGroups.each { group ->
             changeKey(group, defaultKey)

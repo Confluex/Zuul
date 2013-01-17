@@ -28,9 +28,7 @@ $(function () {
             success:function (data, status, xhr) {
                 swapPrimary(data.name);
             },
-            error:function (xhr, status, error) {
-                showAlert("An error has occurred while setting the default key. Please check the log for more details.");
-            }
+            error:showJsonErrors
         });
         return false;
     };
@@ -52,10 +50,6 @@ $(function () {
     var deleteEntry = function () {
         link = $(this);
         var button = link.parents("div.btn-group").find(".edit-key-action");
-        if (button.hasClass("btn-primary")) {
-            showAlert("Cannot delete default key");
-            return false;
-        }
         var id = link.parents("tr").data("key-name");
         $.ajax({
             url:getContextPath() + '/system/keys/' + encodeURI(id) + ".json",
@@ -64,9 +58,7 @@ $(function () {
             success:function (data, status, xhr) {
                 onDeleteHandler();
             },
-            error:function (xhr, status, error) {
-                showAlert("An error has occurred while deleting the record. Please check the log for more details.");
-            }
+            error:showJsonErrors
         });
         return true;
     };
@@ -132,9 +124,7 @@ $(function () {
         success:function (data) {
             keyMetaData = data;
         },
-        error:function (jqXHR, textStatus, errorThrown) {
-            showAlert("Error finding key meta-data: " + errorThrown);
-        }
+        error:showJsonErrors
     });
     $("input[name='algorithm']").click(keyAlgorithmClickHandler);
 });
