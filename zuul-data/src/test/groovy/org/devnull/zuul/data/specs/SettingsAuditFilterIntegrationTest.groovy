@@ -59,11 +59,11 @@ class SettingsAuditFilterIntegrationTest extends ZuulDataIntegrationTest {
 
     @Test
     void shouldReturnAllRecordsIfFilterIsNull() {
-        assert settingsAuditDao.findAll(new SettingsAuditFilter(null)).size() == settingsAuditDao.findAll()
+        assert settingsAuditDao.findAll(new SettingsAuditFilter(null)).size() == settingsAuditDao.findAll().size()
     }
 
     @Test
     void shouldReturnAllRecordsIfFilterIsEmpty() {
-        assert settingsAuditDao.findAll(new SettingsAuditFilter([:])).size() == settingsAuditDao.findAll()
+        assert settingsAuditDao.findAll(new SettingsAuditFilter([:])).size() == settingsAuditDao.findAll().size()
     }
 }
