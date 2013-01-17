@@ -19,14 +19,7 @@ $(function () {
                 link.parents("tr").children(".value").text(data.value);
 
             },
-            error:function (jqXHR, textStatus, errorThrown) {
-                try {
-                    var json = JSON.parse(jqXHR.responseText);
-                    showAlert(json.messages.join(". "));
-                } catch (e) {
-                    showAlert("Error encrypting value: " + textStatus)
-                }
-            }
+            error: showJsonErrors
         });
     };
     var deleteEntry = function () {
@@ -38,9 +31,7 @@ $(function () {
             success:function (data, status, xhr) {
                 onDeleteHandler();
             },
-            error:function (xhr, status, error) {
-                showAlert("An error has occurred while deleting the record. Please check the log for more details.");
-            }
+            error:showJsonErrors
         });
     };
     var onDeleteHandler = function () {
@@ -75,9 +66,7 @@ $(function () {
                 window.location = location;
                 window.location.reload();
             },
-            error:function (xhr, status, error) {
-                showAlert("An error has occurred while deleting the record. Please check the log for more details." + status);
-            }
+            error: showJsonErrors
         });
     };
     var loadKeysDropDownMenu = function (data) {
@@ -116,7 +105,7 @@ $(function () {
             url:getContextPath() + "/system/keys.json",
             contentType:'application/json',
             success:loadKeysDropDownMenu,
-            error: function() { showAlert("Error loading key data. Please check the logs for details.") }
+            error: showJsonErrors
         });
     }
     if (window.location.hash) {
