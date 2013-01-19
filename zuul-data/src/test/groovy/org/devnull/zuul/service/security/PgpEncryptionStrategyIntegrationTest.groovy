@@ -29,7 +29,7 @@ class PgpEncryptionStrategyIntegrationTest {
 
     @Test
     void shouldEncryptDataUsingPublicKey() {
-        def publicKey = new ClassPathResource("/test-public-key.asc").inputStream.text
+        def publicKey = new ClassPathResource("/gpg/acme/acme-public-key.asc").inputStream.text
         def encrypted = null
         3.times {
             def time = stopWatch {

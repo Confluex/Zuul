@@ -8,3 +8,4 @@ target/
 *.ids
 security.properties
 *.log
+trustdb.gpg
