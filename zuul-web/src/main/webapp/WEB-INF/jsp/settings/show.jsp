@@ -84,7 +84,8 @@
                     <label class="control-label" for="encrypted">Encrypted</label>
 
                     <div class="controls">
-                        <input id="encrypted" name="encrypted" type="checkbox" title="Encrypted Flag" value="true">
+                        <input id="encrypted" name="encrypted" type="checkbox" value="true" title="Encrypted Flag"
+                                data-content="Use only to manually encrypted state. Can be useful for resetting values, etc.">
                     </div>
                 </div>
             </fieldset>
