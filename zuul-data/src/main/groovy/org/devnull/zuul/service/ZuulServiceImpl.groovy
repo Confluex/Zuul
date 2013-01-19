@@ -207,7 +207,13 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     SettingsEntry createEntry(SettingsGroup group, SettingsEntry entry) {
         group.addToEntries(entry)
-        return save(entry)
+        if (entry.encrypted) {
+            entry.value = encryptionStrategy.encrypt(entry.value, group.key)
+            return save(entry, AuditType.ENCRYPT)
+        }
+        else {
+            return save(entry)
+        }
     }
 
     List<SettingsEntry> search(String query, Pagination<SettingsEntry> pagination) {

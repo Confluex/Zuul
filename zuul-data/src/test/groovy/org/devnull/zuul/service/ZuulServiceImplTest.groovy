@@ -530,9 +530,22 @@ public class ZuulServiceImplTest {
         def entry = new SettingsEntry()
         service.createEntry(group, entry)
         def arg = ArgumentCaptor.forClass(SettingsEntry)
+        verify(service.encryptionStrategy, never()).encrypt(anyString(), any(EncryptionKey))
         verify(service.settingsEntryDao).save(arg.capture())
         assert arg.value.group == group
         assert group.entries.contains(arg.value)
+    }
+
+    @Test
+    void shouldEncryptWhileCreatingNewEntriesIfEntityHasEncryptedFlag() {
+        def group = new SettingsGroup(key: new EncryptionKey())
+        def entry = new SettingsEntry(value: "test", encrypted: true)
+        when(service.encryptionStrategy.encrypt("test", group.key)).thenReturn("mumbojumbo")
+        service.createEntry(group, entry)
+        verify(service.encryptionStrategy).encrypt("test", group.key)
+        verify(service.settingsEntryDao).save(entry)
+        assert entry.group == group
+        assert entry.value == "mumbojumbo"
     }
 
     @Test
