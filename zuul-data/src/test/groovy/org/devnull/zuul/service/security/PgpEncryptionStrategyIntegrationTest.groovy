@@ -36,7 +36,6 @@ class PgpEncryptionStrategyIntegrationTest {
                 def key = new EncryptionKey(algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP, password: publicKey)
                 encrypted =  strategy.encrypt("abc", key)
             }
-            // pretty crappy assertion but I'm not going to implement PGP decrypt (yet)
             assert encrypted.startsWith("-----BEGIN PGP MESSAGE")
             assert encrypted.trim().endsWith("-----END PGP MESSAGE-----")
             log.info("Results:\n{}", encrypted)
@@ -44,5 +43,33 @@ class PgpEncryptionStrategyIntegrationTest {
         }
     }
 
+    @Test
+    void shouldDecryptWithGpgCommandLineIfAvailable() {
+        def publicKey = new ClassPathResource("/gpg/acme/acme-public-key.asc").inputStream.text
+        def key = new EncryptionKey(algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP, password: publicKey)
+        def homedir = new ClassPathResource("/gpg/acme/acme-public-key.asc").file.parent
+        def encrypted = new File(homedir, "encrypted.asc.tmp")
+        def gpg = "gpg --homedir=${homedir} -d ${encrypted}"
+
+        log.info("Executing {}", gpg)
+        encrypted.deleteOnExit()
+        encrypted.text = strategy.encrypt("abc", key)
+        log.info("Encrypted: {}", encrypted.text)
+        try {
+            def cmd = gpg.execute()
+            def decrypted = cmd.text
+            assert decrypted == "abc"
+        } catch (IOException e) {
+            // This is crappy but I don't want to have everyone install GPG to run tests. At some point, maybe I'll
+            // try some sort of dynamic install in the build. I really want the encrypted values decrypted with
+            // an external tool.
+            if (e.message.contains("The system cannot find the file specified")) {
+                log.warn("Unable to run shouldDecryptWithGpgCommandLineIfAvailable because GPG CLI is not installed", e)
+            }
+            else {
+                throw e
+            }
+        }
+    }
 
 }
