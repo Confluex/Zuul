@@ -106,6 +106,7 @@ class SettingsServicesController {
         def entry = zuulService.findSettingsEntry(id)
         entry.key = formEntry.key
         entry.value = formEntry.value
+        entry.encrypted = formEntry.encrypted
         return zuulService.save(entry)
     }
 

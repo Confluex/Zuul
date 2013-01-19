@@ -80,6 +80,13 @@
                         <input id="value" name="value" class="span3" type="text">
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label" for="encrypted">Encrypted</label>
+
+                    <div class="controls">
+                        <input id="encrypted" name="encrypted" type="checkbox" title="Encrypted Flag" value="true">
+                    </div>
+                </div>
             </fieldset>
         </form>
     </div>

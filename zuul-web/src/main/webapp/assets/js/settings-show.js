@@ -2,6 +2,13 @@ $(function () {
     var dialog = $('#editEntryDialog').modal({show:false});
     var link = null;
 
+    var updateEncryptLink = function(target, encrypted) {
+        target.data('encrypted', encrypted);
+        target.text(encrypted ? ' Decrypt ' : ' Encrypt ');
+        var icon = $(document.createElement('i')).addClass("icon-lock");
+        target.prepend(icon);
+    };
+
     var toggleEncrypt = function () {
         link = $(this);
         var operation = link.data('encrypted') ? 'decrypt' : 'encrypt';
@@ -11,13 +18,8 @@ $(function () {
             data:{id:id},
             contentType:'application/json',
             success:function (data) {
-                link.data('encrypted', data.encrypted);
-                link.text(data.encrypted ? 'Decrypt ' : 'Encrypt ');
-                var icon = $(document.createElement('i'));
-                icon.addClass("icon-lock");
-                link.prepend(icon);
+                updateEncryptLink(link, data.encrypted);
                 link.parents("tr").children(".value").text(data.value);
-
             },
             error: showJsonErrors
         });
@@ -42,6 +44,7 @@ $(function () {
     };
     var onSaveHandler = function (entry) {
         var row = link.parents("tr");
+        updateEncryptLink(link.parent().find(".encrypt-link"), entry.encrypted);
         row.fadeOut('slow', function () {
             row.children(".value").text(entry.value);
             row.children(".key").text(entry.key);
@@ -62,8 +65,7 @@ $(function () {
             type:'DELETE',
             contentType:'application/json',
             success:function (data, status, xhr) {
-                var location = getContextPath() + "/settings/" + encodeURI(group) + "#" + encodeURI(env);
-                window.location = location;
+                window.location = getContextPath() + "/settings/" + encodeURI(group) + "#" + encodeURI(env);
                 window.location.reload();
             },
             error: showJsonErrors
