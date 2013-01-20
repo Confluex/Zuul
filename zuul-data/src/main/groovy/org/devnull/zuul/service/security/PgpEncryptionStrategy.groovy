@@ -21,7 +21,6 @@ import java.security.SecureRandom
 @Slf4j
 class PgpEncryptionStrategy implements EncryptionStrategy {
 
-    static final int BUFFER_SIZE = 1024;
     static final String PROVIDER = BouncyCastleProvider.PROVIDER_NAME
     static final int SYM_ALGORITHM_TYPE = PGPEncryptedData.CAST5
 
@@ -43,7 +42,7 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
     protected void encrypt(InputStream input, OutputStream output, PGPPublicKey publicKey) {
         def literalGenerator = new PGPLiteralDataGenerator()
         def compressedGenerator = new PGPCompressedDataGenerator(PGPCompressedData.ZIP)
-        def pgpGenerator = new PGPEncryptedDataGenerator(PGPEncryptedData.CAST5, true, new SecureRandom(), "BC")
+        def pgpGenerator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
         pgpGenerator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
 
         def armoredOut = new ArmoredOutputStream(output);
