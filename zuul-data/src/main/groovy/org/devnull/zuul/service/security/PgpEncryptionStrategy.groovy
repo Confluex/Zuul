@@ -40,24 +40,27 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
     }
 
     protected void encrypt(InputStream input, OutputStream output, PGPPublicKey publicKey) {
-        def literalGenerator = new PGPLiteralDataGenerator()
-        def compressedGenerator = new PGPCompressedDataGenerator(PGPCompressedData.ZIP)
-        def pgpGenerator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
-        pgpGenerator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
-
         def armoredOut = new ArmoredOutputStream(output);
         def bytesOut = new ByteArrayOutputStream()
-        def compressedOut = compressedGenerator.open(bytesOut)
-        def literalOut = literalGenerator.open(compressedOut, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE, input.available(), new Date())
 
-        literalOut << input
-        compressedOut.close()
+        compress(input, bytesOut)
 
+        def pgpGenerator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
+        pgpGenerator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
         def bytes = bytesOut.toByteArray()
         def pgpOut = pgpGenerator.open(armoredOut, bytes.size())
         pgpOut << bytes
 
         [pgpOut, armoredOut]*.close()
+    }
+
+    void compress(InputStream input, OutputStream out) {
+        def literalGenerator = new PGPLiteralDataGenerator()
+        def generator = new PGPCompressedDataGenerator(PGPCompressedData.ZIP)
+        def compressedOut = generator.open(out)
+        def literalOut = literalGenerator.open(compressedOut, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE, input.available(), new Date())
+        literalOut << input
+        [literalOut, compressedOut, generator, literalGenerator]*.close()
     }
 
 
