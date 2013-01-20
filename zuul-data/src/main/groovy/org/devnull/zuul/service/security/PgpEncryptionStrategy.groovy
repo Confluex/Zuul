@@ -40,18 +40,12 @@ class PgpEncryptionStrategy implements EncryptionStrategy {
     }
 
     protected void encrypt(InputStream input, OutputStream output, PGPPublicKey publicKey) {
-        def armoredOut = new ArmoredOutputStream(output);
-        def bytesOut = new ByteArrayOutputStream()
-
-        compress(input, bytesOut)
-
         def pgpGenerator = new PGPEncryptedDataGenerator(SYM_ALGORITHM_TYPE, true, new SecureRandom(), PROVIDER)
         pgpGenerator.addMethod(new BcPublicKeyKeyEncryptionMethodGenerator(publicKey))
-        def bytes = bytesOut.toByteArray()
-        def pgpOut = pgpGenerator.open(armoredOut, bytes.size())
-        pgpOut << bytes
-
-        [pgpOut, armoredOut]*.close()
+        def armoredOut = new ArmoredOutputStream(output)
+        def pgpOut = pgpGenerator.open(armoredOut, new byte[1024])
+        compress(input, pgpOut)
+        [pgpGenerator, pgpOut, armoredOut]*.close()
     }
 
     void compress(InputStream input, OutputStream out) {
