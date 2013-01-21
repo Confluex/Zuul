@@ -15,6 +15,7 @@ Web application for securely managing and accessing configuration for webapps.
  Thanks to [Jetbrains](http://jetbrains.com/) for graciously donating Intellij IDEA licenses.
 
 **YourKit**
+
 Thanks to YourKit for donating Java profiler licenses.
 
  <blockquote>
