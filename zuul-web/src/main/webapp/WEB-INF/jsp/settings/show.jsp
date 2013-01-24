@@ -14,6 +14,11 @@
     <script src="${pageContext.request.contextPath}/assets/ext/binder-0.3.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/json-form.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/settings-show.js"></script>
+    <style>
+        td.value {
+            max-width: 500px;
+        }
+    </style>
 </head>
 <body>
 <div class="row">
@@ -73,6 +78,14 @@
 
                     <div class="controls">
                         <input id="value" name="value" class="span3" type="text">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="encrypted">Encrypted</label>
+
+                    <div class="controls">
+                        <input id="encrypted" name="encrypted" type="checkbox" value="true" title="Encrypted Flag"
+                                data-content="Use only to manually encrypted state. Can be useful for resetting values, etc.">
                     </div>
                 </div>
             </fieldset>

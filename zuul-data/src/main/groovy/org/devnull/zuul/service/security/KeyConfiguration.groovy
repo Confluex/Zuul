@@ -10,4 +10,5 @@ class KeyConfiguration {
     String provider
     Integer hashIterations
     String description
+    Boolean secret = true
 }

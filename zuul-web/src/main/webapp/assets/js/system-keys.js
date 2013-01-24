@@ -28,9 +28,7 @@ $(function () {
             success:function (data, status, xhr) {
                 swapPrimary(data.name);
             },
-            error:function (xhr, status, error) {
-                showAlert("An error has occurred while setting the default key. Please check the log for more details.");
-            }
+            error:showJsonErrors
         });
         return false;
     };
@@ -38,6 +36,7 @@ $(function () {
     var onSaveHandler = function (entry) {
         var row = link.parents("tr");
         var keyConfig = keyMetaData[entry.algorithm];
+        link.data("key-secret", keyConfig.secret);
         row.fadeOut('slow', function () {
             row.children(".key-description").text(entry.description);
             row.children(".key-name").text(entry.name);
@@ -51,10 +50,6 @@ $(function () {
     var deleteEntry = function () {
         link = $(this);
         var button = link.parents("div.btn-group").find(".edit-key-action");
-        if (button.hasClass("btn-primary")) {
-            showAlert("Cannot delete default key");
-            return false;
-        }
         var id = link.parents("tr").data("key-name");
         $.ajax({
             url:getContextPath() + '/system/keys/' + encodeURI(id) + ".json",
@@ -63,9 +58,7 @@ $(function () {
             success:function (data, status, xhr) {
                 onDeleteHandler();
             },
-            error:function (xhr, status, error) {
-                showAlert("An error has occurred while deleting the record. Please check the log for more details.");
-            }
+            error:showJsonErrors
         });
         return true;
     };
@@ -80,6 +73,7 @@ $(function () {
     var showEditDialog = function () {
         link = $(this);
         var id = link.parents("tr").data("key-name");
+        toggleSecretKeyInput(link.data("key-secret"));
         $('#editEntryDialog').modal('show');
         $('#editEntryForm').jsonForm('loadResourceById', id);
     };
@@ -98,6 +92,25 @@ $(function () {
     };
 
 
+    var toggleSecretKeyInput = function(isSecret) {
+        if (isSecret == true) {
+            $('#passwordGroup').show();
+            $('#publicKeyGroup').hide();
+            $("#publicKey").prop('disabled', true);
+            $("#password").prop('disabled', false);
+        }
+        else {
+            $('#passwordGroup').hide();
+            $('#publicKeyGroup').show();
+            $("#publicKey").prop('disabled', false);
+            $("#password").prop('disabled', true);
+        }
+    };
+
+    var keyAlgorithmClickHandler = function() {
+        toggleSecretKeyInput($(this).data('key-secret'));
+    };
+
     $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
     $(".default-key-action").click(toggleDefaultKey);
     $(".edit-key-action").click(showEditDialog);
@@ -111,8 +124,7 @@ $(function () {
         success:function (data) {
             keyMetaData = data;
         },
-        error:function (jqXHR, textStatus, errorThrown) {
-            showAlert("Error finding key meta-data: " + errorThrown);
-        }
+        error:showJsonErrors
     });
+    $("input[name='algorithm']").click(keyAlgorithmClickHandler);
 });

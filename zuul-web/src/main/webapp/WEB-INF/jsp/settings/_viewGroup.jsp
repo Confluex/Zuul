@@ -124,8 +124,8 @@
                     <a class="btn btn-small disabled">Disabled</a>
                 </c:if>
             </td>
-            <td class="key">${fn:escapeXml(e.key)}</td>
-            <td class="value">${fn:escapeXml(e.value)}</td>
+            <td class="key ellipsis">${fn:escapeXml(e.key)}</td>
+            <td class="value ellipsis">${fn:escapeXml(e.value)}</td>
         </tr>
     </c:forEach>
     </tbody>

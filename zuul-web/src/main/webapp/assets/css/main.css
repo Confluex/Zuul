@@ -31,8 +31,17 @@ border-color: #953b39;
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
 }
 
-/* ------------ Start Bootstrap Extensions ------------------- */
+textarea.code, input.code {
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 12px;
+}
 
+.modal-wide {
+    width: 750px;
+    margin-left: -375px;
+}
+
+/* ------------ Stop Bootstrap Extensions ------------------- */
 
 
 .label {
@@ -84,6 +93,9 @@ tr .discoverable  {
     margin-top: 1em;
     margin-bottom: 1em;
 }
+
+.ellipsis { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
 
 footer {
     text-align: center;

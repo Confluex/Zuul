@@ -2,18 +2,21 @@ package org.devnull.zuul.web
 
 import org.devnull.util.pagination.HttpRequestPagination
 import org.devnull.zuul.data.model.SettingsEntry
-import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.CookieValue
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
-
-import org.springframework.web.bind.annotation.*
 
 @Controller
 class SettingsController {
@@ -130,11 +133,21 @@ class SettingsController {
 
 
     @RequestMapping(value = "/settings/{environment}/{groupName}/key/change", method = RequestMethod.GET)
-    String changeGroupKey(@PathVariable("environment") String environment, @PathVariable("groupName") String groupName,
-                          @RequestParam String keyName) {
+    String changeGroupKey(
+            @PathVariable("environment") String environment,
+            @PathVariable("groupName") String groupName,
+            @RequestParam String keyName,
+            @CookieValue(value = "PGP_KEY_CHANGE_CONFIRMED", required = false, defaultValue = "false") Boolean pgpConfirmed
+    ) {
         def group = zuulService.findSettingsGroupByNameAndEnvironment(groupName, environment)
-        def key = zuulService.findKeyByName(keyName)
-        zuulService.changeKey(group, key)
+        def newKey = zuulService.findKeyByName(keyName)
+        if (group.key.isPgpKey && group.entries.count { it.encrypted }) {
+            return "/error/pgpKeyChange"
+        }
+        if (newKey.isPgpKey && !pgpConfirmed) {
+            return "/settings/pgpKeyConfirm"
+        }
+        zuulService.changeKey(group, newKey)
         return "redirect:/settings/${groupName}#${environment}"
     }
 

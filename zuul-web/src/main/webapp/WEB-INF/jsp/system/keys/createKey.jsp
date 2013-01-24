@@ -9,6 +9,9 @@
 <head>
     <title>Create Key</title>
     <meta name="tab" content="admin"/>
+    <script src="${pageContext.request.contextPath}/assets/ext/binder-0.3.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/system-keys.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/json-form.js"></script>
 </head>
 <body>
 <div class="row">
@@ -40,6 +43,23 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label">Algorithm</label>
+
+                    <div class="controls">
+                        <div class="btn-group" data-toggle="buttons-radio">
+                            <c:forEach var="config" items="${keyMetaData}">
+                                <label class="radio">
+                                    <input type="radio" name="algorithm" value="${fn:escapeXml(config.key)}"
+                                           data-key-secret="${config.value.secret}">
+                                        <span title="${fn:escapeXml(config.value.algorithm)}">
+                                                ${fn:escapeXml(config.value.description)}
+                                        </span>
+                                </label>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+                <div id="passwordGroup" class="control-group">
                     <label class="control-label" for="password">Password</label>
 
                     <div class="controls">
@@ -49,19 +69,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">Algorithm</label>
+                <div id="publicKeyGroup" class="control-group hide">
+                    <label class="control-label" for="publicKey">Public Key</label>
 
                     <div class="controls">
-                        <div class="btn-group" data-toggle="buttons-radio">
-                            <c:forEach var="config" items="${keyMetaData}">
-                                <label class="radio">
-                                    <input type="radio" name="algorithm" value="${fn:escapeXml(config.key)}">
-                                        <span title="${fn:escapeXml(config.value.algorithm)}">
-                                            ${fn:escapeXml(config.value.description)}
-                                        </span>
-                                </label>
-                            </c:forEach>
+                        <div class="input-append">
+                            <textarea id="publicKey" name="password" class="span4 code"
+                                      style="width: 470px; min-height: 250px;"
+                                      placeholder="Paste ASCII Armored Public Key">${fn:escapeXml(createKeyForm.password)}</textarea>
                         </div>
                     </div>
                 </div>

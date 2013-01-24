@@ -14,10 +14,12 @@ import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
+import org.devnull.zuul.service.error.InvalidOperationException
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.junit.After
 import org.junit.Before
@@ -33,8 +35,8 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
 
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
-import org.devnull.zuul.data.model.SettingsAudit
 
 public class ZuulServiceImplTest {
 
@@ -186,10 +188,31 @@ public class ZuulServiceImplTest {
         verify(service.encryptionKeyDao).delete("test")
     }
 
-    @Test(expected = ConflictingOperationException)
+    @Test(expected = InvalidOperationException)
     void shouldThrowExceptionWhenDeletingDefaultKey() {
         when(service.encryptionKeyDao.findOne("test")).thenReturn(new EncryptionKey(defaultKey: true))
         service.deleteKey("test")
+    }
+
+    @Test(expected = InvalidOperationException)
+    void shouldThrowExceptionWhenDeletingPgpKeysAssignedToSettingsWithEncryptedValues() {
+        def key = new EncryptionKey(name: "test", algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP)
+        def entries = [new SettingsEntry(encrypted: false), new SettingsEntry(encrypted: true)]
+        def group = new SettingsGroup(key:key, entries: entries)
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(key)
+        when(service.settingsGroupDao.findByKey(key)).thenReturn([group])
+        service.deleteKey("test")
+    }
+
+    @Test
+    void shouldDeletePgpKeysAssignedSettingsWithNoEncryptedValues() {
+        def key = new EncryptionKey(name: "test", algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP)
+        def entries = [new SettingsEntry(encrypted: false), new SettingsEntry(encrypted: false)]
+        def group = new SettingsGroup(key:key, entries: entries)
+        when(service.encryptionKeyDao.findOne("test")).thenReturn(key)
+        when(service.settingsGroupDao.findByKey(key)).thenReturn([group])
+        service.deleteKey("test")
+        verify(service.encryptionKeyDao).delete(key.name)
     }
 
 
@@ -507,9 +530,22 @@ public class ZuulServiceImplTest {
         def entry = new SettingsEntry()
         service.createEntry(group, entry)
         def arg = ArgumentCaptor.forClass(SettingsEntry)
+        verify(service.encryptionStrategy, never()).encrypt(anyString(), any(EncryptionKey))
         verify(service.settingsEntryDao).save(arg.capture())
         assert arg.value.group == group
         assert group.entries.contains(arg.value)
+    }
+
+    @Test
+    void shouldEncryptWhileCreatingNewEntriesIfEntityHasEncryptedFlag() {
+        def group = new SettingsGroup(key: new EncryptionKey())
+        def entry = new SettingsEntry(value: "test", encrypted: true)
+        when(service.encryptionStrategy.encrypt("test", group.key)).thenReturn("mumbojumbo")
+        service.createEntry(group, entry)
+        verify(service.encryptionStrategy).encrypt("test", group.key)
+        verify(service.settingsEntryDao).save(entry)
+        assert entry.group == group
+        assert entry.value == "mumbojumbo"
     }
 
     @Test
@@ -555,12 +591,21 @@ public class ZuulServiceImplTest {
     }
 
     @Test
-    void shouldLogAuditWhenSavingEntry() {
+    void shouldLogAuditAsModifyWhenSavingExistingEntry() {
         def entry = new SettingsEntry(id: 1)
         def user = new User(userName: "testUser")
         when(service.securityService.currentUser).thenReturn(user)
         service.save(entry)
-        verify(service.auditService).logAudit(user, entry)
+        verify(service.auditService).logAudit(user, entry, SettingsAudit.AuditType.MOD)
+    }
+
+    @Test
+    void shouldLogAuditAsModifyWhenSavingNewEntry() {
+        def entry = new SettingsEntry(id: null)
+        def user = new User(userName: "testUser")
+        when(service.securityService.currentUser).thenReturn(user)
+        service.save(entry)
+        verify(service.auditService).logAudit(user, entry, SettingsAudit.AuditType.ADD)
     }
 
     @Test

@@ -97,35 +97,50 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <task:annotation-driven />
     <task:executor id="auditExecutor" pool-size="10" queue-capacity="1000" rejection-policy="DISCARD"/>
 
-    <!-- Key Configurations -->
+    <!-- Security Configurations -->
+    <bean class="org.devnull.zuul.service.security.SecurityProvidersRegistrar">
+        <property name="providers">
+            <util:list>
+                <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
+            </util:list>
+        </property>
+    </bean>
     <util:map id="keyMetaData" map-class="java.util.LinkedHashMap"
               key-type="java.lang.String" value-type="org.devnull.zuul.service.security.KeyConfiguration">
-        <entry key="PBEWITHSHA256AND128BITAES-CBC-BC">
+        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}">
             <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="PBEWITHSHA256AND128BITAES-CBC-BC"/>
+                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}"/>
+                <property name="description" value="PGP Public Key"/>
+                <property name="provider" value="BC"/>
+                <property name="secret" value="false"/>
+            </bean>
+        </entry>
+        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}">
+            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}"/>
                 <property name="description" value="AES (Bouncy Castle)"/>
                 <property name="provider" value="BC"/>
                 <property name="hashIterations" value="1000"/>
             </bean>
         </entry>
-        <entry key="PBEWithSHAAnd2-KeyTripleDES-CBC">
+        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}">
             <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="PBEWithSHAAnd2-KeyTripleDES-CBC"/>
+                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}"/>
                 <property name="description" value="Triple DES (Bouncy Castle)"/>
                 <property name="provider" value="BC"/>
                 <property name="hashIterations" value="1000"/>
             </bean>
         </entry>
-        <entry key="PBEWithMD5AndTripleDES">
+        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}">
             <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="PBEWithMD5AndTripleDES"/>
+                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}"/>
                 <property name="description" value="Triple DES (JCE)"/>
                 <property name="hashIterations" value="1000"/>
             </bean>
         </entry>
-        <entry key="PBEWithMD5AndDES">
+        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}">
             <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="PBEWithMD5AndDES"/>
+                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}"/>
                 <property name="description" value="DES (JCE)"/>
                 <property name="hashIterations" value="1000"/>
             </bean>

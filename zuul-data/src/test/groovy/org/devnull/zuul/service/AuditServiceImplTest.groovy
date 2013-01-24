@@ -19,7 +19,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 
-import static org.mockito.Matchers.any
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 class AuditServiceImplTest {
@@ -34,6 +34,28 @@ class AuditServiceImplTest {
                 settingsGroupDao: mock(SettingsGroupDao),
                 securityService: mock(SecurityService)
         )
+    }
+
+    @Test
+    void shouldNotRecordDecryptedValues() {
+        def type = SettingsAudit.AuditType.DECRYPT
+        def group = createGroup()
+        when(service.settingsEntryDao.findOne(1)).thenReturn(group.entries.first())
+        service.logAudit(new User(userName: "userA"), group.entries.first(), type)
+        def args = ArgumentCaptor.forClass(SettingsAudit)
+        verify(service.settingsAuditDao).save(args.capture())
+        assert args.value.settingsValue == type.action
+    }
+
+    @Test
+    void shouldNotRecordEncryptedValues() {
+        def type = SettingsAudit.AuditType.ENCRYPT
+        def group = createGroup()
+        when(service.settingsEntryDao.findOne(1)).thenReturn(group.entries.first())
+        service.logAudit(new User(userName: "userA"), group.entries.first(), type)
+        def args = ArgumentCaptor.forClass(SettingsAudit)
+        verify(service.settingsAuditDao).save(args.capture())
+        assert args.value.settingsValue == type.action
     }
 
     @Test
@@ -92,7 +114,8 @@ class AuditServiceImplTest {
     void shouldNotThrowExceptionIfErrorOccursSavingAudit() {
         when(service.settingsAuditDao.save(any(SettingsAudit))).thenThrow(new RuntimeException("test"))
         service.logAudit(new User(userName: "userA"), new SettingsEntry())
-        verify(service.settingsAuditDao).save(any(SettingsAudit))    }
+        verify(service.settingsAuditDao).save(any(SettingsAudit))
+    }
 
 
     @Test

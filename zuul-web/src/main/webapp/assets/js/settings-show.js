@@ -2,6 +2,13 @@ $(function () {
     var dialog = $('#editEntryDialog').modal({show:false});
     var link = null;
 
+    var updateEncryptLink = function(target, encrypted) {
+        target.data('encrypted', encrypted);
+        target.text(encrypted ? ' Decrypt ' : ' Encrypt ');
+        var icon = $(document.createElement('i')).addClass("icon-lock");
+        target.prepend(icon);
+    };
+
     var toggleEncrypt = function () {
         link = $(this);
         var operation = link.data('encrypted') ? 'decrypt' : 'encrypt';
@@ -9,18 +16,12 @@ $(function () {
         $.ajax({
             url:getContextPath() + "/settings/entry/" + operation + ".json",
             data:{id:id},
+            contentType:'application/json',
             success:function (data) {
-                link.data('encrypted', data.encrypted);
-                link.text(data.encrypted ? 'Decrypt ' : 'Encrypt ');
-                var icon = $(document.createElement('i'));
-                icon.addClass("icon-lock");
-                link.prepend(icon);
+                updateEncryptLink(link, data.encrypted);
                 link.parents("tr").children(".value").text(data.value);
-
             },
-            error:function (jqXHR, textStatus, errorThrown) {
-                showAlert("Error encrypting value: " + errorThrown);
-            }
+            error: showJsonErrors
         });
     };
     var deleteEntry = function () {
@@ -28,12 +29,11 @@ $(function () {
         $.ajax({
             url:getContextPath() + '/settings/entry/' + link.data('id') + ".json",
             type:'DELETE',
+            contentType:'application/json',
             success:function (data, status, xhr) {
                 onDeleteHandler();
             },
-            error:function (xhr, status, error) {
-                showAlert("An error has occurred while deleting the record. Please check the log for more details.");
-            }
+            error:showJsonErrors
         });
     };
     var onDeleteHandler = function () {
@@ -44,6 +44,7 @@ $(function () {
     };
     var onSaveHandler = function (entry) {
         var row = link.parents("tr");
+        updateEncryptLink(link.parent().find(".encrypt-link"), entry.encrypted);
         row.fadeOut('slow', function () {
             row.children(".value").text(entry.value);
             row.children(".key").text(entry.key);
@@ -62,14 +63,12 @@ $(function () {
         $.ajax({
             url:getContextPath() + "/settings/" + encodeURI(env) + "/" + encodeURI(group) + ".properties",
             type:'DELETE',
+            contentType:'application/json',
             success:function (data, status, xhr) {
-                var location = getContextPath() + "/settings/" + encodeURI(group) + "#" + encodeURI(env);
-                window.location = location;
+                window.location = getContextPath() + "/settings/" + encodeURI(group) + "#" + encodeURI(env);
                 window.location.reload();
             },
-            error:function (xhr, status, error) {
-                showAlert("An error has occurred while deleting the record. Please check the log for more details." + status);
-            }
+            error: showJsonErrors
         });
     };
     var loadKeysDropDownMenu = function (data) {
@@ -97,6 +96,7 @@ $(function () {
     };
 
 
+    $("#encrypted").popover({placement:'right', trigger:'hover'});
     $(".descriptive").popover({placement:'top', trigger:'hover'});
     $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
     $(".encrypt-link").click(toggleEncrypt);
@@ -106,8 +106,9 @@ $(function () {
     if ($(".keys-dropdown-menu").length) {
         $.ajax({
             url:getContextPath() + "/system/keys.json",
+            contentType:'application/json',
             success:loadKeysDropDownMenu,
-            error: function() { showAlert("Error loading key data. Please check the logs for details.") }
+            error: showJsonErrors
         });
     }
     if (window.location.hash) {

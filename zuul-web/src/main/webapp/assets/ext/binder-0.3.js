@@ -234,7 +234,7 @@ Binder.FormBinder.prototype = {
     return accessor.target;
   },
   serializeField: function( element, obj ) {
-    if (!element.name) return;
+    if (!element.name || $(element).prop('disabled')) return;
     var accessor = this._getAccessor( obj );
     var value = undefined
     if( element.type == "radio" || element.type == "checkbox" )  {

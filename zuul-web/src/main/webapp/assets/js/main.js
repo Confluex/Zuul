@@ -2,6 +2,16 @@ function getContextPath() {
     return $('meta[name=contextPath]').attr('content');
 }
 
+function createCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    }
+    document.cookie = encodeURI(name) + "=" + encodeURI(value) + expires + "; path=/";
+}
+
 function createAlert(message) {
     var closeButton = $(document.createElement("button"));
     closeButton.addClass("close");
@@ -18,6 +28,21 @@ function createAlert(message) {
 function showAlert(message) {
     var alertDiv = createAlert(message);
     alertDiv.insertAfter("#topNav");
+}
+
+function showJsonErrors(xhr, status, error) {
+    try {
+        var json = $.parseJSON(xhr.responseText);
+        var errors = json.messages;
+        if (errors[0] == "Unhandled server error") errors.splice(0, 1);
+        showAlert(errors.join(". "));
+
+    } catch (e) {
+        if (window.console) {
+            console.log("Error handling error: " + e);
+        }
+        alert("An unhandled error has occurred. Please check the log for more details.");
+    }
 }
 
 function clearFormValidationAlerts(form, reset) {

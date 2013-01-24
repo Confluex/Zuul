@@ -12,13 +12,17 @@ import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.SettingsAudit
+import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.data.specs.SettingsEntryEncryptedWithKey
 import org.devnull.zuul.data.specs.SettingsEntrySearch
+import org.devnull.zuul.service.error.InvalidOperationException
 import org.devnull.zuul.service.security.EncryptionStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.domain.Sort
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
@@ -26,7 +30,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
-import org.devnull.zuul.data.model.SettingsAudit
 
 @Service("zuulService")
 @Transactional(readOnly = true)
@@ -47,6 +50,7 @@ class ZuulServiceImpl implements ZuulService {
     EnvironmentDao environmentDao
 
     @Autowired
+    @Qualifier("keyTypeEncryptionStrategy")
     EncryptionStrategy encryptionStrategy
 
     @Autowired
@@ -188,16 +192,28 @@ class ZuulServiceImpl implements ZuulService {
 
     @Transactional(readOnly = false)
     SettingsEntry save(SettingsEntry entry) {
+        def type = entry.id ? AuditType.MOD : AuditType.ADD
+        return save(entry, type)
+    }
+
+    @Transactional(readOnly = false)
+    SettingsEntry save(SettingsEntry entry, AuditType type) {
         log.info("Saving entry: {}", entry)
         errorIfInvalid(entry, "entry")
-        auditService.logAudit(securityService.currentUser, entry)
+        auditService.logAudit(securityService.currentUser, entry, type)
         return settingsEntryDao.save(entry)
     }
 
     @Transactional(readOnly = false)
     SettingsEntry createEntry(SettingsGroup group, SettingsEntry entry) {
         group.addToEntries(entry)
-        return save(entry)
+        if (entry.encrypted) {
+            entry.value = encryptionStrategy.encrypt(entry.value, group.key)
+            return save(entry, AuditType.ENCRYPT)
+        }
+        else {
+            return save(entry)
+        }
     }
 
     List<SettingsEntry> search(String query, Pagination<SettingsEntry> pagination) {
@@ -273,6 +289,7 @@ class ZuulServiceImpl implements ZuulService {
 
     @Transactional(readOnly = false)
     EncryptionKey saveKey(EncryptionKey key) {
+        errorIfInvalid(key, "key")
         def existingKey = encryptionKeyDao.findOne(key.name)
         if (existingKey && !existingKey.compatibleWith(key)) {
             reEncryptEntriesWithMatchingKey(existingKey, key)
@@ -283,10 +300,17 @@ class ZuulServiceImpl implements ZuulService {
     @Transactional(readOnly = false)
     void deleteKey(String name) {
         def key = encryptionKeyDao.findOne(name)
-        if (key.defaultKey) {
-            throw new ConflictingOperationException("Cannot delete default key")
-        }
         def existingGroups = settingsGroupDao.findByKey(key)
+        if (key.defaultKey) {
+            throw new InvalidOperationException("Cannot delete default key")
+        }
+        if (key.isPgpKey) {
+            existingGroups.each {
+                if (it.entries.find { it.encrypted }) {
+                    throw new InvalidOperationException("Cannot delete PGP keys which are associated to encrypted values.")
+                }
+            }
+        }
         def defaultKey = findDefaultKey()
         existingGroups.each { group ->
             changeKey(group, defaultKey)

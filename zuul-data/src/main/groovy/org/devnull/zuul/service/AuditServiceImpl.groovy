@@ -68,6 +68,9 @@ class AuditServiceImpl implements AuditService {
                     settingsValue: entry.value,
                     type: type
             )
+            if (type == AuditType.DECRYPT || type == AuditType.ENCRYPT) {
+                audit.settingsValue = type.action
+            }
             log.debug("Saving new audit entry: {}", audit)
             settingsAuditDao.save(audit)
         }
