@@ -24,9 +24,13 @@
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>${fn:escapeXml(groupName)}</h1>
+            <h2>
+                <a id="group-settings" href="#" class="btn btn-mini expressive" title="settings">
+                    <i class="icon-cog"></i>
+                </a>
+                ${fn:escapeXml(groupName)}
+            </h2>
         </div>
-
         <div class="tabbable tabs-left">
             <ul class="nav nav-tabs">
                 <c:forEach var="env" items="${environments}" varStatus="i">
@@ -85,7 +89,7 @@
 
                     <div class="controls">
                         <input id="encrypted" name="encrypted" type="checkbox" value="true" title="Encrypted Flag"
-                                data-content="Use only to manually encrypted state. Can be useful for resetting values, etc.">
+                               data-content="Use only to manually encrypted state. Can be useful for resetting values, etc.">
                     </div>
                 </div>
             </fieldset>

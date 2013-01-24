@@ -98,6 +98,7 @@ $(function () {
 
     $("#encrypted").popover({placement:'right', trigger:'hover'});
     $(".descriptive").popover({placement:'top', trigger:'hover'});
+    $(".expressive").tooltip();
     $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
     $(".encrypt-link").click(toggleEncrypt);
     $(".edit-link").click(showEditDialog);
