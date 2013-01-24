@@ -1,6 +1,5 @@
 package org.devnull.zuul.service.security
 
-import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.service.error.InvalidOperationException
 import org.junit.Before

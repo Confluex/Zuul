@@ -5,8 +5,7 @@ import org.junit.Test
 import java.security.Provider
 import java.security.Security
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
+import static org.mockito.Mockito.*
 
 class SecurityProvidersRegistrarTest {
     @Test
