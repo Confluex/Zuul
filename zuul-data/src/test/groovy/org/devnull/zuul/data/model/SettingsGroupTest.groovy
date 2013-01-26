@@ -38,6 +38,13 @@ public class SettingsGroupTest {
     }
 
     @Test
+    void shouldConvertNullValuesToEmptyStringWhenConvertingToProperties() {
+        group.entries[0].value = null
+        def properties = group as Properties
+        assert properties[group.entries[0].key] == ''
+    }
+
+    @Test
     void shouldSetBiDirectionalRelationshipWhenAddingEntries() {
         def entry = new SettingsEntry(key: "testkey", value: "testval")
         group.addToEntries(entry)

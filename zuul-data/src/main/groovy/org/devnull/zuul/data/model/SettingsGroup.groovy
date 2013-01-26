@@ -9,9 +9,9 @@ import org.devnull.zuul.data.config.ZuulDataConstants
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
-import javax.persistence.*
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -57,7 +57,8 @@ class SettingsGroup implements Serializable {
             case Properties:
                 def properties = new Properties()
                 entries.each {
-                    properties.put(it.key, it.encrypted ? "ENC(${it.value})".toString() : it.value)
+                    def value = it.value ?: ''
+                    properties.put(it.key, it.encrypted ? "ENC(${value})".toString() : value)
                 }
                 return properties
             case Map:
