@@ -64,7 +64,8 @@ class SettingsGroup implements Serializable {
             case Map:
                 def map = [:]
                 entries.each {
-                    map[it.key] = it.encrypted ? "ENC(${it.value})".toString() : it.value
+                    def value = it.value ?: ''
+                    map[it.key] = it.encrypted ? "ENC(${value})".toString() : value
                 }
                 return map
             default:
