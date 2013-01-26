@@ -16,8 +16,8 @@ import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 @Entity
-@EqualsAndHashCode()
-@ToString(includeNames = true)
+@EqualsAndHashCode(excludes = "groups")
+@ToString(includeNames = true, excludes = "groups")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 class Settings {
 
