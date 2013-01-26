@@ -45,6 +45,13 @@ public class SettingsGroupTest {
     }
 
     @Test
+    void shouldConvertNullValuesToEmptyStringWhenConvertingToMap() {
+        group.entries[0].value = null
+        def result = group as Map
+        assert result[group.entries[0].key] == ''
+    }
+
+    @Test
     void shouldSetBiDirectionalRelationshipWhenAddingEntries() {
         def entry = new SettingsEntry(key: "testkey", value: "testval")
         group.addToEntries(entry)
