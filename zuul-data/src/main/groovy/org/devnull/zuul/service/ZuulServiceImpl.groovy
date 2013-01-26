@@ -13,6 +13,7 @@ import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.devnull.zuul.data.model.SettingsEntry
@@ -158,8 +159,8 @@ class ZuulServiceImpl implements ZuulService {
         return environmentDao.save(environments)
     }
 
-    List<SettingsGroup> listSettingsGroups() {
-        return settingsGroupDao.findAll(new Sort("name")) as List<SettingsGroup>
+    List<Settings> listSettings() {
+        return settingsDao.findAll(new Sort("name")) as List<Settings>
     }
 
     @Transactional(readOnly = false)

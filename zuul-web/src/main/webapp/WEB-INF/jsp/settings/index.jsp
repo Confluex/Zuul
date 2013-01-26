@@ -1,4 +1,4 @@
-<%--@elvariable id="groups" type="java.util.List<java.lang.String>"--%>
+<%--@elvariable id="settings" type="java.util.List<org.devnull.zuul.data.model.Settings>"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -19,10 +19,10 @@
 <div class="row">
     <div class="span12">
         <ul>
-            <c:forEach var="group" items="${groups}">
+            <c:forEach var="i" items="${settings}">
                 <li>
-                    <a href="${pageContext.request.contextPath}/settings/${fn:escapeXml(group)}">
-                            ${fn:escapeXml(group)}
+                    <a href="${pageContext.request.contextPath}/settings/${fn:escapeXml(i.name)}">
+                            ${fn:escapeXml(i.name)}
                     </a>
                 </li>
             </c:forEach>

@@ -105,8 +105,8 @@ class SettingsController {
      */
     @RequestMapping(value = "/settings", method = RequestMethod.GET)
     ModelAndView index() {
-        def groups = zuulService.listSettingsGroups().collect { it.name }.unique()
-        return new ModelAndView("/settings/index", [groups: groups])
+        def settings = zuulService.listSettings()
+        return new ModelAndView("/settings/index", [settings: groups])
     }
 
     /**

@@ -3,6 +3,7 @@ package org.devnull.zuul.service
 import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsAudit.AuditType
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
@@ -40,7 +41,7 @@ public interface ZuulService {
 
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env)
 
-    List<SettingsGroup> listSettingsGroups()
+    List<Settings> listSettings()
 
     @PreAuthorize("hasPermission(#group.environment, 'admin')")
     SettingsGroup save(SettingsGroup group)

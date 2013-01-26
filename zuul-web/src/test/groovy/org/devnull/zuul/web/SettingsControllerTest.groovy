@@ -4,6 +4,7 @@ import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
@@ -27,18 +28,15 @@ public class SettingsControllerTest {
     }
 
     @Test
-    void shouldListAllDistinctGroupNames() {
-        def groups = [
-                new SettingsGroup(name: "a", environment: new Environment(name: "prod")),
-                new SettingsGroup(name: "a", environment: new Environment(name: "qa")),
-                new SettingsGroup(name: "a", environment: new Environment(name: "dev")),
-                new SettingsGroup(name: "b", environment: new Environment(name: "dev")),
-                new SettingsGroup(name: "b", environment: new Environment(name: "qa"))
+    void shouldListAllSettings() {
+        def settings = [
+                new Settings(id: 1),
+                new Settings(id: 2)
         ]
-        when(controller.zuulService.listSettingsGroups()).thenReturn(groups)
+        when(controller.zuulService.listSettings()).thenReturn(settings)
         def mv = controller.index()
         assert mv.viewName == "/settings/index"
-        assert mv.model.groups == ["a", "b"]
+        assert mv.model.settings == settings
     }
 
     @Test

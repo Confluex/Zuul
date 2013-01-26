@@ -1,6 +1,7 @@
 package org.devnull.zuul.web.security
 
 import org.devnull.zuul.data.dao.EnvironmentDao
+import org.devnull.zuul.data.dao.SettingsDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.Environment
@@ -19,15 +20,20 @@ abstract class SecurityWebIntegrationTest extends ZuulWebIntegrationTest {
     @Autowired
     SettingsEntryDao settingsEntryDao
 
+    @Autowired
+    SettingsDao settingsDao
+
 
     protected SettingsGroup findRestrictedGroup() {
-        def group = settingsGroupDao.findByNameAndEnvironment("app-data-config", new Environment(name: "prod"))
+        def settings = settingsDao.findByName("app-data-config")
+        def group = settingsGroupDao.findBySettingsAndEnvironment(settings, new Environment(name: "prod"))
         assert group.environment.restricted
         return group
     }
 
     protected SettingsGroup findUnRestrictedGroup() {
-        def group = settingsGroupDao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        def settings = settingsDao.findByName("app-data-config")
+        def group = settingsGroupDao.findBySettingsAndEnvironment(settings, new Environment(name: "dev"))
         assert !group.environment.restricted
         return group
     }

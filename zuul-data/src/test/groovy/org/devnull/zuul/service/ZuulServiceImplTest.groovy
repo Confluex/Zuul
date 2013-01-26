@@ -466,12 +466,12 @@ public class ZuulServiceImplTest {
     }
 
     @Test
-    void listSettingsGroupsShouldSortByName() {
-        def expected = [new SettingsGroup(name: "foo")]
+    void listSettingsShouldSortByName() {
+        def expected = [new Settings(name: "foo")]
         def sort = new Sort("name")
-        when(service.settingsGroupDao.findAll(sort)).thenReturn(expected)
-        def results = service.listSettingsGroups()
-        verify(service.settingsGroupDao).findAll(sort)
+        when(service.settingsDao.findAll(sort)).thenReturn(expected)
+        def results = service.listSettings()
+        verify(service.settingsDao).findAll(sort)
         assert results.is(expected)
     }
 
