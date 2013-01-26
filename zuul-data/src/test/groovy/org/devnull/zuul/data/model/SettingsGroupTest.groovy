@@ -8,7 +8,7 @@ public class SettingsGroupTest {
     SettingsGroup group
 
     @Before
-    void createConverter() {
+    void createGroup() {
         group = new SettingsGroup(
                 id: 1,
                 name: "testGroup",
@@ -18,6 +18,22 @@ public class SettingsGroupTest {
         group.entries.add(new SettingsEntry(key: 'a.b.c', value: 'foo'))
         group.entries.add(new SettingsEntry(key: 'd.e.f', value: 'bar'))
         group.entries.add(new SettingsEntry(key: 'h.i.j', value: 'rot13', encrypted: true))
+    }
+
+
+    @Test
+    void shouldCreateSettingsWhenSettingGroupNameIfItDoesNotExist() {
+        def group = new SettingsGroup()
+        assert !group.settings
+        group.name = "newGroup"
+        assert group.settings.name == "newGroup"
+        assert group.name == "newGroup"
+        assert group.settings.groups.contains(group)
+    }
+
+    @Test
+    void shouldReturnNullIfAskingForNameAndSettingsObjectDoesNotExist() {
+        assert new SettingsGroup().name == null
     }
 
     @Test

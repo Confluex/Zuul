@@ -9,9 +9,16 @@ import org.devnull.zuul.data.config.ZuulDataConstants
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.OrderBy
 import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 @Entity
 @EqualsAndHashCode(excludes = 'entries')
@@ -41,9 +48,29 @@ class SettingsGroup implements Serializable {
     @NotNull
     EncryptionKey key
 
-    @Size(min = 1, message = "Name cannot by empty")
-    @Column(nullable = false)
-    String name
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "settings_id")
+    @JsonBackReference
+    @NotNull
+    Settings settings
+
+    /**
+     * Name is a now a shortcut to the setting object's name
+     */
+    String getName() {
+        return settings?.name
+    }
+
+    /**
+     * Name is a now a shortcut to the setting object's name
+     */
+    void setName(String name) {
+        if (!settings) {
+            settings = new Settings()
+            settings.addToGroups(this)
+        }
+        settings.name = name
+    }
 
     void addToEntries(SettingsEntry entry) {
         entry.group = this

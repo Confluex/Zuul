@@ -10,10 +10,12 @@ import org.devnull.util.pagination.SimplePagination
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
+import org.devnull.zuul.data.dao.SettingsDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
@@ -57,6 +59,7 @@ public class ZuulServiceImplTest {
         def templateMessage = new SimpleMailMessage()
         templateMessage.from = "test@devnull.org"
         service = new ZuulServiceImpl(
+                settingsDao: mock(SettingsDao),
                 settingsGroupDao: mock(SettingsGroupDao),
                 settingsEntryDao: mock(SettingsEntryDao),
                 environmentDao: mock(EnvironmentDao),
@@ -409,21 +412,28 @@ public class ZuulServiceImplTest {
 
     @Test
     void findSettingsGroupByNameShouldReturnResultsFromDao() {
-        def expected = [new SettingsGroup(name: "some-config")]
-        when(service.settingsGroupDao.findByName("some-config")).thenReturn(expected)
+        def settings = new Settings(
+                id: 100,
+                name:"some-config",
+                groups: [new SettingsGroup(id: 1), new SettingsGroup(id: 2)]
+        )
+        when(service.settingsDao.findByName("some-config")).thenReturn(settings)
         def result = service.findSettingsGroupByName("some-config")
-        verify(service.settingsGroupDao).findByName("some-config")
-        assert result.is(expected)
+        verify(service.settingsDao).findByName("some-config")
+        assert result == settings.groups
     }
 
     @Test
     void findSettingsGroupByNameAndEnvironmentShouldReturnResultsFromDao() {
-        def expected = new SettingsGroup()
+        def group = new SettingsGroup(id: 1)
         def env = new Environment(name: "prod")
-        when(service.settingsGroupDao.findByNameAndEnvironment("some-config", env)).thenReturn(expected)
+        def settings = new Settings(id: 100)
+        when(service.settingsDao.findByName("some-config")).thenReturn(settings)
+        when(service.settingsGroupDao.findBySettingsAndEnvironment(settings, env)).thenReturn(group)
         def result = service.findSettingsGroupByNameAndEnvironment("some-config", "prod")
-        verify(service.settingsGroupDao).findByNameAndEnvironment("some-config", env)
-        assert result.is(expected)
+        verify(service.settingsDao).findByName("some-config")
+        verify(service.settingsGroupDao).findBySettingsAndEnvironment(settings, env)
+        assert result.is(group)
     }
 
     @Test

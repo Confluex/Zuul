@@ -2,8 +2,10 @@ package org.devnull.zuul.data.dao
 
 import org.devnull.zuul.data.model.EncryptionKey
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.test.ZuulDataIntegrationTest
+import org.junit.Before
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -15,9 +17,19 @@ class SettingsGroupDaoIntegrationTest extends ZuulDataIntegrationTest {
     @Autowired
     SettingsEntryDao entryDao
 
+    @Autowired
+    SettingsDao settingsDao
+
+    Settings settings
+
+    @Before
+    void findSettings() {
+        this.settings = settingsDao.findByName("app-data-config")
+    }
+
     @Test
     void findByNameAndEnvironmentShouldFindRecordAndMapCorrectly() {
-        def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        def group = dao.findBySettingsAndEnvironment(settings, new Environment(name: "dev"))
         assert group.id == 1
         assert group.name == "app-data-config"
         assert group.environment.name == "dev"
@@ -47,8 +59,8 @@ class SettingsGroupDaoIntegrationTest extends ZuulDataIntegrationTest {
     }
 
     @Test
-    void findByNameShouldReturnCorrectNumberOfRecords() {
-        def groups = dao.findByName("app-data-config")
+    void findBySettingsShouldReturnCorrectNumberOfRecords() {
+        def groups = dao.findBySettings(settings)
         assert groups.size() == 3
         groups.each { assert it.name == "app-data-config" }
         assert groups.find { it.environment.name == "dev" }
@@ -58,11 +70,11 @@ class SettingsGroupDaoIntegrationTest extends ZuulDataIntegrationTest {
 
     @Test
     void shouldCascadePersistNewEntries() {
-        def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        def group = dao.findBySettingsAndEnvironment(settings, new Environment(name: "dev"))
         assert group.entries.size() == 7
         group.addToEntries(new SettingsEntry(key: "new.key", value: "woohoo!"))
         dao.save(group)
-        def result = dao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        def result = dao.findBySettingsAndEnvironment(settings, new Environment(name: "dev"))
         assert result.entries.size() == 8
         assert result.entries.last().key == "new.key"
         assert result.entries.last().value == "woohoo!"
@@ -71,7 +83,7 @@ class SettingsGroupDaoIntegrationTest extends ZuulDataIntegrationTest {
     @Test
     void shouldCascadeDeleteEntries() {
         def count = entryDao.count()
-        def group = dao.findByNameAndEnvironment("app-data-config", new Environment(name: "dev"))
+        def group = dao.findBySettingsAndEnvironment(settings, new Environment(name: "dev"))
         def decrementBy = group.entries.size()
         dao.delete(group.id)
         assert entryDao.count() == count - decrementBy

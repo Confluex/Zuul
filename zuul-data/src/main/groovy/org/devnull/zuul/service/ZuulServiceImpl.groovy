@@ -8,6 +8,7 @@ import org.devnull.util.pagination.Pagination
 import org.devnull.zuul.data.config.ZuulDataConstants
 import org.devnull.zuul.data.dao.EncryptionKeyDao
 import org.devnull.zuul.data.dao.EnvironmentDao
+import org.devnull.zuul.data.dao.SettingsDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.EncryptionKey
@@ -39,6 +40,9 @@ class ZuulServiceImpl implements ZuulService {
 
     @Autowired
     EncryptionKeyDao encryptionKeyDao
+
+    @Autowired
+    SettingsDao settingsDao
 
     @Autowired
     SettingsGroupDao settingsGroupDao
@@ -111,12 +115,13 @@ class ZuulServiceImpl implements ZuulService {
     }
 
     List<SettingsGroup> findSettingsGroupByName(String name) {
-        return settingsGroupDao.findByName(name)
+        return settingsDao.findByName(name).groups
     }
 
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env) {
         log.debug("Finding settings group by name:{}, env:{}", name, env)
-        return settingsGroupDao.findByNameAndEnvironment(name, new Environment(name: env))
+        def settings = settingsDao.findByName(name)
+        return settingsGroupDao.findBySettingsAndEnvironment(settings, new Environment(name: env))
     }
 
     List<Environment> listEnvironments() {

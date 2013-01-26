@@ -5,10 +5,12 @@ import groovy.transform.ToString
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
@@ -23,13 +25,6 @@ class Settings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id
 
-    /**
-     * This should by in sync with settings group names... Eventually, this may be refactored to be the
-     * parent container for a settings group and the name would reside here. Seems a little heavy
-     * for now though.
-     *
-     * TODO needs refactoring before 1.5 release (see comment)
-     */
     @Size(min = 1, message = "Name cannot by empty")
     String name
 
@@ -37,4 +32,15 @@ class Settings {
     @Size(min = 1, max = 32, message = "Folder must be 1-32 characters long")
     @NotNull
     String folder
+
+    @OneToMany(mappedBy = "settings", cascade = [CascadeType.ALL])
+    @javax.persistence.OrderBy("environment.ordinal")
+    List<SettingsGroup> groups = []
+
+
+    Settings addToGroups(SettingsGroup group) {
+        group.settings = this
+        groups << group
+        return this
+    }
 }
