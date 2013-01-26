@@ -34,7 +34,6 @@ class Settings {
     String folder
 
     @OneToMany(mappedBy = "settings", cascade = [CascadeType.ALL])
-    @javax.persistence.OrderBy("environment.ordinal")
     List<SettingsGroup> groups = []
 
 

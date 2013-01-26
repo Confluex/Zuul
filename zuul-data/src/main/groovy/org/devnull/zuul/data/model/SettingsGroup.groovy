@@ -55,7 +55,8 @@ class SettingsGroup implements Serializable {
     Settings settings
 
     /**
-     * Name is a now a shortcut to the setting object's name
+     * Name is a now a shortcut to the setting object's name.
+     * TODO refactor this away before 1.5 release
      */
     String getName() {
         return settings?.name
@@ -63,6 +64,7 @@ class SettingsGroup implements Serializable {
 
     /**
      * Name is a now a shortcut to the setting object's name
+     * TODO refactor this away before 1.5 release
      */
     void setName(String name) {
         if (!settings) {

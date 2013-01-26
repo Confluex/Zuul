@@ -1,6 +1,7 @@
 package org.devnull.zuul.web
 
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
@@ -64,11 +65,13 @@ class SettingsServicesControllerTest {
 
     @Test
     void shouldRenderSettingsGroupsAsJson() {
-        def expected = [new SettingsGroup(name: "group-a", environment: new Environment(name:"dev"))]
-        when(controller.zuulService.listSettingsGroups()).thenReturn(expected)
+        def settings = [
+                new Settings(name: 'group-a').addToGroups(new SettingsGroup(environment: new Environment(name: "dev")))
+        ]
+        when(controller.zuulService.listSettings()).thenReturn(settings)
         def results = controller.listJson(new MockHttpServletRequest())
-        verify(controller.zuulService).listSettingsGroups()
-        assert results == [[name:'group-a', environment:'dev', resourceUri:'/settings/dev/group-a.json']]
+        verify(controller.zuulService).listSettings()
+        assert results == [[name: 'group-a', environment: 'dev', resourceUri: '/settings/dev/group-a.json']]
     }
 
     @Test
@@ -104,7 +107,7 @@ class SettingsServicesControllerTest {
     @Test
     void shouldUpdateSettingsEntry() {
         def formEntry = new SettingsEntry(key: "a", value: "b")
-        def dbEntry = new SettingsEntry(id:100, key: "not a", value: "not b", group: new SettingsGroup(id: 1))
+        def dbEntry = new SettingsEntry(id: 100, key: "not a", value: "not b", group: new SettingsGroup(id: 1))
 
         when(controller.zuulService.findSettingsEntry(100)).thenReturn(dbEntry)
         when(controller.zuulService.save(dbEntry)).thenReturn(dbEntry)
@@ -121,7 +124,7 @@ class SettingsServicesControllerTest {
     @Test
     void shouldUpdateEncryptFlagWhenSavingSettingsEntry() {
         def formEntry = new SettingsEntry(key: "a", value: "b", encrypted: true)
-        def dbEntry = new SettingsEntry(id:100, key: "not a", value: "not b", group: new SettingsGroup(id: 1))
+        def dbEntry = new SettingsEntry(id: 100, key: "not a", value: "not b", group: new SettingsGroup(id: 1))
         when(controller.zuulService.findSettingsEntry(100)).thenReturn(dbEntry)
         when(controller.zuulService.save(dbEntry)).thenReturn(dbEntry)
         def resultEntry = controller.updateEntryJson(100, formEntry)
@@ -148,7 +151,7 @@ class SettingsServicesControllerTest {
         def response = new MockHttpServletResponse()
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "qa")).thenReturn(expected)
         def result = controller.showByNameAndEnvJson("test-config", "qa", response)
-        assert result ==  [a:'1', b:'ENC(2)']
+        assert result == [a: '1', b: 'ENC(2)']
         assert response.status == MockHttpServletResponse.SC_OK
     }
 
@@ -158,7 +161,7 @@ class SettingsServicesControllerTest {
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("test-config", "qa")).thenReturn(null)
         def result = controller.showByNameAndEnvJson("test-config", "qa", response)
         assert response.status == MockHttpServletResponse.SC_NOT_FOUND
-        assert result ==  null
+        assert result == null
     }
 
 }

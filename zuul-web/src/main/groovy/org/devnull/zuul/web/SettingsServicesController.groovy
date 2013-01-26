@@ -63,14 +63,18 @@ class SettingsServicesController {
     @ResponseBody
     List<Map> listJson(HttpServletRequest request) {
         log.debug("Rending JSON for settings groups")
-        def groups = zuulService.listSettingsGroups()
-        return groups.collect {
-            [
-                    name: it.name,
-                    environment: it.environment.name,
-                    resourceUri: "${request.contextPath}/settings/${it.environment.name}/${it.name}.json".toString()
-            ]
+        def results = []
+        zuulService.listSettings().each { settings ->
+            settings.groups.each {
+                results << [
+                        name: it.name,
+                        environment: it.environment.name,
+                        resourceUri: "${request.contextPath}/settings/${it.environment.name}/${it.name}.json".toString()
+                ]
+            }
         }
+
+        return results
     }
 
     /**
