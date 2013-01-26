@@ -9,6 +9,7 @@
         <loadData tableName="security_user" file="/data/test/SecurityUser.csv"/>
         <loadData tableName="security_user_role" file="/data/test/SecurityUserRole.csv"/>
         <loadData tableName="environment" file="/data/test/Environment.csv"/>
+        <loadData tableName="settings" file="/data/test/Settings.csv"/>
         <loadData tableName="settings_group" file="/data/test/SettingsGroup.csv"/>
         <loadData tableName="settings_entry" file="/data/test/SettingsEntry.csv"/>
     </changeSet>
