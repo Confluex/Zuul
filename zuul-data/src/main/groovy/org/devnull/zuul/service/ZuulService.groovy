@@ -22,10 +22,23 @@ public interface ZuulService {
 
     /* Settings --------------------------- */
 
+    /**
+     * Will look for a setttings record with the given name. If not found,
+     * it will stub it out with a default record and save it. Implementations
+     * should consider concurrency issues.
+     */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     Settings findOrCreateSettingsByName(String name)
 
+    /**
+     * Return all available settings. Implementers should sort by name.
+     */
     List<Settings> listSettings()
+
+    /**
+     * Lookup a settings record by name. Will return null if it does not exist.
+     */
+    Settings getSettingsByName(String name)
 
     /* Settings Groups -------------------- */
 

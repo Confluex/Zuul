@@ -40,33 +40,22 @@ public class SettingsControllerTest {
     }
 
     @Test
-    void showShouldGroupResultsByEnvironment() {
+    void shouldShowSettingsWithCorrectModel() {
         def environments = [
                 new Environment(name: "dev"),
                 new Environment(name: "qa"),
                 new Environment(name: "prod")
         ]
-        def groups = [
-                new SettingsGroup(name: "group-1", environment: environments[0]),
-                new SettingsGroup(name: "group-1", environment: environments[1]),
-                new SettingsGroup(name: "group-1", environment: environments[2])
-        ]
+        def settings = new Settings( name: "group-1")
 
         when(controller.zuulService.listEnvironments()).thenReturn(environments)
-        when(controller.zuulService.findSettingsGroupByNameAndEnvironment('group-1', 'dev')).thenReturn(groups[0])
-        when(controller.zuulService.findSettingsGroupByNameAndEnvironment('group-1', 'qa')).thenReturn(groups[1])
-        when(controller.zuulService.findSettingsGroupByNameAndEnvironment('group-1', 'prod')).thenReturn(groups[2])
+        when(controller.zuulService.getSettingsByName(settings.name)).thenReturn(settings)
 
         def mv = controller.show("group-1")
 
         assert mv.viewName == "/settings/show"
         assert mv.model.environments.is(environments)
-        assert mv.model.groupsByEnv instanceof Map
-        environments.each { env ->
-            //noinspection GroovyAssignabilityCheck
-            assert mv.model.groupsByEnv[env] == groups.find { it.environment == env }
-        }
-        assert mv.model.groupName == "group-1"
+        assert mv.model.settings.is(settings)
     }
 
     @Test
@@ -93,7 +82,7 @@ public class SettingsControllerTest {
     void shouldCreateNewEntriesForGroup() {
         def environmentName = 'testEnvironment'
         def groupName = 'testGroup'
-        def group = new SettingsGroup(id: 1, name: groupName)
+        def group = new SettingsGroup(id: 1, settings: new Settings(name: groupName))
         def entry = new SettingsEntry(key: 'a', value: 'b', group: group)
 
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment(groupName, environmentName)).thenReturn(group)
@@ -115,7 +104,7 @@ public class SettingsControllerTest {
 
     @Test
     void createFromScratchShouldInvokeServiceAndRedirectToCorrectView() {
-        def group = new SettingsGroup(name: "foo", environment: new Environment(name: "dev"))
+        def group = new SettingsGroup(settings: new Settings(name: "foo"), environment: new Environment(name: "dev"))
         when(controller.zuulService.createEmptySettingsGroup("foo", "dev")).thenReturn(group)
         def view = controller.createFromScratch("foo", "dev")
         verify(controller.zuulService).createEmptySettingsGroup("foo", "dev")
@@ -140,7 +129,7 @@ public class SettingsControllerTest {
 
     @Test
     void createFromCopySubmitShouldFindCorrectEntryToCopyAndSave() {
-        def groupToCopy = new SettingsGroup(id: 1, name: "some-config", environment: new Environment(name: "qa"))
+        def groupToCopy = new SettingsGroup(id: 1, settings: new Settings(name: "some-config"), environment: new Environment(name: "qa"))
         when(controller.zuulService.findSettingsGroupByNameAndEnvironment("some-config", "qa")).thenReturn(groupToCopy)
         def view = controller.createFromCopySubmit("foo", "dev", "/qa/some-config.properties")
         verify(controller.zuulService).findSettingsGroupByNameAndEnvironment("some-config", "qa")
@@ -198,9 +187,9 @@ public class SettingsControllerTest {
     }
 
     @Test
-    void shouldGroupSearchResultsByGroup() {
+    void shouldGroupSearchResultsByName() {
         def groupA = new SettingsGroup(settings: new Settings(name: "groupA"))
-        def groupB = new SettingsGroup(settings: new Settings(name: "groupA"))
+        def groupB = new SettingsGroup(settings: new Settings(name: "groupB"))
         def entries = [
                 new SettingsEntry(key: "abc", value: '123', group: groupA),
                 new SettingsEntry(key: "abc", value: '456', group: groupB),
@@ -209,8 +198,8 @@ public class SettingsControllerTest {
         when(controller.zuulService.search(eq("abc"), Matchers.any(Pagination))).thenReturn(entries)
         def mv = controller.search("abc", new MockHttpServletRequest())
         assert mv.model.results == [
-                (groupA): [entries[0], entries[2]],
-                (groupB): [entries[1]]
+                (groupA.name): [entries[0], entries[2]],
+                (groupB.name): [entries[1]]
         ]
         assert mv.viewName == "/settings/search"
     }

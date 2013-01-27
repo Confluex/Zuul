@@ -82,6 +82,20 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldGetSettingsRecordByName() {
+        def settings = new Settings(name: "test")
+        when(service.settingsDao.findByName(settings.name)).thenReturn(settings)
+        def results = service.getSettingsByName("test")
+        assert results == settings
+    }
+
+    @Test
+    void shouldReturnNullWhenGettingSettingsByNameAndItDoesNotExist() {
+        def results = service.getSettingsByName("test")
+        assert results == null
+    }
+
+    @Test
     void shouldCreateNewSettingsIfTheyDoNotExist() {
         def settings = new Settings(name: "test-settings")
         when(service.settingsDao.findByName(settings.name)).thenReturn(null)

@@ -36,7 +36,7 @@ class SettingsServicesControllerTest {
     @Test
     void renderPropertiesByNameAndEnvRenderPropertiesFile() {
         def mockResponse = new MockHttpServletResponse()
-        def group = new SettingsGroup(name: "my-application", environment: new Environment(name: "dev"))
+        def group = new SettingsGroup(settings: new Settings(name: "my-application"), environment: new Environment(name: "dev"))
         group.entries.add(new SettingsEntry(key: "jdbc.driver", value: "com.awesome.db.Driver"))
         group.entries.add(new SettingsEntry(key: "jdbc.username", value: "maxPower"))
 

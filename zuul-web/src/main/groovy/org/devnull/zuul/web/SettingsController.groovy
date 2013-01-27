@@ -114,11 +114,8 @@ class SettingsController {
     @RequestMapping(value = "/settings/{name}", method = RequestMethod.GET)
     ModelAndView show(@PathVariable("name") String name) {
         def environments = zuulService.listEnvironments()
-        def groupsByEnv = [:]
-        environments.each { env ->
-            groupsByEnv[env] = zuulService.findSettingsGroupByNameAndEnvironment(name, env.name)
-        }
-        def model = [groupsByEnv: groupsByEnv, groupName: name, environments: environments]
+        def settings = zuulService.getSettingsByName(name)
+        def model = [settings: settings, environments: environments]
         return new ModelAndView("/settings/show", model)
     }
 
@@ -154,7 +151,7 @@ class SettingsController {
     @RequestMapping(value = "/settings/search")
     ModelAndView search(@RequestParam("q") String query, HttpServletRequest request) {
         def pagination = new HttpRequestPagination<SettingsEntry>(request)
-        def results = zuulService.search(query, pagination)?.groupBy { it.group }
+        def results = zuulService.search(query, pagination)?.groupBy { it.group.settings.name }
         return new ModelAndView("/settings/search", [query: query, results: results])
     }
 }

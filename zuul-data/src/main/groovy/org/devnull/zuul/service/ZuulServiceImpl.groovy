@@ -183,6 +183,10 @@ class ZuulServiceImpl implements ZuulService {
         }
     }
 
+    Settings getSettingsByName(String name) {
+        return settingsDao.findByName(name)
+    }
+
     List<Settings> listSettings() {
         return settingsDao.findAll(new Sort("name")) as List<Settings>
     }
