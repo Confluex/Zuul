@@ -199,8 +199,8 @@ public class SettingsControllerTest {
 
     @Test
     void shouldGroupSearchResultsByGroup() {
-        def groupA = new SettingsGroup(name: "groupA")
-        def groupB = new SettingsGroup(name: "groupB")
+        def groupA = new SettingsGroup(settings: new Settings(name: "groupA"))
+        def groupB = new SettingsGroup(settings: new Settings(name: "groupA"))
         def entries = [
                 new SettingsEntry(key: "abc", value: '123', group: groupA),
                 new SettingsEntry(key: "abc", value: '456', group: groupB),

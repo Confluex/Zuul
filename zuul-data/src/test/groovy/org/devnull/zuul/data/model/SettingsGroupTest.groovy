@@ -11,7 +11,7 @@ public class SettingsGroupTest {
     void createGroup() {
         group = new SettingsGroup(
                 id: 1,
-                name: "testGroup",
+                settings: new Settings(name: "testGroup"),
                 environment: new Environment(name: "testEnv"),
                 key: new EncryptionKey(name: "testKey")
         )
@@ -22,18 +22,12 @@ public class SettingsGroupTest {
 
 
     @Test
-    void shouldCreateSettingsWhenSettingGroupNameIfItDoesNotExist() {
-        def group = new SettingsGroup()
-        assert !group.settings
+    void shouldSetParentSettingsName() {
+        def group = new SettingsGroup(settings: new Settings(name: "oldGroup"))
+        assert group.name == "oldGroup"
         group.name = "newGroup"
         assert group.settings.name == "newGroup"
         assert group.name == "newGroup"
-        assert group.settings.groups.contains(group)
-    }
-
-    @Test
-    void shouldReturnNullIfAskingForNameAndSettingsObjectDoesNotExist() {
-        assert new SettingsGroup().name == null
     }
 
     @Test

@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
-import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
@@ -30,7 +29,6 @@ class Settings {
 
     @Pattern(regexp = "^[a-zA-Z0-9_\\- ]+", message = "Folders can only contain: numbers, letters, spaces, underscores, dashes")
     @Size(min = 1, max = 32, message = "Folder must be 1-32 characters long")
-    @NotNull
     String folder
 
     @OneToMany(mappedBy = "settings", cascade = [CascadeType.ALL])

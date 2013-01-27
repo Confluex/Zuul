@@ -151,7 +151,7 @@ public class ZuulServiceImplTest {
 
         SimpleMailMessage sentMsg = null
         service.mailSender = [
-                send: { SimpleMailMessage msg ->  sentMsg = msg }
+                send: { SimpleMailMessage msg -> sentMsg = msg }
         ] as MailSender
 
         when(service.securityService.currentUser).thenReturn(requester)
@@ -240,7 +240,7 @@ public class ZuulServiceImplTest {
     void shouldThrowExceptionWhenDeletingPgpKeysAssignedToSettingsWithEncryptedValues() {
         def key = new EncryptionKey(name: "test", algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP)
         def entries = [new SettingsEntry(encrypted: false), new SettingsEntry(encrypted: true)]
-        def group = new SettingsGroup(key:key, entries: entries)
+        def group = new SettingsGroup(key: key, entries: entries)
         when(service.encryptionKeyDao.findOne("test")).thenReturn(key)
         when(service.settingsGroupDao.findByKey(key)).thenReturn([group])
         service.deleteKey("test")
@@ -250,7 +250,7 @@ public class ZuulServiceImplTest {
     void shouldDeletePgpKeysAssignedSettingsWithNoEncryptedValues() {
         def key = new EncryptionKey(name: "test", algorithm: ZuulDataConstants.KEY_ALGORITHM_PGP)
         def entries = [new SettingsEntry(encrypted: false), new SettingsEntry(encrypted: false)]
-        def group = new SettingsGroup(key:key, entries: entries)
+        def group = new SettingsGroup(key: key, entries: entries)
         when(service.encryptionKeyDao.findOne("test")).thenReturn(key)
         when(service.settingsGroupDao.findByKey(key)).thenReturn([group])
         service.deleteKey("test")
@@ -364,18 +364,20 @@ public class ZuulServiceImplTest {
                 new EncryptionKey(name: "c", defaultKey: true),
                 new EncryptionKey(name: "d", defaultKey: false)
         ]
+        def mockSettings = new Settings(name: "testGroup")
         def mockEnvironment = new Environment(name: "testEnv")
-        def mockGroup = new SettingsGroup(id: 1, name: "testGroup", environment: mockEnvironment, key: mockKeys[2])
+        def mockGroup = new SettingsGroup(id: 1, environment: mockEnvironment, key: mockKeys[2])
 
 
         when(service.environmentDao.findOne(mockEnvironment.name)).thenReturn(mockEnvironment)
         when(service.encryptionKeyDao.findAll()).thenReturn(mockKeys)
+        when(service.settingsDao.findByName("testGroup")).thenReturn(mockSettings)
         when(service.settingsGroupDao.save(Matchers.any(SettingsGroup))).thenReturn(mockGroup)
         def result = service.createEmptySettingsGroup("testGroup", "testEnv")
 
         def groupArg = ArgumentCaptor.forClass(SettingsGroup.class)
         verify(service.settingsGroupDao).save(groupArg.capture())
-        assert groupArg.value.name == mockGroup.name
+        assert groupArg.value.settings.name == mockSettings.name
         assert groupArg.value.environment == mockGroup.environment
         assert groupArg.value.key == mockGroup.key
         assert !groupArg.value.entries
@@ -385,12 +387,14 @@ public class ZuulServiceImplTest {
     @Test
     void shouldCreateSettingsGroupFromPropertiesFile() {
         def environment = new Environment(name: "qa")
-        def group = new SettingsGroup(environment: environment, name: "test-data-config")
+        def settings = new Settings(name: "test-data-config").addToGroups(new SettingsGroup(environment: environment))
+        def group = settings.groups.first()
         def stream = new ClassPathResource("/test-data-config-qa.properties")
         def user = new User(userName: "userA")
 
+        when(service.settingsDao.findByName(settings.name)).thenReturn(settings)
         when(service.settingsGroupDao.save(Matchers.any(SettingsGroup))).thenReturn(group)
-        when(service.environmentDao.findOne("qa")).thenReturn(environment)
+        when(service.environmentDao.findOne(environment.name)).thenReturn(environment)
         when(service.securityService.currentUser).thenReturn(user)
         def result = service.createSettingsGroupFromPropertiesFile("test-data-config", "qa", stream.inputStream)
 
@@ -399,7 +403,7 @@ public class ZuulServiceImplTest {
 
         assert arg.value == result
 
-        assert result.name == "test-data-config"
+        assert result.settings == settings
         assert result.environment == environment
         assert result.entries.size() == 2
 
@@ -414,29 +418,29 @@ public class ZuulServiceImplTest {
 
     @Test
     void shouldCopySettingsGroupFromExistingWithCorrectValues() {
-        def groupToCopy = new SettingsGroup(
-                id: 1, name: "test-config",
-                environment: new Environment(name: "prod"),
+        def group = new SettingsGroup(
+                id: 1, environment: new Environment(name: "prod"),
                 key: new EncryptionKey(name: "testKey")
         )
-        groupToCopy.addToEntries(new SettingsEntry(key: "username", value: "jdoe"))
-        groupToCopy.addToEntries(new SettingsEntry(key: "password", value: "3s+3_23s.zze3if", encrypted: true))
-        def environment = new Environment(name: "dev")
+        group.addToEntries(new SettingsEntry(key: "username", value: "jdoe"))
+        group.addToEntries(new SettingsEntry(key: "password", value: "3s+3_23s.zze3if", encrypted: true))
+        def settings = new Settings(name: "some-config").addToGroups(group)
+        def newEnvironment = new Environment(name: "dev")
 
-
-        when(service.environmentDao.findOne("dev")).thenReturn(environment)
-        service.createSettingsGroupFromCopy("some-config", "dev", groupToCopy)
+        when(service.settingsDao.findByName(settings.name)).thenReturn(settings)
+        when(service.environmentDao.findOne(newEnvironment.name)).thenReturn(newEnvironment)
+        service.createSettingsGroupFromCopy("some-config", "dev", group)
 
         def copy = ArgumentCaptor.forClass(SettingsGroup)
         verify(service.settingsGroupDao).save(copy.capture())
 
-        assert copy.value.name == "some-config"
-        assert copy.value.environment == environment
-        assert copy.value.key == groupToCopy.key
+        assert copy.value.settings.name == "some-config"
+        assert copy.value.environment == newEnvironment
+        assert copy.value.key == group.key
 
         assert copy.value.entries.size() == 2
-        assert !copy.value.entries[0].is(groupToCopy.entries[0])
-        assert !copy.value.entries[1].is(groupToCopy.entries[1])
+        assert !copy.value.entries[0].is(group.entries[0])
+        assert !copy.value.entries[1].is(group.entries[1])
 
         assert copy.value.entries[0].key == "username"
         assert copy.value.entries[0].value == "jdoe"
@@ -453,7 +457,7 @@ public class ZuulServiceImplTest {
     void findSettingsGroupByNameShouldReturnResultsFromDao() {
         def settings = new Settings(
                 id: 100,
-                name:"some-config",
+                name: "some-config",
                 groups: [new SettingsGroup(id: 1), new SettingsGroup(id: 2)]
         )
         when(service.settingsDao.findByName("some-config")).thenReturn(settings)
@@ -568,7 +572,7 @@ public class ZuulServiceImplTest {
 
     @Test
     void shouldDeleteSettingsEntry() {
-        def entry = new SettingsEntry(id:1)
+        def entry = new SettingsEntry(id: 1)
         service.deleteSettingsEntry(entry)
         verify(service.settingsEntryDao).delete(1)
     }
@@ -678,7 +682,7 @@ public class ZuulServiceImplTest {
     @Test
     void shouldToggleEnvironmentRestrictionFlagToFalseIfAlreadyTrue() {
         def environment = new Environment(name: "testEnv", restricted: true)
-        when (service.environmentDao.findOne("testEnv")).thenReturn(environment)
+        when(service.environmentDao.findOne("testEnv")).thenReturn(environment)
         def result = service.toggleEnvironmentRestriction("testEnv")
         def arg = ArgumentCaptor.forClass(Environment)
         verify(service.environmentDao).save(arg.capture())
@@ -689,7 +693,7 @@ public class ZuulServiceImplTest {
     @Test
     void shouldToggleEnvironmentRestrictionFlagToTrueIfAlreadyFalse() {
         def environment = new Environment(name: "testEnv", restricted: false)
-        when (service.environmentDao.findOne("testEnv")).thenReturn(environment)
+        when(service.environmentDao.findOne("testEnv")).thenReturn(environment)
         def result = service.toggleEnvironmentRestriction("testEnv")
         def arg = ArgumentCaptor.forClass(Environment)
         verify(service.environmentDao).save(arg.capture())

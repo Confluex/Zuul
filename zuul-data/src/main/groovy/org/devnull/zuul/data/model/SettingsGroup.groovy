@@ -59,7 +59,7 @@ class SettingsGroup implements Serializable {
      * TODO refactor this away before 1.5 release
      */
     String getName() {
-        return settings?.name
+        return settings.name
     }
 
     /**
@@ -67,16 +67,13 @@ class SettingsGroup implements Serializable {
      * TODO refactor this away before 1.5 release
      */
     void setName(String name) {
-        if (!settings) {
-            settings = new Settings()
-            settings.addToGroups(this)
-        }
         settings.name = name
     }
 
-    void addToEntries(SettingsEntry entry) {
+    SettingsGroup addToEntries(SettingsEntry entry) {
         entry.group = this
         entries << entry
+        return this
     }
 
     def asType(Class type) {

@@ -8,6 +8,7 @@ import org.devnull.zuul.data.dao.SettingsAuditDao
 import org.devnull.zuul.data.dao.SettingsEntryDao
 import org.devnull.zuul.data.dao.SettingsGroupDao
 import org.devnull.zuul.data.model.Environment
+import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsAudit
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
@@ -203,7 +204,7 @@ class AuditServiceImplTest {
         def group = new SettingsGroup(
                 id: 22,
                 environment: new Environment(name: "dev"),
-                name: "test group"
+                settings:  new Settings(name: "test group")
         )
         group.addToEntries(new SettingsEntry(key: "property.a", value: "1"))
         group.addToEntries(new SettingsEntry(key: "property.b", value: "mumbojumbo", encrypted: true))

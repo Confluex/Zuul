@@ -20,10 +20,14 @@ public interface ZuulService {
     @PreAuthorize("hasRole('ROLE_USER')")
     void notifyPermissionsRequest(String roleName)
 
-    /* Settings Groups -------------------- */
+    /* Settings --------------------------- */
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     Settings findOrCreateSettingsByName(String name)
+
+    List<Settings> listSettings()
+
+    /* Settings Groups -------------------- */
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     void changeKey(SettingsGroup group, EncryptionKey key)
@@ -43,8 +47,6 @@ public interface ZuulService {
     List<SettingsGroup> findSettingsGroupByName(String name)
 
     SettingsGroup findSettingsGroupByNameAndEnvironment(String name, String env)
-
-    List<Settings> listSettings()
 
     @PreAuthorize("hasPermission(#group.environment, 'admin')")
     SettingsGroup save(SettingsGroup group)

@@ -79,11 +79,13 @@ class ZuulServiceImpl implements ZuulService {
     Lock settingsLock = new ReentrantLock()
 
     @Transactional(readOnly = false)
-    SettingsGroup createEmptySettingsGroup(String groupName, String environmentName) {
-        log.info("Creating empty group for name: {}, environment: {}", groupName, environmentName)
+    SettingsGroup createEmptySettingsGroup(String name, String environmentName) {
+        log.info("Creating empty group for name: {}, environment: {}", name, environmentName)
         def env = environmentDao.findOne(environmentName)
         def key = findDefaultKey()
-        def group = new SettingsGroup(name: groupName, environment: env, key: key)
+        def settings = findOrCreateSettingsByName(name)
+        def group = new SettingsGroup(environment: env, key: key)
+        settings.addToGroups(group)
         return save(group)
     }
 
@@ -104,7 +106,8 @@ class ZuulServiceImpl implements ZuulService {
     SettingsGroup createSettingsGroupFromCopy(String name, String environmentName, SettingsGroup copy) {
         log.info("Creating copy for name:{}, env:{} from: {}", name, environmentName, copy)
         def env = environmentDao.findOne(environmentName)
-        def group = new SettingsGroup(name: name, environment: env, key: copy.key)
+        def group = new SettingsGroup(environment: env, key: copy.key)
+        findOrCreateSettingsByName(name).addToGroups(group)
         copy.entries.each {
             def entry = new SettingsEntry(key: it.key, value: it.value, encrypted: it.encrypted)
             log.debug("appending entry: {}", entry)
