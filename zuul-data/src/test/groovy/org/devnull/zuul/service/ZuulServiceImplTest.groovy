@@ -37,6 +37,8 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
 
+import java.util.concurrent.locks.Lock
+
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
@@ -59,6 +61,7 @@ public class ZuulServiceImplTest {
         def templateMessage = new SimpleMailMessage()
         templateMessage.from = "test@devnull.org"
         service = new ZuulServiceImpl(
+                settingsLock: mock(Lock),
                 settingsDao: mock(SettingsDao),
                 settingsGroupDao: mock(SettingsGroupDao),
                 settingsEntryDao: mock(SettingsEntryDao),
@@ -76,6 +79,42 @@ public class ZuulServiceImplTest {
     @After
     void resetMetaClass() {
         GroovySystem.metaClassRegistry.setMetaClass(ZuulServiceImpl, serviceMetaClass)
+    }
+
+    @Test
+    void shouldCreateNewSettingsIfTheyDoNotExist() {
+        def settings = new Settings(name: "test-settings")
+        when(service.settingsDao.findByName(settings.name)).thenReturn(null)
+        when(service.settingsDao.save(eq(settings))).thenReturn(settings)
+        def results = service.findOrCreateSettingsByName(settings.name)
+        verify(service.settingsDao).save(eq(settings))
+        verify(service.settingsLock).lock()
+        verify(service.settingsLock).unlock()
+        assert results == settings
+    }
+
+    @Test
+    void shouldUseExistingSettingsIfItExists() {
+        def settings = new Settings(name: "test-settings")
+        when(service.settingsDao.findByName(settings.name)).thenReturn(settings)
+        def results = service.findOrCreateSettingsByName(settings.name)
+        verify(service.settingsDao, never()).save(any(Settings))
+        verify(service.settingsLock).lock()
+        verify(service.settingsLock).unlock()
+        assert results == settings
+    }
+
+    @Test
+    void shouldReleaseLockIfErrorOccursWhileFindingOrCreatingSettings() {
+        def settings = new Settings(name: "test-settings")
+        when(service.settingsDao.findByName(settings.name)).thenThrow(new RuntimeException("test"))
+        def thrown = assertException(RuntimeException) {
+            service.findOrCreateSettingsByName(settings.name)
+        }
+        assert thrown.message == "test"
+        verify(service.settingsDao, never()).save(any(Settings))
+        verify(service.settingsLock).lock()
+        verify(service.settingsLock).unlock()
     }
 
     @Test(expected = ValidationException)
@@ -656,5 +695,18 @@ public class ZuulServiceImplTest {
         verify(service.environmentDao).save(arg.capture())
         assert arg.value.restricted
         assert result == arg.value.restricted
+    }
+
+    protected def assertException = { Class expected, closure ->
+        Throwable thrown = null
+        try {
+            closure()
+        }
+        catch (Throwable e) {
+            thrown = e
+        }
+        assert thrown
+        assert thrown.class == expected
+        return thrown
     }
 }

@@ -33,6 +33,9 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.Validator
 
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
+
 @Service("zuulService")
 @Transactional(readOnly = true)
 class ZuulServiceImpl implements ZuulService {
@@ -72,6 +75,8 @@ class ZuulServiceImpl implements ZuulService {
 
     @Autowired
     Validator validator
+
+    Lock settingsLock = new ReentrantLock()
 
     @Transactional(readOnly = false)
     SettingsGroup createEmptySettingsGroup(String groupName, String environmentName) {
@@ -157,6 +162,22 @@ class ZuulServiceImpl implements ZuulService {
             environments.find {it.name == name }?.ordinal = i
         }
         return environmentDao.save(environments)
+    }
+
+    @Transactional(readOnly = false)
+    Settings findOrCreateSettingsByName(String name) {
+        settingsLock.lock()
+        try {
+            def settings = settingsDao.findByName(name)
+            if (!settings) {
+                settings = new Settings(name: name)
+                settings = settingsDao.save(settings)
+            }
+            return settings
+        }
+        finally {
+            settingsLock.unlock()
+        }
     }
 
     List<Settings> listSettings() {

@@ -23,6 +23,9 @@ public interface ZuulService {
     /* Settings Groups -------------------- */
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    Settings findOrCreateSettingsByName(String name)
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void changeKey(SettingsGroup group, EncryptionKey key)
 
     @PreAuthorize("hasPermission(#environmentName, 'org.devnull.zuul.data.model.Environment', 'admin')")
