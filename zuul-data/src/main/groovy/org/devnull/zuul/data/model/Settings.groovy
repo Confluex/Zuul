@@ -40,4 +40,16 @@ class Settings {
         groups << group
         return this
     }
+
+    def getAt(key) {
+        switch (key?.class) {
+            case Environment:
+                return groups?.find { it.environment == key}
+                break
+            default:
+                return null
+        }
+    }
+
+
 }

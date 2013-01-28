@@ -1,6 +1,6 @@
 <%--@elvariable id="name" type="java.lang.String"--%>
 <%--@elvariable id="environments" type="java.util.List<org.devnull.zuul.data.model.Environment>"--%>
-<%--@elvariable id="groupsByEnv" type="java.util.Map<String, org.devnull.zuul.data.model.SettingsGroup>"--%>
+<%--@elvariable id="settings" type="org.devnull.zuul.data.model.Settings"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -39,7 +39,7 @@
             <div class="tab-content">
                 <c:forEach var="env" items="${environments}" varStatus="i">
                     <c:set var="activeFlag" value="${i.index == 0 ? 'active' : ''}"/>
-                    <c:set var="group" value="${groupsByEnv[env]}" scope="request"/>
+                    <c:set var="group" value="${settings.getAt(env)}" scope="request"/>
                     <c:set var="environment" value="${env}" scope="request"/>
                     <div id="${fn:escapeXml(env.name)}" class="tab-pane ${activeFlag}" style="min-height: 300px;">
                         <c:choose>

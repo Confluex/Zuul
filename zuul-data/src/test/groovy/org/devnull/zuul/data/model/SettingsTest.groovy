@@ -20,4 +20,19 @@ class SettingsTest {
             assert settings.groups.contains(it)
         }
     }
+
+    @Test
+    void shouldFindGroupByEnvironment() {
+        def dev = new Environment(name: "dev")
+        def qa = new Environment(name: "qa")
+        def prod = new Environment(name: "prod")
+        def groups = [ new SettingsGroup(id: 1, environment: prod), new SettingsGroup(id: 2, environment: dev)]
+        def settings = new Settings(groups:groups)
+
+        assert settings[qa] == null
+        assert settings[dev] == groups[1]
+        assert settings[prod] == groups[0]
+        assert settings[null] == null
+        assert settings[123] == null
+    }
 }
