@@ -8,22 +8,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <c:set var="revision" scope="request">${zfn:applicationVersion(pageContext.servletContext)}</c:set>
     <title><decorator:title/> | Zuul</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="contextPath" content="${pageContext.request.contextPath}">
+    <meta name="revision" content="${revision}"/>
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/assets/images/favicon.ico">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/ext/bootstrap-2.2.1/css/bootstrap.min.css"
           type="text/css">
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/ext/bootstrap-2.2.1/css/bootstrap-responsive.min.css"
           type="text/css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css" type="text/css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/main.css?v=${revision}" type="text/css">
     <script src="${pageContext.request.contextPath}/assets/ext/jquery-1.8.2.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/ext/bootstrap-2.2.1/js/bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/js/main.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/js/settings-menu.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/main.js?v=${revision}"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/settings-menu.js?v=${revision}"></script>
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -164,13 +166,13 @@
             <li><a href="https://github.com/mcantrell/Zuul/wiki">View the Documentation</a></li>
             <li><a href="https://github.com/mcantrell/Zuul/issues">Request Support &amp; New Features</a></li>
         </ul>
-        <span class="label label-warning">Version: ${zfn:applicationVersion(pageContext.servletContext)}</span>
+        <span class="label label-warning">Version: ${revision}</span>
     </footer>
 </div>
 <security:authorize access="hasRole('ROLE_USER')">
     <script>
         $(function () {
-            $("#settingsMenu .dropdown-menu").settingsMenu();
+            $("#settingsMenu").find(".dropdown-menu").settingsMenu();
         });
     </script>
 </security:authorize>
