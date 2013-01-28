@@ -13,6 +13,11 @@
 <head>
     <title>Audit</title>
     <meta name="tab" content="admin"/>
+    <style>
+        td.ellipsis {
+            max-width: 250px;
+        }
+    </style>
 </head>
 <body>
 
@@ -44,22 +49,22 @@
                 </c:url>
                 <a href="${filterUrl}">${fn:escapeXml(row.groupEnvironment)}</a>
             </display:column>
-            <display:column sortProperty="groupName" title="Group" sortable="true">
+            <display:column sortProperty="groupName" title="Group" sortable="true" class="ellipsis">
                 <c:url var="filterUrl" value="/audit/filter/add">
                     <c:param name="field" value="groupName"/>
                     <c:param name="value" value="${row.groupName}"/>
                 </c:url>
                 <a href="${filterUrl}">${fn:escapeXml(row.groupName)}</a>
             </display:column>
-            <display:column sortProperty="settingsKey" title="Key" sortable="true">
+            <display:column sortProperty="settingsKey" title="Key" sortable="true" class="ellipsis">
                 <c:url var="filterUrl" value="/audit/filter/add">
                     <c:param name="field" value="settingsKey"/>
                     <c:param name="value" value="${row.settingsKey}"/>
                 </c:url>
                 <a href="${filterUrl}">${fn:escapeXml(row.settingsKey)}</a>
             </display:column>
-            <display:column property="settingsValue" title="Value" sortable="true" escapeXml="true"/>
-            <display:column sortProperty="modifiedBy" title="User" sortable="true">
+            <display:column property="settingsValue" title="Value" sortable="true" escapeXml="true" class="ellipsis"/>
+            <display:column sortProperty="modifiedBy" title="User" sortable="true" class="ellipsis">
                 <c:set var="user" value="${users[row.modifiedBy]}"/>
                 <c:url var="filterUrl" value="/audit/filter/add">
                     <c:param name="field" value="modifiedBy"/>
