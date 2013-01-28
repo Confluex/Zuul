@@ -115,7 +115,11 @@ class SettingsController {
     ModelAndView show(@PathVariable("name") String name) {
         def environments = zuulService.listEnvironments()
         def settings = zuulService.getSettingsByName(name)
-        def model = [settings: settings, environments: environments]
+        def groupsByEnv = [:]
+        environments.each { env ->
+            groupsByEnv[env] = settings?.groups?.find { it.environment == env }
+        }
+        def model = [settings: settings, environments: environments, groupsByEnv:groupsByEnv]
         return new ModelAndView("/settings/show", model)
     }
 

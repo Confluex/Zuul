@@ -1,5 +1,5 @@
 <%--@elvariable id="environment" type="org.devnull.zuul.data.model.Environment"--%>
-<%--@elvariable id="groupName" type="java.lang.String"--%>
+<%--@elvariable id="name" type="java.lang.String"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
@@ -16,7 +16,7 @@
 
         <div class="btn-group">
             <c:url var="scratchUrl" value="/settings/create/scratch">
-                <c:param name="name" value="${groupName}"/>
+                <c:param name="name" value="${name}"/>
                 <c:param name="environment" value="${environment.name}"/>
             </c:url>
             <a id="scratchLink" href="${scratchUrl}" class="btn btn-large btn-primary">
@@ -24,7 +24,7 @@
                 From Scratch
             </a>
             <c:url var="uploadUrl" value="/settings/create/upload">
-                <c:param name="name" value="${groupName}"/>
+                <c:param name="name" value="${name}"/>
                 <c:param name="environment" value="${environment.name}"/>
             </c:url>
             <a id="uploadLink" href="${uploadUrl}" class="btn btn-large btn-primary">
@@ -32,7 +32,7 @@
                 Upload File
             </a>
             <c:url var="copyUrl" value="/settings/create/copy">
-                <c:param name="name" value="${groupName}"/>
+                <c:param name="name" value="${name}"/>
                 <c:param name="environment" value="${environment.name}"/>
             </c:url>
             <a href="${copyUrl}" class="btn btn-large btn-primary">

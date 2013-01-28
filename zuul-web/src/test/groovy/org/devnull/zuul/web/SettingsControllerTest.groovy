@@ -39,14 +39,18 @@ public class SettingsControllerTest {
         assert mv.model.settings == settings
     }
 
+    @SuppressWarnings("GroovyAssignabilityCheck")
     @Test
-    void shouldShowSettingsWithCorrectModel() {
+    void shouldShowSettingsGroupedByEnvironment() {
         def environments = [
                 new Environment(name: "dev"),
                 new Environment(name: "qa"),
                 new Environment(name: "prod")
         ]
         def settings = new Settings( name: "group-1")
+        settings.addToGroups(new SettingsGroup(id: 1, environment: environments[1]))
+        settings.addToGroups(new SettingsGroup(id: 2, environment: environments[0]))
+        settings.addToGroups(new SettingsGroup(id: 3, environment: environments[2]))
 
         when(controller.zuulService.listEnvironments()).thenReturn(environments)
         when(controller.zuulService.getSettingsByName(settings.name)).thenReturn(settings)
@@ -56,7 +60,33 @@ public class SettingsControllerTest {
         assert mv.viewName == "/settings/show"
         assert mv.model.environments.is(environments)
         assert mv.model.settings.is(settings)
+        assert mv.model.groupsByEnv[environments[0]] == settings.groups[1]
+        assert mv.model.groupsByEnv[environments[1]] == settings.groups[0]
+        assert mv.model.groupsByEnv[environments[2]] == settings.groups[2]
     }
+
+    @SuppressWarnings("GroovyAssignabilityCheck")
+    @Test
+    void shouldShowSettingsWithEmptyModelIfItDoesNotExist() {
+        def environments = [
+                new Environment(name: "dev"),
+                new Environment(name: "qa"),
+                new Environment(name: "prod")
+        ]
+
+        when(controller.zuulService.listEnvironments()).thenReturn(environments)
+        when(controller.zuulService.getSettingsByName(anyString())).thenReturn(null)
+
+        def mv = controller.show("group-1")
+
+        assert mv.viewName == "/settings/show"
+        assert mv.model.environments.is(environments)
+        assert mv.model.settings == null
+        assert mv.model.groupsByEnv[environments[0]] == null
+        assert mv.model.groupsByEnv[environments[1]] == null
+        assert mv.model.groupsByEnv[environments[2]] == null
+    }
+
 
     @Test
     void shouldRedirectToGroupEnvironmentTab() {

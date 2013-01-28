@@ -57,6 +57,10 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>oemInViewFilter</filter-name>
+        <url-pattern>/settings.json</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>oemInViewFilter</filter-name>
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
 

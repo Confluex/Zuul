@@ -1,6 +1,6 @@
+<%--@elvariable id="name" type="java.lang.String"--%>
 <%--@elvariable id="environments" type="java.util.List<org.devnull.zuul.data.model.Environment>"--%>
 <%--@elvariable id="groupsByEnv" type="java.util.Map<String, org.devnull.zuul.data.model.SettingsGroup>"--%>
-<%--@elvariable id="groupName" type="java.lang.String"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${fn:escapeXml(groupName)}</title>
+    <title>${fn:escapeXml(name)}</title>
     <meta name="tab" content="settings"/>
     <script src="${pageContext.request.contextPath}/assets/ext/binder-0.3.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/json-form.js"></script>
@@ -24,7 +24,7 @@
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>${fn:escapeXml(groupName)}</h1>
+            <h1>${fn:escapeXml(name)}</h1>
         </div>
 
         <div class="tabbable tabs-left">
@@ -39,7 +39,6 @@
             <div class="tab-content">
                 <c:forEach var="env" items="${environments}" varStatus="i">
                     <c:set var="activeFlag" value="${i.index == 0 ? 'active' : ''}"/>
-                    <c:set var="groupName" value="${groupName}" scope="request"/>
                     <c:set var="group" value="${groupsByEnv[env]}" scope="request"/>
                     <c:set var="environment" value="${env}" scope="request"/>
                     <div id="${fn:escapeXml(env.name)}" class="tab-pane ${activeFlag}" style="min-height: 300px;">
