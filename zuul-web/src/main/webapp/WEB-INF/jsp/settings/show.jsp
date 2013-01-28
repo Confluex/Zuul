@@ -63,7 +63,7 @@
     </div>
     <div class="modal-body">
         <form id="editEntryForm" action="${pageContext.request.contextPath}/settings/entry"
-              onsubmit="return false;" method="PUT" class="form-horizontal">
+              onsubmit="return false;" data-save-method="PUT" class="form-horizontal">
             <fieldset>
                 <div class="control-group">
                     <label class="control-label" for="key">Key</label>

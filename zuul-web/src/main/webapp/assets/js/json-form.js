@@ -65,10 +65,11 @@
     function saveRecord() {
         var binder = Binder.FormBinder.bind(form.get(0));
         var data = binder.serialize();
+        var method = form.data('save-method');
         delete data['']; // TODO weird empty key being generated for some reason. Figure out where it's coming from..
         $.ajax({
             url:resourceUri + '/' + encodeURI(resourceId) + ".json",
-            type:form.attr('method'),
+            type: method ? method : form.attr('method'),
             data:JSON.stringify(data),
             contentType:'application/json',
             success:function (data, status, xhr) {
