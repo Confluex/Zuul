@@ -1,6 +1,7 @@
 package org.devnull.zuul.web
 
 import org.devnull.util.pagination.HttpRequestPagination
+import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.service.ZuulService
 import org.slf4j.LoggerFactory
@@ -108,15 +109,26 @@ class SettingsController {
         return new ModelAndView("/settings/index", [settings: zuulService.listSettings()])
     }
 
-    /**
-     * User interface for editing settings group
-     */
     @RequestMapping(value = "/settings/{name}", method = RequestMethod.GET)
     ModelAndView show(@PathVariable("name") String name) {
         def environments = zuulService.listEnvironments()
         def settings = zuulService.getSettingsByName(name)
         def model = [settings: settings, environments: environments]
         return new ModelAndView("/settings/show", model)
+    }
+
+    @RequestMapping(value = "/settings/{name}/edit", method = RequestMethod.GET)
+    ModelAndView editForm(@PathVariable("name") String name) {
+        def settings = zuulService.getSettingsByName(name)
+        def model = [settings: settings]
+        return new ModelAndView("/settings/edit", model)
+    }
+
+    @RequestMapping(value = "/settings/{name}/edit", method = RequestMethod.POST)
+    String editFormSubmit(@Valid @ModelAttribute("settings") Settings settings, BindingResult result) {
+        if (result.hasErrors()) return "/settings/edit"
+        zuulService.save(settings)
+        return "redirect:/settings/${settings.name}"
     }
 
     /**

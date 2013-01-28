@@ -24,7 +24,7 @@
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>${fn:escapeXml(name)}</h1>
+            <h1><a href="${pageContext.request.contextPath}/settings/${fn:escapeXml(name)}/edit">${fn:escapeXml(name)}</a></h1>
         </div>
 
         <div class="tabbable tabs-left">

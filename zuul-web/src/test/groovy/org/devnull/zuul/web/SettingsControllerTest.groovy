@@ -28,6 +28,31 @@ public class SettingsControllerTest {
     }
 
     @Test
+    void shouldShowEditForm() {
+        def settings = new Settings(name: "test-settings")
+        when(controller.zuulService.getSettingsByName(settings.name)).thenReturn(settings)
+        def mv = controller.editForm("test-settings")
+        assert mv.model.settings == settings
+        assert mv.viewName == "/settings/edit"
+    }
+
+    @Test
+    void shouldSaveFormSubmissionFromEditForm() {
+        def settings = new Settings(id:  1, name: "test-settings")
+        def view = controller.editFormSubmit(settings, mockSuccessfulBindingResult())
+        verify(controller.zuulService).save(settings)
+        assert view == "redirect:/settings/${settings.name}"
+    }
+
+    @Test
+    void shouldNotSaveFormSubmissionFromEditFormIfNotValid() {
+        def settings = new Settings(id:  1, name: "test-settings")
+        def view = controller.editFormSubmit(settings, mockFailureBindingResult())
+        verify(controller.zuulService, never()).save(settings)
+        assert view == "/settings/edit"
+    }
+
+    @Test
     void shouldListAllSettings() {
         def settings = [
                 new Settings(id: 1),
