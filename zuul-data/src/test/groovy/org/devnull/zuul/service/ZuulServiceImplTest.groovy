@@ -82,6 +82,25 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldSaveSettings() {
+        def settings = new Settings(id: 1, name: "test")
+        when(service.settingsDao.save(settings)).thenReturn(settings)
+        def results = service.save(settings)
+        verify(service.settingsDao).save(settings)
+        assert results.is(settings)
+    }
+
+    @Test(expected = ValidationException)
+    void shouldErrorWhenSavingInvalidSettings() {
+        def settings = new Settings(id: 1, name: "test")
+        def mockErrors = new MockFor(BeanPropertyBindingResult)
+        mockErrors.demand.hasErrors { return true }
+        mockErrors.use {
+            service.save(settings)
+        }
+    }
+
+    @Test
     void shouldGetSettingsRecordByName() {
         def settings = new Settings(name: "test")
         when(service.settingsDao.findByName(settings.name)).thenReturn(settings)

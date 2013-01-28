@@ -40,6 +40,8 @@ public interface ZuulService {
      */
     Settings getSettingsByName(String name)
 
+    Settings save(Settings settings)
+
     /* Settings Groups -------------------- */
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

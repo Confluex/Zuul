@@ -191,6 +191,12 @@ class ZuulServiceImpl implements ZuulService {
         return settingsDao.findAll(new Sort("name")) as List<Settings>
     }
 
+    @Override
+    Settings save(Settings settings) {
+        errorIfInvalid(settings, "settings")
+        return settingsDao.save(settings)
+    }
+
     @Transactional(readOnly = false)
     SettingsEntry encryptSettingsEntryValue(Integer entryId) {
         def entry = settingsEntryDao.findOne(entryId)
