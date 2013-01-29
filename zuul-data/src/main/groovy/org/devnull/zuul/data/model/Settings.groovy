@@ -2,6 +2,7 @@ package org.devnull.zuul.data.model
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import org.devnull.zuul.data.config.ZuulDataConstants
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 
@@ -18,7 +19,9 @@ import javax.validation.constraints.Size
 @EqualsAndHashCode(excludes = "groups")
 @ToString(includeNames = true, excludes = "groups")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-class Settings {
+class Settings implements Serializable {
+
+    static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

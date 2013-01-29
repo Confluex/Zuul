@@ -2,7 +2,7 @@ package org.devnull.zuul.data.config
 
 class ZuulDataConstants {
 
-    static final long API_VERSION = 2L
+    static final long API_VERSION = 3L
 
     static final String ROLE_GUEST = "ROLE_GUEST"
     static final String ROLE_USER = "ROLE_USER"
