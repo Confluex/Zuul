@@ -38,7 +38,7 @@ class SettingsGroup implements Serializable {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "environment")
-    @JsonBackReference
+    @JsonBackReference("settingsGroup.environment")
     @NotNull
     Environment environment
 
@@ -50,7 +50,7 @@ class SettingsGroup implements Serializable {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "settings_id")
-    @JsonBackReference
+    @JsonBackReference("settingsGroup.settings")
     @NotNull
     Settings settings
 
