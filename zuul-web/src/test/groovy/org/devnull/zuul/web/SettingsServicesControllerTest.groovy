@@ -24,6 +24,60 @@ class SettingsServicesControllerTest {
     }
 
     @Test
+    void shouldCreateTreeMenuOfSettingsGroupedByFolders() {
+        def settings = [
+                new Settings(folder: "Human Resources", name: "hr-services"),
+                new Settings(folder: "Human Resources", name: "hr-database"),
+                new Settings(folder: "Human Resources", name: "hr-etl"),
+                new Settings(folder: "Finance", name: "finance-database"),
+                new Settings(folder: "Finance", name: "finance-application"),
+                new Settings(folder: "Finance", name: "finance-services"),
+                new Settings(folder: "Misc", name: "joe's skunkworks config"),
+                new Settings(folder: null, name: "base-ldap"),
+                new Settings(folder: null, name: "base-sftp"),
+                new Settings(folder: null, name: "base-archive")
+        ]
+        when(controller.zuulService.listSettings()).thenReturn(settings)
+        def request = new MockHttpServletRequest(contextPath: "/config")
+        def menu = controller.menu(request)
+
+        assert menu.size() == 6
+
+        def finance = menu[0]
+        assert finance.name == "Finance"
+        assert finance.leafs.size() == 3
+        assert finance.leafs[0].name == "finance-application"
+        assert finance.leafs[0].resourceUri == "/config/settings/finance-application"
+        assert finance.leafs[1].name == "finance-database"
+        assert finance.leafs[1].resourceUri == "/config/settings/finance-database"
+        assert finance.leafs[2].name == "finance-services"
+        assert finance.leafs[2].resourceUri == "/config/settings/finance-services"
+
+        def hr = menu[1]
+        assert hr.name == "Human Resources"
+        assert hr.leafs.size() == 3
+        assert hr.leafs[0].name == "hr-database"
+        assert hr.leafs[0].resourceUri == "/config/settings/hr-database"
+        assert hr.leafs[1].name == "hr-etl"
+        assert hr.leafs[1].resourceUri == "/config/settings/hr-etl"
+        assert hr.leafs[2].name == "hr-services"
+        assert hr.leafs[2].resourceUri == "/config/settings/hr-services"
+
+        def misc = menu[2]
+        assert misc.name == "Misc"
+        assert misc.leafs.size() == 1
+        assert misc.leafs[0].name == "joe's skunkworks config"
+        assert misc.leafs[0].resourceUri == "/config/settings/joe%27s+skunkworks+config"
+
+        assert menu[3].name == "base-archive"
+        assert menu[3].resourceUri == "/config/settings/base-archive"
+        assert menu[4].name == "base-ldap"
+        assert menu[4].resourceUri == "/config/settings/base-ldap"
+        assert menu[5].name == "base-sftp"
+        assert menu[5].resourceUri == "/config/settings/base-sftp"
+    }
+
+    @Test
     void createFromPropertiesFileShouldInvokeServiceWithFileInputStream() {
         def multipartFile = mock(MultipartFile)
         def inputStream = mock(InputStream)

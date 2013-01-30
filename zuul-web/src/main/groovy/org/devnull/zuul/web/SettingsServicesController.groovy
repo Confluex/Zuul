@@ -57,6 +57,30 @@ class SettingsServicesController {
     }
 
     /**
+     * View the settings grouped according to folder
+     */
+    @RequestMapping(value = "/settings/menu.json", method = RequestMethod.GET)
+    @ResponseBody
+    List<Map> menu(HttpServletRequest request) {
+        def menu = []
+        def settings = zuulService.listSettings()
+        def folders = settings.findAll { it.folder }.groupBy { it.folder }
+        def createLeaf = { name ->
+            def encoded = URLEncoder.encode(name, 'UTF-8')
+            // Note: This is different from settings.json's resourceUri. URIs should not indicate content
+            // type. That should be left to a URL or content negotiation. I'll update settings.json at some point
+            // but I don't feel like breaking compatibility for possible clients at this point.
+            [ name: name, resourceUri: "${request.contextPath}/settings/${encoded}"  ]
+        }
+        def createNode = { name, leafs ->
+            [ name: name, leafs: leafs.sort { it.name }.collect { createLeaf(it.name) } ]
+        }
+        menu += folders.keySet().sort().collect { createNode(it, folders[it]) }
+        menu += settings.findAll { !it.folder }.sort { it.name}.collect { createLeaf(it.name) }
+        return menu
+    }
+
+    /**
      * View all of the settings groups as JSON
      */
     @RequestMapping(value = "/settings.json", method = RequestMethod.GET)
