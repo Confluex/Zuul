@@ -70,7 +70,7 @@ class SettingsServicesController {
             // Note: This is different from settings.json's resourceUri. URIs should not indicate content
             // type. That should be left to a URL or content negotiation. I'll update settings.json at some point
             // but I don't feel like breaking compatibility for possible clients at this point.
-            [ name: name, resourceUri: "${request.contextPath}/settings/${encoded}"  ]
+            [ name: name, resourceUri: "${request.contextPath}/settings/${encoded}".toString()  ]
         }
         def createNode = { name, leafs ->
             [ name: name, leafs: leafs.sort { it.name }.collect { createLeaf(it.name) } ]

@@ -9,43 +9,49 @@
             settings = $.extend(settings, options);
             subMenu = this;
             $.ajax({
-                url:getContextPath() + "/settings.json",
+                url:getContextPath() + "/settings/menu.json",
                 success:function (data) {
-                    var fileNames = distinctGroupNames(data);
-                    for (var i = 0; i < fileNames.length && i < settings.max ; i++) {
-                        var name = fileNames[i];
-                        var path = getContextPath() + "/settings/" + encodeURI(name);
-                        methods.createMenuItem(name, path);
+                    for (var i = 0; i < data.length && i < settings.max ; i++) {
+                        var entry = data[i];
+                        if (entry.leafs) {
+                            methods.createMenuNode(entry.name, entry.leafs, subMenu)
+                        }
+                        else {
+                            methods.createMenuItem(entry.name, entry.resourceUri, subMenu);
+                        }
                     }
-                    if (fileNames.length > settings.max) {
+                    if (data.length > settings.max) {
                         methods.createMenuItem("More..", getContextPath() + "/settings");
                     }
-                    $("#navSearchInput").typeahead({source:fileNames, minLength:3,
+                    $("#navSearchInput").typeahead({
+                        minLength:3,
+                        source:  function(q, callback) {
+                            // TODO
+                            return ["test"]
+                        },
                         updater:function (selected, context) {
                             document.location = getContextPath() + "/settings/" + encodeURI(selected);
-                        }});
+                        }
+                    });
                 }
             });
-            function distinctGroupNames(data) {
-                var names = [];
-                for (var i = 0; i < data.length; i++) {
-                    var group = data[i];
-                    if ($.inArray(group.name, names) == -1) {
-                        names.push(group.name);
-                    }
-                }
-                return names
-            }
 
             return this;
         },
-        createMenuItem:function(name, url) {
-            var link = $(document.createElement('a'));
-            link.text(name);
-            link.attr('href', url);
-            var subMenuItem = $(document.createElement('li'));
-            subMenuItem.append(link);
-            subMenu.append(subMenuItem);
+        createMenuItem:function(name, url, container) {
+            var item =  $(document.createElement('li'));
+            var link = $(document.createElement('a')).attr('href', url).text(name).appendTo(item);
+            item.appendTo(container);
+        },
+        createMenuNode:function(name, leafs, container) {
+            var item = $(document.createElement("li")).addClass("dropdown-submenu");
+            var link = $(document.createElement('a')).attr('href', "#").text(name).appendTo(item);
+            var list = $(document.createElement("ul")).addClass("dropdown-menu").appendTo(item);
+            for (var i = 0; i < leafs.length; i++) {
+                var leaf = leafs[i];
+                methods.createMenuItem(leaf.name, leaf.resourceUri, list);
+            }
+            item.appendTo(container);
         }
     };
 
@@ -56,6 +62,7 @@
             return methods.init.apply(this, arguments);
         } else {
             $.error('Method ' + method + ' does not exist on jQuery.settingsMenu');
+            return false;
         }
     };
 
