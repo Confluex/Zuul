@@ -20,25 +20,18 @@
             return this;
         },
         createSearch: function (data) {
-            var leafs = [];
-            var searchValues = [];
-            $.each(data, function (i, node) {
-                if ($.isArray(node.leafs)) {
-                    leafs.concat(leafs, node.leafs);
-                }
-                else if (node.resourceUri) {
-                    leafs.push(node)
-                }
-            });
-            $.each(leafs, function (i, leaf) {
-                searchValues.push(leaf.resourceUri);
+            var leafs = $.map(data, function(node) {
+               if ($.isArray(node.leafs)) {
+                   return $.map(node.leafs, function(leaf) {
+                       return leaf.resourceUri;
+                   })
+               } else {
+                   return node.resourceUri;
+               }
             });
             $("#navSearchInput").typeahead({
-                minLength: 3,
-                source: searchValues,
-                updater: function (selected, context) {
-                    document.location = selected
-                }
+                minLength: 3, source: leafs,
+                updater: function (selected) { document.location = selected }
             });
         },
         createMenu: function (data) {
