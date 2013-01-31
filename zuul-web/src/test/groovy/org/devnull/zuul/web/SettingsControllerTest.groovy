@@ -233,7 +233,7 @@ public class SettingsControllerTest {
     }
 
     @Test
-    void shouldGroupSearchResultsByName() {
+    void shouldGroupSearchResultsSettingsGroup() {
         def groupA = new SettingsGroup(settings: new Settings(name: "groupA"))
         def groupB = new SettingsGroup(settings: new Settings(name: "groupB"))
         def entries = [
@@ -244,8 +244,8 @@ public class SettingsControllerTest {
         when(controller.zuulService.search(eq("abc"), Matchers.any(Pagination))).thenReturn(entries)
         def mv = controller.search("abc", new MockHttpServletRequest())
         assert mv.model.results == [
-                (groupA.name): [entries[0], entries[2]],
-                (groupB.name): [entries[1]]
+                (groupA): [entries[0], entries[2]],
+                (groupB): [entries[1]]
         ]
         assert mv.viewName == "/settings/search"
     }

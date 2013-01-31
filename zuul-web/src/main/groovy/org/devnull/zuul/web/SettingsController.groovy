@@ -163,7 +163,7 @@ class SettingsController {
     @RequestMapping(value = "/settings/search")
     ModelAndView search(@RequestParam("q") String query, HttpServletRequest request) {
         def pagination = new HttpRequestPagination<SettingsEntry>(request)
-        def results = zuulService.search(query, pagination)?.groupBy { it.group.settings.name }
+        def results = zuulService.search(query, pagination)?.groupBy { it.group }
         return new ModelAndView("/settings/search", [query: query, results: results])
     }
 }
