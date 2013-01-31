@@ -11,8 +11,11 @@ import org.devnull.zuul.service.ZuulService
 import org.devnull.zuul.web.test.ControllerTestMixin
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers
+import org.springframework.beans.propertyeditors.StringTrimmerEditor
 import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.web.bind.WebDataBinder
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
@@ -248,5 +251,20 @@ public class SettingsControllerTest {
                 (groupB): [entries[1]]
         ]
         assert mv.viewName == "/settings/search"
+    }
+
+    @SuppressWarnings("GroovyAccessibility")
+    @Test
+    void shouldRegisterStringTrimmerPropertyEditor() {
+        def binder = mock(WebDataBinder)
+        controller.initBinder(binder)
+        def editorArg = ArgumentCaptor.forClass(StringTrimmerEditor)
+        verify(binder).registerCustomEditor(eq(String), editorArg.capture())
+        assert editorArg.value.emptyAsNull
+        assert editorArg.value.charsToDelete.contains("\t")
+        assert editorArg.value.charsToDelete.contains("\n")
+        assert editorArg.value.charsToDelete.contains("\r")
+        assert editorArg.value.charsToDelete.contains(" ")
+
     }
 }
