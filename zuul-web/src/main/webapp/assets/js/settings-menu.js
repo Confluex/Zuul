@@ -5,45 +5,62 @@
     };
     var subMenu = null;
     var methods = {
-        init: function(options) {
+        init: function (options) {
             settings = $.extend(settings, options);
             subMenu = this;
             $.ajax({
-                url:getContextPath() + "/settings/menu.json",
-                success:function (data) {
-                    for (var i = 0; i < data.length && i < settings.max ; i++) {
-                        var entry = data[i];
-                        if (entry.leafs) {
-                            methods.createMenuNode(entry.name, entry.leafs, subMenu)
-                        }
-                        else {
-                            methods.createMenuItem(entry.name, entry.resourceUri, subMenu);
-                        }
-                    }
-                    if (data.length > settings.max) {
-                        methods.createMenuItem("More..", getContextPath() + "/settings");
-                    }
-                    $("#navSearchInput").typeahead({
-                        minLength:3,
-                        source:  function(q, callback) {
-                            // TODO
-                            return ["test"]
-                        },
-                        updater:function (selected, context) {
-                            document.location = getContextPath() + "/settings/" + encodeURI(selected);
-                        }
-                    });
+                url: getContextPath() + "/settings/menu.json",
+                success: function (data) {
+                    methods.createMenu(data);
+                    methods.createSearch(data);
+
                 }
             });
 
             return this;
         },
-        createMenuItem:function(name, url, container) {
-            var item =  $(document.createElement('li'));
-            var link = $(document.createElement('a')).attr('href', url).text(name).appendTo(item);
+        createSearch: function (data) {
+            var leafs = [];
+            var searchValues = [];
+            $.each(data, function (i, node) {
+                if ($.isArray(node.leafs)) {
+                    leafs.concat(leafs, node.leafs);
+                }
+                else if (node.resourceUri) {
+                    leafs.push(node)
+                }
+            });
+            $.each(leafs, function (i, leaf) {
+                searchValues.push(leaf.resourceUri);
+            });
+            $("#navSearchInput").typeahead({
+                minLength: 3,
+                source: searchValues,
+                updater: function (selected, context) {
+                    document.location = selected
+                }
+            });
+        },
+        createMenu: function (data) {
+            for (var i = 0; i < data.length && i < settings.max; i++) {
+                var entry = data[i];
+                if (entry.leafs) {
+                    methods.createMenuNode(entry.name, entry.leafs, subMenu)
+                }
+                else {
+                    methods.createMenuItem(entry.name, entry.resourceUri, subMenu);
+                }
+            }
+            if (data.length > settings.max) {
+                methods.createMenuItem("More..", getContextPath() + "/settings");
+            }
+        },
+        createMenuItem: function (name, url, container) {
+            var item = $(document.createElement('li'));
+            var link = $(document.createElement('a')).attr('href', url).addClass("leaf").text(name).appendTo(item);
             item.appendTo(container);
         },
-        createMenuNode:function(name, leafs, container) {
+        createMenuNode: function (name, leafs, container) {
             var item = $(document.createElement("li")).addClass("dropdown-submenu");
             var link = $(document.createElement('a')).attr('href', "#").text(name).appendTo(item);
             var list = $(document.createElement("ul")).addClass("dropdown-menu").appendTo(item);
