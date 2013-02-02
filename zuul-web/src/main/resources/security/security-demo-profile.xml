@@ -10,13 +10,8 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 
 
     <s:authentication-manager id="authenticationManager">
-        <s:authentication-provider>
-            <s:user-service>
-                <s:user name="system" password="demo" authorities="ROLE_SYSTEM_ADMIN" />
-                <s:user name="admin" password="demo" authorities="ROLE_ADMIN" />
-                <s:user name="user" password="demo" authorities="ROLE_USER" />
-            </s:user-service>
-        </s:authentication-provider>
+        <!--suppress SpringModelInspection -->
+        <s:authentication-provider ref="demoAuthenticationProvider"/>
     </s:authentication-manager>
 
     <s:http use-expressions="true" realm="Zuul Configuration Management"

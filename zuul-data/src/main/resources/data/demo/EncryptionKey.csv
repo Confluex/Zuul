@@ -1,0 +1,3 @@
+name,description,password,default_key,algorithm
+Default Key,Default key which can be used for evaluation purposes..,badpassword1,true,PBEWithMD5AndDES
+Human Resources Key,Used for securing HR applications.,badpassword2,false,PBEWITHSHA256AND128BITAES-CBC-BC
