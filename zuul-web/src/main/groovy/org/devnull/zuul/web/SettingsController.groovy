@@ -31,7 +31,7 @@ class SettingsController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(String.class, new StringTrimmerEditor(" \t\r\n", true));
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
     /**

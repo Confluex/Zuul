@@ -261,10 +261,6 @@ public class SettingsControllerTest {
         def editorArg = ArgumentCaptor.forClass(StringTrimmerEditor)
         verify(binder).registerCustomEditor(eq(String), editorArg.capture())
         assert editorArg.value.emptyAsNull
-        assert editorArg.value.charsToDelete.contains("\t")
-        assert editorArg.value.charsToDelete.contains("\n")
-        assert editorArg.value.charsToDelete.contains("\r")
-        assert editorArg.value.charsToDelete.contains(" ")
-
+        assert !editorArg.value.charsToDelete
     }
 }
