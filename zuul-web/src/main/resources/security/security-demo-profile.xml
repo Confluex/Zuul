@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans profile="security-demo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:s="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+">
+
+
+    <s:authentication-manager id="authenticationManager">
+        <s:authentication-provider>
+            <s:user-service>
+                <s:user name="system" password="demo" authorities="ROLE_SYSTEM_ADMIN" />
+                <s:user name="admin" password="demo" authorities="ROLE_ADMIN" />
+                <s:user name="user" password="demo" authorities="ROLE_USER" />
+            </s:user-service>
+        </s:authentication-provider>
+    </s:authentication-manager>
+
+    <s:http use-expressions="true" realm="Zuul Configuration Management"
+            authentication-manager-ref="authenticationManager"
+            access-decision-manager-ref="accessDecisionManager">
+        <s:intercept-url pattern="/account/**" access="hasRole('ROLE_GUEST')"/>
+        <s:intercept-url pattern="/settings/create**" access="hasRole('ROLE_ADMIN')"/>
+        <s:intercept-url pattern="/settings/**/*.properties" access="permitAll" method="GET"/>
+        <s:intercept-url pattern="/settings/**/*.json" access="permitAll" method="GET"/>
+        <s:intercept-url pattern="/settings/**" access="hasRole('ROLE_USER')"/>
+        <s:intercept-url pattern="/system/**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
+        <s:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <s:intercept-url pattern="/audit/**" access="hasRole('ROLE_ADMIN')"/>
+        <s:intercept-url pattern="/**" access="permitAll"/>
+        <s:form-login login-page="/login" authentication-failure-url="/login?login_error=authentication"/>
+        <s:logout logout-url="/logout" logout-success-url="/"/>
+    </s:http>
+
+</beans>

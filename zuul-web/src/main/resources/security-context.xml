@@ -60,4 +60,5 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
     <!-- imports enabled by profiles -->
     <import resource="security/security-openid-profile.xml"/>
     <import resource="security/security-ldap-profile.xml"/>
+    <import resource="security/security-demo-profile.xml"/>
 </beans>

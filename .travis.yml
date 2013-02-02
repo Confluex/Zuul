@@ -8,4 +8,4 @@ script: "mvn -U -P ci test"
 env: MAVEN_OPTS="-Dhttps.protocols=SSLv3 -Dforce.http.jre.executor=true"
 branches:
   except:
-    - settings-organization
+    - demo-profile
