@@ -12,6 +12,7 @@
         <loadData tableName="settings" file="/data/test/Settings.csv"/>
         <loadData tableName="settings_group" file="/data/test/SettingsGroup.csv"/>
         <loadData tableName="settings_entry" file="/data/test/SettingsEntry.csv"/>
+        <loadData tableName="settings_audit" file="/data/test/SettingsAudit.csv"/>
     </changeSet>
 
 </databaseChangeLog>

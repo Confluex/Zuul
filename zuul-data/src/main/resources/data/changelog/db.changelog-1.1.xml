@@ -36,8 +36,4 @@
         </createIndex>
     </changeSet>
 
-    <changeSet author="mcantrell" id="zuul-1.1-load-test-data" context="test">
-        <loadData tableName="settings_audit" file="/data/test/SettingsAudit.csv"/>
-    </changeSet>
-
 </databaseChangeLog>
