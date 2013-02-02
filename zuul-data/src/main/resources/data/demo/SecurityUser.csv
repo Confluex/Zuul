@@ -1,4 +1,4 @@
 id,user_name,first_name,last_name,email,enabled
-1,system_admin,Demo,SysAdmin,system.admin@devnull.org,true
-2,admin,Demo,Admin,system.admin@devnull.org,true
-3,user,Demo,User,system.admin@devnull.org,true
+1,system_admin,Demo,SysAdmin,system.admin@demo.devnull.org,true
+2,admin,Demo,Admin,admin@demo.devnull.org,true
+3,user,Demo,User,user@demo.devnull.org,true
