@@ -125,7 +125,7 @@ class SettingsServicesControllerTest {
         when(controller.zuulService.listSettings()).thenReturn(settings)
         def results = controller.listJson(new MockHttpServletRequest())
         verify(controller.zuulService).listSettings()
-        assert results == [[name: 'group-a', environment: 'dev', resourceUri: '/settings/dev/group-a.json']]
+        assert results == [[name: 'group-a', environment: 'dev', resourceUri: '/settings/dev/group-a']]
     }
 
     @Test

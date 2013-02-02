@@ -67,9 +67,6 @@ class SettingsServicesController {
         def folders = settings.findAll { it.folder }.groupBy { it.folder }
         def createLeaf = { name ->
             def encoded = URLEncoder.encode(name, 'UTF-8')
-            // Note: This is different from settings.json's resourceUri. URIs should not indicate content
-            // type. That should be left to a URL or content negotiation. I'll update settings.json at some point
-            // but I don't feel like breaking compatibility for possible clients at this point.
             [ name: name, resourceUri: "${request.contextPath}/settings/${encoded}".toString()  ]
         }
         def createNode = { name, leafs ->
@@ -93,7 +90,7 @@ class SettingsServicesController {
                 results << [
                         name: it.name,
                         environment: it.environment.name,
-                        resourceUri: "${request.contextPath}/settings/${it.environment.name}/${it.name}.json".toString()
+                        resourceUri: "${request.contextPath}/settings/${it.environment.name}/${it.name}".toString()
                 ]
             }
         }

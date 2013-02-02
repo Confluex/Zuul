@@ -17,10 +17,10 @@ public class SettingsServicesControllerIntegrationTest extends ZuulWebIntegratio
     void shouldRenderSettingsGroupAsJson() {
         def results = controller.listJson(new MockHttpServletRequest())
         assert results == [
-                [name: 'app-data-config', environment: 'dev', resourceUri: '/settings/dev/app-data-config.json'],
-                [name: 'app-data-config', environment: 'qa', resourceUri: '/settings/qa/app-data-config.json'],
-                [name: 'app-data-config', environment: 'prod', resourceUri: '/settings/prod/app-data-config.json'],
-                [name: 'hr-service-config', environment: 'prod', resourceUri: '/settings/prod/hr-service-config.json']
+                [name: 'app-data-config', environment: 'dev', resourceUri: '/settings/dev/app-data-config'],
+                [name: 'app-data-config', environment: 'qa', resourceUri: '/settings/qa/app-data-config'],
+                [name: 'app-data-config', environment: 'prod', resourceUri: '/settings/prod/app-data-config'],
+                [name: 'hr-service-config', environment: 'prod', resourceUri: '/settings/prod/hr-service-config']
         ]
     }
 
