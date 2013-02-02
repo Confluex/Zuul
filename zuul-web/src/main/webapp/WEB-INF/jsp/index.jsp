@@ -59,7 +59,7 @@
         <div class="page-header">
             <h2>News &amp; Announcements</h2>
         </div>
-        <div id="newsFeed" data-url="http://news.devnull.org/feeds/posts/default/-/zuul" data-max-results="5">
+        <div id="newsFeed" data-url="http://news.devnull.org/feeds/posts/default/-/zuul" data-max-results="2">
             Loading..
         </div>
     </div>
