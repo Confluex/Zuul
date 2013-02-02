@@ -32,6 +32,7 @@ class DemoAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Incorrect username or password. Demo password is: ${demoPassword}")
         }
         def auth = new TestingAuthenticationToken(user, "********", user.authorities as List)
+        auth.authenticated = true
         log.debug("Created new authentication token {}", auth)
         return auth
     }

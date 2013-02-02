@@ -31,6 +31,7 @@ class DemoAuthenticationProviderTest {
         when(provider.securityService.findByUserName(user.userName)).thenReturn(user)
         def auth = provider.authenticate(new UsernamePasswordAuthenticationToken("validUser", provider.demoPassword))
         assert auth.principal == user
+        assert auth.authenticated
         assert auth.authorities.size() == 2
         assert auth.authorities.find { it.authority == "ROLE_A"}
         assert auth.authorities.find { it.authority == "ROLE_B"}
