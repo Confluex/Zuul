@@ -13,142 +13,157 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <context:property-placeholder location="classpath:/zuul-data-config.properties" order="1" ignore-unresolvable="true"/>
-    <jpa:repositories base-package="org.devnull.zuul.data.dao"/>
-    <context:annotation-config/>
-    <context:component-scan base-package="org.devnull.zuul.data"/>
-    <context:component-scan base-package="org.devnull.zuul.service"/>
-    <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    <beans>
+        <context:property-placeholder location="classpath:/zuul-data-config.properties" order="1" ignore-unresolvable="true"/>
+        <jpa:repositories base-package="org.devnull.zuul.data.dao"/>
+        <context:annotation-config/>
+        <context:component-scan base-package="org.devnull.zuul.data"/>
+        <context:component-scan base-package="org.devnull.zuul.service"/>
+        <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+        <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
+        <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="url" value="${jdbc.zuul.url}"/>
-        <property name="username" value="${jdbc.zuul.username}"/>
-        <property name="password" value="${jdbc.zuul.password}"/>
-        <property name="driverClassName" value="${jdbc.zuul.driver}"/>
-        <property name="initialSize" value="5"/>
-        <property name="testOnBorrow" value="true"/>
-        <property name="validationQuery" value="${jdbc.zuul.validationQuery}"/>
-        <property name="maxWait" value="60000"/>
-        <property name="maxActive" value="50"/>
-        <property name="removeAbandoned" value="true"/>
-        <property name="removeAbandonedTimeout" value="300"/>
-        <property name="logAbandoned" value="true"/>
-    </bean>
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        </bean>
 
-
-    <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="changeLog" value="classpath:/data/changelog/db.changelog-master.xml"/>
-        <property name="contexts" value="${liquibase.contexts}"/>
-    </bean>
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <property name="url" value="${jdbc.zuul.url}"/>
+            <property name="username" value="${jdbc.zuul.username}"/>
+            <property name="password" value="${jdbc.zuul.password}"/>
+            <property name="driverClassName" value="${jdbc.zuul.driver}"/>
+            <property name="initialSize" value="5"/>
+            <property name="testOnBorrow" value="true"/>
+            <property name="validationQuery" value="${jdbc.zuul.validationQuery}"/>
+            <property name="maxWait" value="60000"/>
+            <property name="maxActive" value="50"/>
+            <property name="removeAbandoned" value="true"/>
+            <property name="removeAbandonedTimeout" value="300"/>
+            <property name="logAbandoned" value="true"/>
+        </bean>
 
 
-    <bean id="entityManagerFactory" depends-on="liquibase"
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.hbm2ddl.auto">${jdbc.zuul.generate.ddl}</prop>
-                <prop key="hibernate.dialect">${jdbc.zuul.dialect}</prop>
-                <prop key="hibernate.jdbc.batch_size">15</prop>
-                <prop key="hibernate.show_sql">false</prop>
-                <prop key="hibernate.default_batch_fetch_size">1000</prop>
-                <prop key="hibernate.jdbc.batch_versioned_data">true</prop>
-                <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
-                <prop key="hibernate.max_fetch_depth">1</prop>
-                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
-                <prop key="hibernate.cache.use_query_cache">true</prop>
-                <prop key="hibernate.cache.use_second_level_cache">true</prop>
-                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
-            </props>
-        </property>
-        <property name="persistenceUnitPostProcessors">
-            <list>
-                <bean class="org.springframework.data.jpa.support.ClasspathScanningPersistenceUnitPostProcessor">
-                    <constructor-arg value="org.devnull"/>
+        <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="changeLog" value="classpath:/data/changelog/db.changelog-master.xml"/>
+        </bean>
+
+
+        <bean id="entityManagerFactory" depends-on="liquibase"
+              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="jpaProperties">
+                <props>
+                    <prop key="hibernate.hbm2ddl.auto">${jdbc.zuul.generate.ddl}</prop>
+                    <prop key="hibernate.dialect">${jdbc.zuul.dialect}</prop>
+                    <prop key="hibernate.jdbc.batch_size">15</prop>
+                    <prop key="hibernate.show_sql">false</prop>
+                    <prop key="hibernate.default_batch_fetch_size">1000</prop>
+                    <prop key="hibernate.jdbc.batch_versioned_data">true</prop>
+                    <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+                    <prop key="hibernate.max_fetch_depth">1</prop>
+                    <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                    <prop key="hibernate.cache.use_query_cache">true</prop>
+                    <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                    <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+                </props>
+            </property>
+            <property name="persistenceUnitPostProcessors">
+                <list>
+                    <bean class="org.springframework.data.jpa.support.ClasspathScanningPersistenceUnitPostProcessor">
+                        <constructor-arg value="org.devnull"/>
+                    </bean>
+                </list>
+            </property>
+            <property name="loadTimeWeaver">
+                <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+            </property>
+            <property name="persistenceUnitName" value="zuul"/>
+        </bean>
+
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="${smtp.host}"/>
+            <property name="port" value="${smtp.port}"/>
+            <property name="username" value="${smtp.username}"/>
+            <property name="password" value="${smtp.password}"/>
+        </bean>
+
+        <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+            <property name="from" value="${smtp.from}"/>
+        </bean>
+
+        <task:annotation-driven />
+        <task:executor id="auditExecutor" pool-size="10" queue-capacity="1000" rejection-policy="DISCARD"/>
+
+        <!-- Security Configurations -->
+        <bean class="org.devnull.zuul.service.security.SecurityProvidersRegistrar">
+            <property name="providers">
+                <util:list>
+                    <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
+                </util:list>
+            </property>
+        </bean>
+        <util:map id="keyMetaData" map-class="java.util.LinkedHashMap"
+                  key-type="java.lang.String" value-type="org.devnull.zuul.service.security.KeyConfiguration">
+            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}">
+                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}"/>
+                    <property name="description" value="PGP Public Key"/>
+                    <property name="provider" value="BC"/>
+                    <property name="secret" value="false"/>
                 </bean>
-            </list>
-        </property>
-        <property name="loadTimeWeaver">
-            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
-        </property>
-        <property name="persistenceUnitName" value="zuul"/>
-    </bean>
-
-    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="${smtp.host}"/>
-        <property name="port" value="${smtp.port}"/>
-        <property name="username" value="${smtp.username}"/>
-        <property name="password" value="${smtp.password}"/>
-    </bean>
-
-    <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="${smtp.from}"/>
-    </bean>
-
-    <task:annotation-driven />
-    <task:executor id="auditExecutor" pool-size="10" queue-capacity="1000" rejection-policy="DISCARD"/>
-
-    <!-- Security Configurations -->
-    <bean class="org.devnull.zuul.service.security.SecurityProvidersRegistrar">
-        <property name="providers">
-            <util:list>
-                <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
-            </util:list>
-        </property>
-    </bean>
-    <util:map id="keyMetaData" map-class="java.util.LinkedHashMap"
-              key-type="java.lang.String" value-type="org.devnull.zuul.service.security.KeyConfiguration">
-        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}">
-            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}"/>
-                <property name="description" value="PGP Public Key"/>
-                <property name="provider" value="BC"/>
-                <property name="secret" value="false"/>
-            </bean>
-        </entry>
-        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}">
-            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}"/>
-                <property name="description" value="AES (Bouncy Castle)"/>
-                <property name="provider" value="BC"/>
-                <property name="hashIterations" value="1000"/>
-            </bean>
-        </entry>
-        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}">
-            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}"/>
-                <property name="description" value="Triple DES (Bouncy Castle)"/>
-                <property name="provider" value="BC"/>
-                <property name="hashIterations" value="1000"/>
-            </bean>
-        </entry>
-        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}">
-            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}"/>
-                <property name="description" value="Triple DES (JCE)"/>
-                <property name="hashIterations" value="1000"/>
-            </bean>
-        </entry>
-        <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}">
-            <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}"/>
-                <property name="description" value="DES (JCE)"/>
-                <property name="hashIterations" value="1000"/>
-            </bean>
-        </entry>
-    </util:map>
-
-
-
-
-
+            </entry>
+            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}">
+                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}"/>
+                    <property name="description" value="AES (Bouncy Castle)"/>
+                    <property name="provider" value="BC"/>
+                    <property name="hashIterations" value="1000"/>
+                </bean>
+            </entry>
+            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}">
+                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}"/>
+                    <property name="description" value="Triple DES (Bouncy Castle)"/>
+                    <property name="provider" value="BC"/>
+                    <property name="hashIterations" value="1000"/>
+                </bean>
+            </entry>
+            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}">
+                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}"/>
+                    <property name="description" value="Triple DES (JCE)"/>
+                    <property name="hashIterations" value="1000"/>
+                </bean>
+            </entry>
+            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}">
+                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}"/>
+                    <property name="description" value="DES (JCE)"/>
+                    <property name="hashIterations" value="1000"/>
+                </bean>
+            </entry>
+        </util:map>
+    </beans>
+    <beans profile="prod">
+        <bean class="liquibase.integration.spring.SpringLiquibase">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="changeLog" value="classpath:/data/prod/context-data.xml"/>
+        </bean>
+    </beans>
+    <beans profile="test">
+        <bean class="liquibase.integration.spring.SpringLiquibase">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="changeLog" value="classpath:/data/test/context-data.xml"/>
+        </bean>
+    </beans>
+    <beans profile="security-demo">
+        <bean class="liquibase.integration.spring.SpringLiquibase">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="changeLog" value="classpath:/data/demo/context-data.xml"/>
+        </bean>
+    </beans>
 </beans>

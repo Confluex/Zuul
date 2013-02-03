@@ -116,10 +116,4 @@
             <column name="GROUP_ID"/>
         </createIndex>
     </changeSet>
-
-    <changeSet author="mcantrell" id="zuul-1.0-load-deploy-data" context="deploy">
-        <loadData tableName="encryption_key" file="/data/deploy/EncryptionKey.csv"/>
-        <loadData tableName="security_role" file="/data/deploy/SecurityRole.csv"/>
-        <loadData tableName="environment" file="/data/deploy/Environment.csv"/>
-    </changeSet>
 </databaseChangeLog>
