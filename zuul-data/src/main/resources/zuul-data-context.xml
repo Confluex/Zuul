@@ -148,22 +148,16 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
             </entry>
         </util:map>
     </beans>
-    <beans profile="prod">
-        <bean class="liquibase.integration.spring.SpringLiquibase">
-            <property name="dataSource" ref="dataSource"/>
-            <property name="changeLog" value="classpath:/data/prod/context-data.xml"/>
-        </bean>
-    </beans>
     <beans profile="test">
         <bean class="liquibase.integration.spring.SpringLiquibase">
             <property name="dataSource" ref="dataSource"/>
-            <property name="changeLog" value="classpath:/data/test/context-data.xml"/>
+            <property name="changeLog" value="classpath:/data/profile/test/load-profile.xml"/>
         </bean>
     </beans>
     <beans profile="security-demo">
         <bean class="liquibase.integration.spring.SpringLiquibase">
             <property name="dataSource" ref="dataSource"/>
-            <property name="changeLog" value="classpath:/data/demo/context-data.xml"/>
+            <property name="changeLog" value="classpath:/data/profile/demo/load-profile.xml"/>
         </bean>
     </beans>
 </beans>

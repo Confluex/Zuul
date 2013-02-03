@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <!-- using logicalFilePath here to help preserve reverse compatibility due to refactoring of file structure -->
+    <changeSet author="mcantrell" id="zuul-1.0-load-deploy-data" logicalFilePath="/data/changelog/db.changelog-1.0.xml">
+        <!-- checksum changed when refactored, should be harmless -->
+        <validCheckSum>3:4c093f04078f5c2563a8d25c5290b11f</validCheckSum>
+        <validCheckSum>3:1ef903c252a5c948a91d441dc14afa7a</validCheckSum>
+        <loadData tableName="encryption_key" file="/data/profile/all/EncryptionKey.csv"/>
+        <loadData tableName="security_role" file="/data/profile/all/SecurityRole.csv"/>
+        <loadData tableName="environment" file="/data/profile/all/Environment.csv"/>
+    </changeSet>
+
+</databaseChangeLog>
+
+

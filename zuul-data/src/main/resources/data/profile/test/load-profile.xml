@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="mcantrell" id="zuul-load-test-data">
+        <loadData tableName="encryption_key" file="/data/profile/test/EncryptionKey.csv"/>
+        <loadData tableName="security_user" file="/data/profile/test/SecurityUser.csv"/>
+        <loadData tableName="security_user_role" file="/data/profile/test/SecurityUserRole.csv"/>
+        <loadData tableName="settings" file="/data/profile/test/Settings.csv"/>
+        <loadData tableName="settings_group" file="/data/profile/test/SettingsGroup.csv"/>
+        <loadData tableName="settings_entry" file="/data/profile/test/SettingsEntry.csv"/>
+        <loadData tableName="settings_audit" file="/data/profile/test/SettingsAudit.csv"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,2 +1,0 @@
-name,description,password,default_key
-Default Key,Default key which can be used for evaluation purposes..,badpassword1,true
