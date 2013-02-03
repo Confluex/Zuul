@@ -1,8 +1,8 @@
 package org.devnull.zuul.web.test
 
 import org.devnull.security.service.SecurityService
+import org.junit.After
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.ProviderManager
@@ -13,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.transaction.annotation.Transactional
-import org.junit.After
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = [
@@ -22,7 +21,7 @@ import org.junit.After
 'classpath:security-context.xml'
 ])
 @Transactional('transactionManager')
-@ActiveProfiles("security-openid")
+@ActiveProfiles(["test", "security-openid"])
 abstract class ZuulWebIntegrationTest {
 
 
