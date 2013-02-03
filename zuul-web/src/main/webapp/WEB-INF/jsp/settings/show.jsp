@@ -5,6 +5,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -21,10 +22,20 @@
     </style>
 </head>
 <body>
+<security:authorize var="canEdit" access="hasRole('ROLE_ADMIN')"/>
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1><a href="${pageContext.request.contextPath}/settings/${fn:escapeXml(name)}/edit">${fn:escapeXml(name)}</a></h1>
+            <c:choose>
+                <c:when test="${canEdit}">
+                    <h1>
+                        <a href="${pageContext.request.contextPath}/settings/${fn:escapeXml(name)}/edit">${fn:escapeXml(name)}</a>
+                    </h1>
+                </c:when>
+                <c:otherwise>
+                    <h1>${fn:escapeXml(name)}</h1>
+                </c:otherwise>
+            </c:choose>
         </div>
 
         <div class="tabbable tabs-left">
@@ -84,7 +95,7 @@
 
                     <div class="controls">
                         <input id="encrypted" name="encrypted" type="checkbox" value="true" title="Encrypted Flag"
-                                data-content="Use only to manually encrypted state. Can be useful for resetting values, etc.">
+                               data-content="Use only to manually encrypted state. Can be useful for resetting values, etc.">
                     </div>
                 </div>
             </fieldset>
