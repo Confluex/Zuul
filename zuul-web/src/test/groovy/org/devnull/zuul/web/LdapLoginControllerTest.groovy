@@ -14,6 +14,6 @@ public class LdapLoginControllerTest {
     @Test
     void shouldHaveLoginPage() {
         def view = controller.login()
-        assert view == "/login/ldap"
+        assert view == "/login/form"
     }
 }
