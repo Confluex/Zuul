@@ -25,4 +25,17 @@ class SettingsDaoIntegrationTest extends ZuulDataIntegrationTest {
         def settings = dao.findByName("hr-service-config")
         assert settings.name == "hr-service-config"
     }
+
+    @Test
+    void shouldCascadeDelete() {
+        def settings = dao.findByName("app-data-config")
+        settings.groups.each {
+            assert settingsGroupDao.findOne(it.id)
+        }
+        dao.delete(settings.id)
+        settings.groups.each {
+            assert !settingsGroupDao.findOne(it.id)
+        }
+
+    }
 }

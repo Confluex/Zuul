@@ -8,6 +8,7 @@ import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.data.model.SettingsGroup
 import org.devnull.zuul.service.ZuulService
+import org.devnull.zuul.web.config.ZuulWebConstants
 import org.devnull.zuul.web.test.ControllerTestMixin
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +17,7 @@ import org.mockito.Matchers
 import org.springframework.beans.propertyeditors.StringTrimmerEditor
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.web.bind.WebDataBinder
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
@@ -28,6 +30,19 @@ public class SettingsControllerTest {
     @Before
     void createController() {
         controller = new SettingsController(zuulService: mock(ZuulService))
+    }
+
+    @Test
+    void shouldDeleteSettings() {
+        def redirectAttributes = mock(RedirectAttributes)
+        def settings = new Settings(id: 123, name: "test-settings")
+        when(controller.zuulService.getSettingsByName(settings.name)).thenReturn(settings)
+        def view  = controller.delete(redirectAttributes, "test-settings")
+        assert view == "redirect:/"
+        verify(controller.zuulService).delete(settings)
+        verify(redirectAttributes).addFlashAttribute(ZuulWebConstants.FLASH_ALERT_MESSAGE, "Settings Deleted")
+        verify(redirectAttributes).addFlashAttribute(ZuulWebConstants.FLASH_ALERT_TYPE, "success")
+
     }
 
     @Test

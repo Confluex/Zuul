@@ -191,10 +191,16 @@ class ZuulServiceImpl implements ZuulService {
         return settingsDao.findAll(new Sort("name")) as List<Settings>
     }
 
-    @Override
+    @Transactional(readOnly = false)
     Settings save(Settings settings) {
         errorIfInvalid(settings, "settings")
         return settingsDao.save(settings)
+    }
+
+    @Transactional(readOnly = false)
+    void delete(Settings settings) {
+        log.info("Deleting settings: {}", settings.name)
+        settingsDao.delete(settings.id)
     }
 
     @Transactional(readOnly = false)

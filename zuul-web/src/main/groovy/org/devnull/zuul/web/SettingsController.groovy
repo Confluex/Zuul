@@ -4,6 +4,7 @@ import org.devnull.util.pagination.HttpRequestPagination
 import org.devnull.zuul.data.model.Settings
 import org.devnull.zuul.data.model.SettingsEntry
 import org.devnull.zuul.service.ZuulService
+import org.devnull.zuul.web.config.ZuulWebConstants
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.propertyeditors.StringTrimmerEditor
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -137,6 +139,15 @@ class SettingsController {
         if (result.hasErrors()) return "/settings/edit"
         zuulService.save(settings)
         return "redirect:/settings/${settings.name}"
+    }
+
+    @RequestMapping(value = "/settings/{name}/delete")
+    String delete(RedirectAttributes redirectAttrs, @PathVariable("name") String name) {
+        def settings = zuulService.getSettingsByName(name)
+        zuulService.delete(settings)
+        redirectAttrs.addFlashAttribute(ZuulWebConstants.FLASH_ALERT_MESSAGE, "Settings Deleted")
+        redirectAttrs.addFlashAttribute(ZuulWebConstants.FLASH_ALERT_TYPE, "success")
+        return "redirect:/"
     }
 
     /**

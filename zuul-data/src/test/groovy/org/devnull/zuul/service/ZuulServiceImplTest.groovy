@@ -82,6 +82,13 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldDeleteSettings() {
+        def settings = new Settings(id: 1, name: "done for")
+        service.delete(settings)
+        verify(service.settingsDao).delete(settings.id)
+    }
+
+    @Test
     void shouldSaveSettings() {
         def settings = new Settings(id: 1, name: "test")
         when(service.settingsDao.save(settings)).thenReturn(settings)
