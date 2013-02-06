@@ -6,7 +6,7 @@
     <changeSet author="mcantrell" id="zuul-1.5-create-settings-table">
         <createTable tableName="SETTINGS">
             <column name="ID" type="INT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_AUDIT"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">
                 <constraints nullable="false"/>
