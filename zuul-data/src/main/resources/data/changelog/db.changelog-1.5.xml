@@ -28,8 +28,8 @@
                                  referencedTableName="SETTINGS" referencedColumnNames="ID"
                                  constraintName="FK_SETTINGS_GROUP_SETTINGS_ID" deleteCascade="true"/>
         <sql>
-            UPDATE SETTINGS_GROUP g
-            SET SETTINGS_ID = (select ID from SETTINGS s where s.NAME = g.NAME)
+            UPDATE SETTINGS_GROUP
+            SET SETTINGS_ID = (select ID from SETTINGS s where s.NAME = SETTINGS_GROUP.NAME)
         </sql>
         <dropIndex tableName="SETTINGS_GROUP" indexName="UQX_SETTINGS_GROUP_1"/>
         <dropColumn tableName="SETTINGS_GROUP" columnName="NAME"/>
