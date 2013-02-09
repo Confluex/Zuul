@@ -96,6 +96,9 @@ tr .discoverable  {
 
 .ellipsis { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
+.help {
+    cursor: pointer;
+}
 
 footer {
     text-align: center;

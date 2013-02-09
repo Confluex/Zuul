@@ -35,7 +35,13 @@
                 <label class="control-label" for="folder">Folder</label>
 
                 <div class="controls">
-                    <input type="text" id="folder" name="folder" value="${fn:escapeXml(settings.folder)}">
+                    <div class="input-append">
+                        <input type="text" id="folder" name="folder"
+                               value="${fn:escapeXml(settings.folder)}">
+                        <span class="add-on help"
+                              title="Folder Organization"
+                              data-content="Used to organize the top navigation menu. Has no effect on client URLs">?</span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -51,5 +57,10 @@
     </div>
 </div>
 <bootstrap:validate formId="editSettingsForm" modelName="settings"/>
+<script>
+    $(function() {
+        $(".help").popover();
+    })
+</script>
 </body>
 </html>
