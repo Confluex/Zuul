@@ -11,6 +11,10 @@
         <loadData tableName="encryption_key" file="/data/profile/all/EncryptionKey.csv"/>
         <loadData tableName="security_role" file="/data/profile/all/SecurityRole.csv"/>
         <loadData tableName="environment" file="/data/profile/all/Environment.csv"/>
+        <modifySql dbms="mssql">
+            <prepend value="SET IDENTITY_INSERT security_role ON;"/>
+            <append value="SET IDENTITY_INSERT security_role OFF;"/>
+        </modifySql>
     </changeSet>
 
 </databaseChangeLog>

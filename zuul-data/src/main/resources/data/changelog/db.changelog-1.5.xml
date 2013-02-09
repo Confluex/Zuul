@@ -32,6 +32,7 @@
             SET SETTINGS_ID = (select ID from SETTINGS s where s.NAME = SETTINGS_GROUP.NAME)
         </sql>
         <dropIndex tableName="SETTINGS_GROUP" indexName="UQX_SETTINGS_GROUP_1"/>
+        <dropIndex tableName="SETTINGS_GROUP" indexName="IDX_SETTINGS_GROUP_NAME"/>
         <dropColumn tableName="SETTINGS_GROUP" columnName="NAME"/>
         <createIndex indexName="UQX_SETTINGS_GROUP_1" tableName="SETTINGS_GROUP" unique="true">
             <column name="SETTINGS_ID"/>
