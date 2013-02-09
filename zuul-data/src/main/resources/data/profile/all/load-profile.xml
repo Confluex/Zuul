@@ -8,14 +8,10 @@
         <!-- checksum changed when refactored, should be harmless -->
         <validCheckSum>3:4c093f04078f5c2563a8d25c5290b11f</validCheckSum>
         <validCheckSum>3:1ef903c252a5c948a91d441dc14afa7a</validCheckSum>
-        <validCheckSum>3:f7baa15de1a042232360095c5bec1a28</validCheckSum>
+        <validCheckSum>3:9bb04f41fdd102d46098db462a55766a</validCheckSum>
         <loadData tableName="encryption_key" file="/data/profile/all/EncryptionKey.csv"/>
         <loadData tableName="security_role" file="/data/profile/all/SecurityRole.csv"/>
         <loadData tableName="environment" file="/data/profile/all/Environment.csv"/>
-        <modifySql dbms="mssql">
-            <prepend value="SET IDENTITY_INSERT security_role ON;"/>
-            <append value="SET IDENTITY_INSERT security_role OFF;"/>
-        </modifySql>
     </changeSet>
 
 </databaseChangeLog>
