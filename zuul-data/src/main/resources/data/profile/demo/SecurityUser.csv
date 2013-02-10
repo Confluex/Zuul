@@ -1,4 +1,3 @@
 id,user_name,first_name,last_name,email,enabled
-4,system,Demo,SysAdmin,system.admin@demo.devnull.org,true
 5,admin,Demo,Admin,admin@demo.devnull.org,true
 6,user,Demo,User,user@demo.devnull.org,true
