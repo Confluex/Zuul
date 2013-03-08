@@ -85,7 +85,8 @@ class PgpEncryptionStrategyIntegrationTest {
             def cmd = gpg.execute()
             closure(cmd.text)
         } catch (IOException e) {
-            if (e.message.contains("The system cannot find the file specified")) {
+            def message = e.message
+            if (message.contains("cannot find the file") || message.contains("No such file")) {
                 log.warn("Unable to run ${gpg} because GPG CLI is not installed", e)
             }
             else {
