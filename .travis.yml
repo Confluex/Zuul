@@ -1,6 +1,6 @@
 language: java
 before_install:
-    - "curl -L --cookie 'ARU_LANG=US; s_cc=true; gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjce-6-download-429243.html; s_sq=oracleotnlive%2Coracleglobal%3D%2526pid%253Dotn%25253Aen-us%25253A%25252Fjava%25252Fjavase%25252Fdownloads%25252Fjce-6-download-429243.html%2526pidt%253D1%2526oid%253Dhttp%25253A%25252F%25252Fwww.oracle.com%25252Ftechnetwork%25252Fjava%25252Fjavase%25252Fdownloads%25252Fjce-6-download-429243.html%2526ot%253DA'  http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip -o policy.zip"
+    - "curl -L --cookie 's_cc=true; oraclelicense=accept-securebackup-cookie; s_nr=1395077074407; gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjce-7-download-432124.html; s_sq=%5B%5BB%5D%5D'  http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip -o policy.zip"
     - "sudo unzip -j -o policy.zip *.jar -d $JAVA_HOME/jre/lib/security"
     - "ls -la $JAVA_HOME/jre/lib/security"
 install: "mvn install -P ci -U --quiet -DskipTests=true"
