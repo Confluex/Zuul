@@ -26,7 +26,6 @@ $(function () {
         var roleId = link.data("role-id");
         var userId = addRoleDialog.data("user-id");
         var updateUserRow = function (data, status, xhr) {
-            link.parents("span").remove();
             addRoleDialog.modal('hide');
             var row = $("#userTable").find("[data-user-id='" + userId + "']");
             var td = row.find(".role-column");
