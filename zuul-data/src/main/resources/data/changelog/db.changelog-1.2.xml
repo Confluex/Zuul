@@ -4,8 +4,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet author="mcantrell" id="zuul-1.2-add-environment-restrictions">
+        <validCheckSum>3:ef4ba02b7bf3dffff05d11de424f1b6e</validCheckSum>
         <addColumn tableName="ENVIRONMENT">
-            <column name="RESTRICTED" type="BOOLEAN" defaultValue="false" value="0" >
+            <column name="RESTRICTED" type="BOOLEAN" defaultValueBoolean="false" valueBoolean="false" >
                 <constraints nullable="false"/>
             </column>
         </addColumn>
