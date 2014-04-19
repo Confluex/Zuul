@@ -1,4 +1,4 @@
 name,restricted,ordinal
-prod,1,0
-qa,0,1
-dev,0,2
+prod,true,0
+qa,false,1
+dev,false,2
