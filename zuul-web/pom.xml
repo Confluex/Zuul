@@ -5,6 +5,9 @@
     <artifactId>zuul-web</artifactId>
     <packaging>war</packaging>
     <name>Zuul: Web Layer</name>
+	<properties>
+        <jetty.version>8.1.15.v20140411</jetty.version>
+    </properties>
     <parent>
         <groupId>org.devnull</groupId>
         <artifactId>zuul-parent</artifactId>
@@ -87,22 +90,22 @@
 
 		<!-- Jetty -->
 		<dependency>
-    <groupId>org.eclipse.jetty</groupId>
-    <artifactId>jetty-server</artifactId>
-    <version>8.1.15.v20140411</version>
-</dependency>
-<dependency>
-    <groupId>org.eclipse.jetty</groupId>
-    <artifactId>jetty-webapp</artifactId>
-    <version>8.1.15.v20140411</version>
-    <!-- <scope>provided</scope> -->
-</dependency>
-<dependency>
-    <groupId>org.eclipse.jetty</groupId>
-    <artifactId>jetty-jsp</artifactId>
-    <version>8.1.15.v20140411</version>
-    <!-- <scope>provided</scope>  -->
-</dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty.version}</version>
+			<!-- <scope>provided</scope> -->
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jsp</artifactId>
+			<version>${jetty.version}</version>
+			<!-- <scope>provided</scope>  -->
+		</dependency>
 
         <!-- Test -->
         <dependency>
@@ -144,7 +147,7 @@
                     </execution>
                 </executions>
             </plugin>
-			 <plugin>
+			<plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
