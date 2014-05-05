@@ -15,7 +15,8 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 
 
     <beans>
-        <context:property-placeholder location="classpath:/zuul-data-config.properties" order="1" ignore-unresolvable="true"/>
+    	<context:property-placeholder location="${conf.location:classpath:/}zuul-data-config.properties" order="1" ignore-unresolvable="true"/>
+
         <jpa:repositories base-package="org.devnull.zuul.data.dao"/>
         <context:annotation-config/>
         <context:component-scan base-package="org.devnull.zuul.data"/>
