@@ -28,14 +28,19 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class Main {
 
     /**
+     * The default configuration location.
+     */
+    public static final String DEFAULT_CONF_LOCATION = "file:./conf/";
+
+    /**
      * The System property for the server port
      */
-    private static final String SERVER_PORT = "server.port";
+    public static final String SERVER_PORT = "server.port";
     
     /**
      * The System property for the configuration location. 
      */
-    private static final String CONF_LOCATION = "conf.location";
+    public static final String CONF_LOCATION = "conf.location";
 
     public static void main(String[] args) throws Exception {
         setConfLocation();
@@ -62,7 +67,7 @@ public class Main {
     
     private static void setConfLocation() {
         if(System.getProperty(CONF_LOCATION) == null) {
-            System.setProperty(CONF_LOCATION, "file:./conf/");
+            System.setProperty(CONF_LOCATION, DEFAULT_CONF_LOCATION);
         }
     }
 }
