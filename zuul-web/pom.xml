@@ -14,7 +14,7 @@
         <version>1.6-SNAPSHOT</version>
     </parent>
 
-    <dependencies>
+    <dependencies>	
         <!-- Web -->
         <dependency>
             <groupId>org.springframework</groupId>
