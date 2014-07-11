@@ -28,7 +28,8 @@ class SettingsEntry implements Serializable {
             pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_NUMBER",
             pkColumnValue = "SETTINGS_ENTRY_SEQ",
-            allocationSize=1)
+            allocationSize=1,
+            initialValue = 10)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "SETTINGS_ENTRY_GEN")
     Integer id
 

@@ -22,7 +22,8 @@ class SettingsAudit implements Serializable {
             pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_NUMBER",
             pkColumnValue = "SETTINGS_AUDIT_SEQ",
-            allocationSize=1)
+            allocationSize=1,
+            initialValue = 10)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "SETTINGS_AUDIT_GEN")
     Long id
 

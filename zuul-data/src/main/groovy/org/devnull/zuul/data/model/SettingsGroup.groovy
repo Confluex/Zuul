@@ -35,7 +35,8 @@ class SettingsGroup implements Serializable {
             pkColumnName = "SEQ_NAME",
             valueColumnName = "SEQ_NUMBER",
             pkColumnValue = "SETTINGS_GROUP_SEQ",
-            allocationSize=1)
+            allocationSize=1,
+            initialValue = 10)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "SETTINGS_GROUP_GEN")
     Integer id
 
