@@ -29,14 +29,14 @@
             </column>
         </createTable>
         <createTable tableName="SECURITY_ROLE">
-            <column autoIncrement="true" name="ID" type="INT">
+            <column name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_ROLE"/>
             </column>
             <column name="DESCRIPTION" type="VARCHAR(255)"/>
             <column name="NAME" type="VARCHAR(255)"/>
         </createTable>
         <createTable tableName="SECURITY_USER">
-            <column autoIncrement="true" name="ID" type="INT">
+            <column name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_USER"/>
             </column>
             <column name="EMAIL" type="VARCHAR(255)"/>
@@ -56,7 +56,7 @@
             </column>
         </createTable>
         <createTable tableName="SETTINGS_ENTRY">
-            <column autoIncrement="true" name="ID" type="INT">
+            <column name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_ENTRY"/>
             </column>
             <column name="ENCRYPTED" type="BOOLEAN">
@@ -71,7 +71,7 @@
             </column>
         </createTable>
         <createTable tableName="SETTINGS_GROUP">
-            <column autoIncrement="true" name="ID" type="INT">
+            <column name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_GROUP"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">

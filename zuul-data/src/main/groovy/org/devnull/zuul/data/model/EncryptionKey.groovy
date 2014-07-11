@@ -42,6 +42,7 @@ class EncryptionKey implements Serializable {
     @Column(nullable = false, length = 2000)
     String password
 
+    @Column(columnDefinition = "NUMERIC(1,0)")
     Boolean defaultKey = false
 
     @Column(nullable = false, length = 255)
