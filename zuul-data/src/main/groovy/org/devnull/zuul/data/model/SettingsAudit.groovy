@@ -8,6 +8,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.TableGenerator
 
 @Entity
 @EqualsAndHashCode()
@@ -16,7 +17,13 @@ class SettingsAudit implements Serializable {
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableGenerator(name = "SETTINGS_AUDIT_GEN",
+            table = "SEQUENCES",
+            pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_NUMBER",
+            pkColumnValue = "SETTINGS_AUDIT_SEQ",
+            allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "SETTINGS_AUDIT_GEN")
     Long id
 
     String settingsKey

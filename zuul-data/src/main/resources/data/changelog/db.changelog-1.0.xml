@@ -3,6 +3,15 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
+    <changeSet author="jstrittmatter" id="zuul-1.0-create-sequence-table">
+        <createTable tableName="SEQUENCES">
+            <column name="SEQ_NAME" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SEQUENCES"/>
+            </column>
+            <column name="SEQ_NUMBER" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
     <changeSet author="mcantrell" id="zuul-1.0-create-tables">
         <createTable tableName="ENCRYPTION_KEY">
             <column name="NAME" type="VARCHAR(32)">

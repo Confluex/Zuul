@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
+import javax.persistence.TableGenerator
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
@@ -24,7 +25,13 @@ class Settings implements Serializable {
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableGenerator(name = "SETTINGS_GEN",
+            table = "SEQUENCES",
+            pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_NUMBER",
+            pkColumnValue = "SETTINGS_SEQ",
+            allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "SETTINGS_GEN")
     Integer id
 
     @Size(min = 1, message = "Name cannot by empty")
