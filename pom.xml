@@ -11,7 +11,18 @@
         <connection>scm:git:git@github.com:mcantrell/Zuul.git</connection>
         <url>scm:git:git@github.com:mcantrell/Zuul.git</url>
         <developerConnection>scm:git:git@github.com:mcantrell/Zuul.git</developerConnection>
+        <tag>1.6.x</tag>
     </scm>
+    <distributionManagement>
+        <repository>
+            <id>confluex-releases</id>
+            <url>http://dev.confluex.com/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>confluex-snapshots</id>
+            <url>http://dev.confluex.com/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
