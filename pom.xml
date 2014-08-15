@@ -8,9 +8,9 @@
     <name>Zuul: Parent POM</name>
     <url>https://github.com/mcantrell/Zuul</url>
     <scm>
-        <connection>scm:git:git@github.com:mcantrell/Zuul.git</connection>
-        <url>scm:git:git@github.com:mcantrell/Zuul.git</url>
-        <developerConnection>scm:git:git@github.com:mcantrell/Zuul.git</developerConnection>
+        <connection>scm:git:git@github.com:Confluex/zuul.git</connection>
+        <url>scm:git:git@github.com:Confluex/zuul.git</url>
+        <developerConnection>scm:git:git@github.com:Confluex/zuul.git</developerConnection>
         <tag>1.6.x</tag>
     </scm>
     <distributionManagement>
