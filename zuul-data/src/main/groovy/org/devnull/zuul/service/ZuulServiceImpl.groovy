@@ -204,10 +204,9 @@ class ZuulServiceImpl implements ZuulService {
     }
 
     @Transactional(readOnly = false)
-    SettingsEntry encryptSettingsEntryValue(Integer entryId) {
-        def entry = settingsEntryDao.findOne(entryId)
+    SettingsEntry encryptSettingsEntryValue(SettingsEntry entry) {
         if (entry.encrypted) {
-            throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entryId)
+            throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entry.id)
         }
         entry.value = encryptionStrategy.encrypt(entry.value, entry.group.key)
         entry.encrypted = true
@@ -215,10 +214,9 @@ class ZuulServiceImpl implements ZuulService {
     }
 
     @Transactional(readOnly = false)
-    SettingsEntry decryptSettingsEntryValue(Integer entryId) {
-        def entry = settingsEntryDao.findOne(entryId)
+    SettingsEntry decryptSettingsEntryValue(SettingsEntry entry) {
         if (!entry.encrypted) {
-            throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entryId)
+            throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entry.id)
         }
         entry.value = encryptionStrategy.decrypt(entry.value, entry.group.key)
         entry.encrypted = false
