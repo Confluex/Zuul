@@ -39,6 +39,8 @@
     </developers>
     <properties>
         <devnull.version>1.1</devnull.version>
+        <sonar.language>grvy</sonar.language>
+        <sonar.sources>src/main/groovy</sonar.sources>
     </properties>
     <parent>
         <groupId>org.devnull</groupId>
