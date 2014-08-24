@@ -31,6 +31,7 @@ class SettingEntryEncryptSecurityIntegrationTest extends SecurityWebIntegrationT
     void shouldNotAllowRoleAdminToEncryptEntryBelongingToRestrictedGroup() {
         loginAsUser(LOGIN_ROLE_ADMIN)
         def entry = findRestrictedGroup().entries.first()
+        assert entry.group
         settingsServicesController.encrypt(entry.id)
     }
 
