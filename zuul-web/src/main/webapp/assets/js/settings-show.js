@@ -2,15 +2,7 @@ $(function () {
     var dialog = $('#editEntryDialog').modal({show:false});
     var link = null;
 
-    var updateEncryptLink = function(target, encrypted) {
-        target.data('encrypted', encrypted);
-        target.text(encrypted ? ' Decrypt ' : ' Encrypt ');
-        var icon = $(document.createElement('i')).addClass("icon-lock");
-        target.prepend(icon);
-    };
-
     var toggleEncrypt = function () {
-        link = $(this);
         var operation = link.data('encrypted') ? 'decrypt' : 'encrypt';
         var id = link.data('id');
         $.ajax({
@@ -18,8 +10,8 @@ $(function () {
             data:{id:id},
             contentType:'application/json',
             success:function (data) {
-                updateEncryptLink(link, data.encrypted);
-                link.parents("tr").children(".value").text(data.value);
+                link.data('encrypted', data.encrypted);
+                $("#value").val(data.value);
             },
             error: showJsonErrors
         });
@@ -44,7 +36,6 @@ $(function () {
     };
     var onSaveHandler = function (entry) {
         var row = link.parents("tr");
-        updateEncryptLink(link.parent().find(".encrypt-link"), entry.encrypted);
         row.fadeOut('slow', function () {
             row.children(".value").text(entry.value);
             row.children(".key").text(entry.key);
@@ -96,10 +87,9 @@ $(function () {
     };
 
 
-    $("#encrypted").popover({placement:'right', trigger:'hover'});
+    $("#encrypted").click(toggleEncrypt).popover({placement:'right', trigger:'hover'});
     $(".descriptive").popover({placement:'top', trigger:'hover'});
-    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler });
-    $(".encrypt-link").click(toggleEncrypt);
+    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler })
     $(".edit-link").click(showEditDialog);
     $(".delete-link").click(deleteEntry);
     $(".delete-group-link").click(deleteGroup);
