@@ -40,4 +40,14 @@ class SettingsEntry implements Serializable {
 
     @Column(nullable = false)
     Boolean encrypted = false
+
+    SettingsEntry copy() {
+        return new SettingsEntry(
+                key: this.key,
+                value: this.value,
+                group: this.group,
+                id: this.id,
+                encrypted: this.encrypted
+        )
+    }
 }

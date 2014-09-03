@@ -23,8 +23,8 @@ class SettingEntryEncryptSecurityIntegrationTest extends SecurityWebIntegrationT
         loginAsUser(LOGIN_ROLE_ADMIN)
         def entry = findUnRestrictedGroup().entries.first()
         def unencrypted = entry.value
-        settingsServicesController.encrypt(entry.id)
-        assert settingsEntryDao.findOne(entry.id).value != unencrypted
+        assert settingsServicesController.encrypt(entry.id).value != unencrypted
+        assert settingsEntryDao.findOne(entry.id).value == unencrypted
     }
 
     @Test(expected = AccessDeniedException)
@@ -40,8 +40,8 @@ class SettingEntryEncryptSecurityIntegrationTest extends SecurityWebIntegrationT
         loginAsUser(LOGIN_ROLE_SYSTEM_ADMIN)
         def entry = findRestrictedGroup().entries.first()
         def unencrypted = entry.value
-        settingsServicesController.encrypt(entry.id)
-        assert settingsEntryDao.findOne(entry.id).value != unencrypted
+        assert settingsServicesController.encrypt(entry.id).value != unencrypted
+        assert settingsEntryDao.findOne(entry.id).value == unencrypted
     }
 
 }

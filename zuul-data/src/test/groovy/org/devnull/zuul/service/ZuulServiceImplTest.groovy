@@ -588,6 +588,23 @@ public class ZuulServiceImplTest {
     }
 
     @Test
+    void shouldEncryptSettingsEntryWithoutModifyingTheOriginalObject() {
+        def group = new SettingsGroup(key: new EncryptionKey(password: "abc123"))
+        def entry = new SettingsEntry(id: 1, key: "a", value: "foo")
+        group.addToEntries(entry)
+
+        def result = service.encryptSettingsEntryValue(entry)
+        assert !result.is(entry)
+
+        assert result.id == entry.id
+        assert result.group == entry.group
+        assert entry.key == entry.key
+
+        assert result.value != entry.value
+        assert entry.value == "foo"
+    }
+
+    @Test
     void shouldDecryptSettingsEntryWithItsGroupKey() {
         def group = new SettingsGroup(key: new EncryptionKey(password: "abc123"))
         def entry = new SettingsEntry(id: 1, key: "a", value: "encrypted", encrypted: true)
@@ -600,6 +617,23 @@ public class ZuulServiceImplTest {
         verify(service.encryptionStrategy).decrypt("encrypted", group.key)
         assert !decrypted.encrypted
         assert decrypted.value == "decrypted"
+    }
+
+    @Test
+    void shouldDecryptSettingsEntryWithoutModifyingTheOriginalObject() {
+        def group = new SettingsGroup(key: new EncryptionKey(password: "abc123"))
+        def entry = new SettingsEntry(id: 1, key: "a", value: "foo", encrypted: true)
+        group.addToEntries(entry)
+
+        def result = service.decryptSettingsEntryValue(entry)
+        assert !result.is(entry)
+
+        assert result.id == entry.id
+        assert result.group == entry.group
+        assert entry.key == entry.key
+
+        assert result.value != entry.value
+        assert entry.value == "foo"
     }
 
     @Test
