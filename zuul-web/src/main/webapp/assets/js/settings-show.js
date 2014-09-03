@@ -9,10 +9,7 @@ $(function () {
             url:getContextPath() + "/settings/entry/" + operation + ".json",
             data:{id:id},
             contentType:'application/json',
-            success:function (data) {
-                link.data('encrypted', data.encrypted);
-                $("#value").val(data.value);
-            },
+            success:onUpdateHandler,
             error: showJsonErrors
         });
     };
@@ -41,6 +38,15 @@ $(function () {
             row.children(".key").text(entry.key);
         });
         row.fadeIn('slow');
+    };
+    var onUpdateHandler = function(entry) {
+        var encrypted = entry.encrypted;
+        link.data('encrypted', encrypted);
+        $("#value").val(entry.value).attr("readonly", encrypted);
+        $("#encrypted").val(encrypted);
+        $("#encryptToggle").
+            toggleClass("btn-danger", !encrypted).find("i")
+            .toggleClass("icon-white", !encrypted);
     };
     var showEditDialog = function () {
         link = $(this);
@@ -87,9 +93,9 @@ $(function () {
     };
 
 
-    $("#encrypted").click(toggleEncrypt).popover({placement:'right', trigger:'hover'});
+    $("#encryptToggle").click(toggleEncrypt).popover({placement:'right', trigger:'hover'});
     $(".descriptive").popover({placement:'top', trigger:'hover'});
-    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler })
+    $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler, onLoad: onUpdateHandler });
     $(".edit-link").click(showEditDialog);
     $(".delete-link").click(deleteEntry);
     $(".delete-group-link").click(deleteGroup);
