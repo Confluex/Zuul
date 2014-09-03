@@ -93,7 +93,7 @@ $(function () {
     };
 
 
-    $("#encryptToggle").click(toggleEncrypt).popover({placement:'right', trigger:'hover'});
+    $("#encryptToggle").click(toggleEncrypt).tooltip({placement:'right', trigger:'hover'});
     $(".descriptive").popover({placement:'top', trigger:'hover'});
     $("#editEntryForm").jsonForm({ dialog:dialog, onSave:onSaveHandler, onDelete:onDeleteHandler, onLoad: onUpdateHandler });
     $(".edit-link").click(showEditDialog);

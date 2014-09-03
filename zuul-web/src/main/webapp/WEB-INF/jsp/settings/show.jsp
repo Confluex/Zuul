@@ -89,8 +89,7 @@
                     <div class="controls">
                         <div class="input-append">
                             <input id="value" name="value" class="span3" type="text">
-                            <span id="encryptToggle" class="add-on" title="Toggle Encryption"
-                                  data-content="Encrypt or decrypt the value">
+                            <span id="encryptToggle" class="add-on" title="Toggle Encryption">
                                 <i class="icon-lock"></i>
                             </span>
                         </div>
