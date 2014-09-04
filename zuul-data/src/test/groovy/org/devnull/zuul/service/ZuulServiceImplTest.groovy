@@ -602,6 +602,9 @@ public class ZuulServiceImplTest {
 
         assert result.value != entry.value
         assert entry.value == "foo"
+        assert result.encrypted != entry.encrypted
+        assert result.encrypted
+        assert !entry.encrypted
     }
 
     @Test
@@ -634,6 +637,8 @@ public class ZuulServiceImplTest {
 
         assert result.value != entry.value
         assert entry.value == "foo"
+        assert !result.encrypted
+        assert entry.encrypted
     }
 
     @Test
