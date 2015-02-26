@@ -17,7 +17,7 @@
             <column name="NAME"/>
         </createIndex>
         <sql>
-            INSERT INTO SETTINGS (NAME) SELECT DISTINCT NAME FROM settings_group
+            INSERT INTO SETTINGS (NAME) SELECT DISTINCT NAME FROM SETTINGS_GROUP
         </sql>
     </changeSet>
     <changeSet author="mcantrell" id="zuul-1.5-settings-group-conversion">

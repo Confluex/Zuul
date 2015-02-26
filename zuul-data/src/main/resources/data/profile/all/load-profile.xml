@@ -10,11 +10,11 @@
         <validCheckSum>3:1ef903c252a5c948a91d441dc14afa7a</validCheckSum>
         <validCheckSum>3:9bb04f41fdd102d46098db462a55766a</validCheckSum>
         <validCheckSum>3:b3da702a831a2414ea8ea6e83df96051</validCheckSum>
-        <loadData tableName="encryption_key" file="/data/profile/all/EncryptionKey.csv">
+        <loadData tableName="ENCRYPTION_KEY" file="/data/profile/all/EncryptionKey.csv">
             <column name="default_key" type="boolean" />
         </loadData>
-        <loadData tableName="security_role" file="/data/profile/all/SecurityRole.csv"/>
-        <loadData tableName="environment" file="/data/profile/all/Environment.csv">
+        <loadData tableName="SECURITY_ROLE" file="/data/profile/all/SecurityRole.csv"/>
+        <loadData tableName="ENVIRONMENT" file="/data/profile/all/Environment.csv">
             <column name="restricted" type="boolean" />
         </loadData>
     </changeSet>

@@ -4,8 +4,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet author="mcantrell" id="zuul-load-demo-data">
-        <loadData tableName="security_user" file="/data/profile/demo/SecurityUser.csv"/>
-        <loadData tableName="security_user_role" file="/data/profile/demo/SecurityUserRole.csv"/>
+        <loadData tableName="SECURITY_USER" file="/data/profile/demo/SecurityUser.csv"/>
+        <loadData tableName="SECURITY_USER_ROLE" file="/data/profile/demo/SecurityUserRole.csv"/>
     </changeSet>
 
 </databaseChangeLog>

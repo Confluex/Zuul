@@ -4,13 +4,13 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet author="mcantrell" id="zuul-load-test-data">
-        <loadData tableName="encryption_key" file="/data/profile/test/EncryptionKey.csv"/>
-        <loadData tableName="security_user" file="/data/profile/test/SecurityUser.csv"/>
-        <loadData tableName="security_user_role" file="/data/profile/test/SecurityUserRole.csv"/>
-        <loadData tableName="settings" file="/data/profile/test/Settings.csv"/>
-        <loadData tableName="settings_group" file="/data/profile/test/SettingsGroup.csv"/>
-        <loadData tableName="settings_entry" file="/data/profile/test/SettingsEntry.csv"/>
-        <loadData tableName="settings_audit" file="/data/profile/test/SettingsAudit.csv"/>
+        <loadData tableName="ENCRYPTION_KEY" file="/data/profile/test/EncryptionKey.csv"/>
+        <loadData tableName="SECURITY_USER" file="/data/profile/test/SecurityUser.csv"/>
+        <loadData tableName="SECURITY_USER_ROLE" file="/data/profile/test/SecurityUserRole.csv"/>
+        <loadData tableName="SETTINGS" file="/data/profile/test/Settings.csv"/>
+        <loadData tableName="SETTINGS_GROUP" file="/data/profile/test/SettingsGroup.csv"/>
+        <loadData tableName="SETTINGS_ENTRY" file="/data/profile/test/SettingsEntry.csv"/>
+        <loadData tableName="SETTINGS_AUDIT" file="/data/profile/test/SettingsAudit.csv"/>
     </changeSet>
 
 </databaseChangeLog>
