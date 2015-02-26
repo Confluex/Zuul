@@ -4,35 +4,35 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet author="mcantrell" id="zuul-1.1-create-audit-tables">
-        <createTable tableName="SETTINGS_AUDIT">
+        <createTable tableName="settings_audit">
             <column name="ID" type="BIGINT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_AUDIT"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_settings_audit"/>
             </column>
             <column name="SETTINGS_KEY" type="VARCHAR(255)"/>
             <column name="SETTINGS_VALUE" type="VARCHAR(255)"/>
             <column name="ENCRYPTED" type="BOOLEAN"/>
             <column name="GROUP_NAME" type="VARCHAR(255)"/>
-            <column name="GROUP_ENVIRONMENT" type="VARCHAR(12)"/>
+            <column name="GROUP_environment" type="VARCHAR(12)"/>
             <column name="MODIFIED_BY" type="VARCHAR(255)"/>
             <column name="MODIFIED_DATE" type="DATETIME"/>
             <column name="TYPE" type="INT"/>
         </createTable>
-        <createIndex indexName="IDX_SETTINGS_AUDIT_1" tableName="SETTINGS_AUDIT" unique="false">
+        <createIndex indexName="idx_settings_audit_1" tableName="settings_audit" unique="false">
             <column name="MODIFIED_DATE"/>
         </createIndex>
-        <createIndex indexName="IDX_SETTINGS_AUDIT_2" tableName="SETTINGS_AUDIT" unique="false">
+        <createIndex indexName="idx_settings_audit_2" tableName="settings_audit" unique="false">
             <column name="MODIFIED_BY"/>
         </createIndex>
-        <createIndex indexName="IDX_SETTINGS_AUDIT_3" tableName="SETTINGS_AUDIT" unique="false">
+        <createIndex indexName="idx_settings_audit_3" tableName="settings_audit" unique="false">
             <column name="GROUP_NAME"/>
         </createIndex>
     </changeSet>
 
     <changeSet author="mcantrell" id="zuul-1.1-settings-group-unique-constraint">
         <!-- missed this in 1.0... shouldn't have a settings group with the same name and environment -->
-        <createIndex indexName="UQX_SETTINGS_GROUP_1" tableName="SETTINGS_GROUP" unique="true">
+        <createIndex indexName="UQX_SETTINGS_GROUP_1" tableName="settings_group" unique="true">
             <column name="NAME"/>
-            <column name="ENVIRONMENT"/>
+            <column name="environment"/>
         </createIndex>
     </changeSet>
 

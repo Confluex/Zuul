@@ -4,9 +4,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet author="mcantrell" id="zuul-1.0-create-tables">
-        <createTable tableName="ENCRYPTION_KEY">
+        <createTable tableName="encryption_key">
             <column name="NAME" type="VARCHAR(32)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ENCRYPTION_KEY"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_encryption_key"/>
             </column>
             <column name="DEFAULT_KEY" type="BOOLEAN"/>
             <column name="DESCRIPTION" type="VARCHAR(64)"/>
@@ -14,21 +14,21 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createTable tableName="ENVIRONMENT">
+        <createTable tableName="environment">
             <column name="NAME" type="VARCHAR(12)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ENVIRONMENT"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_environment"/>
             </column>
         </createTable>
-        <createTable tableName="SECURITY_ROLE">
+        <createTable tableName="security_role">
             <column autoIncrement="true" name="ID" type="INT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_ROLE"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_security_role"/>
             </column>
             <column name="DESCRIPTION" type="VARCHAR(255)"/>
             <column name="NAME" type="VARCHAR(255)"/>
         </createTable>
-        <createTable tableName="SECURITY_USER">
+        <createTable tableName="security_user">
             <column autoIncrement="true" name="ID" type="INT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SECURITY_USER"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_security_user"/>
             </column>
             <column name="EMAIL" type="VARCHAR(255)"/>
             <column name="ENABLED" type="BOOLEAN">
@@ -38,7 +38,7 @@
             <column name="LAST_NAME" type="VARCHAR(255)"/>
             <column name="USER_NAME" type="VARCHAR(255)"/>
         </createTable>
-        <createTable tableName="SECURITY_USER_ROLE">
+        <createTable tableName="security_user_role">
             <column name="USER_ID" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -46,7 +46,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createTable tableName="SETTINGS_ENTRY">
+        <createTable tableName="settings_entry">
             <column autoIncrement="true" name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_ENTRY"/>
             </column>
@@ -61,14 +61,14 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createTable tableName="SETTINGS_GROUP">
+        <createTable tableName="settings_group">
             <column autoIncrement="true" name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS_GROUP"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="ENVIRONMENT" type="VARCHAR(12)">
+            <column name="environment" type="VARCHAR(12)">
                 <constraints nullable="false"/>
             </column>
             <column name="KEY_NAME" type="VARCHAR(32)">
@@ -78,41 +78,41 @@
     </changeSet>
 
     <changeSet author="mcantrell" id="zuul-1.0-create-foreign-keys">
-        <addForeignKeyConstraint baseTableName="SECURITY_USER_ROLE" baseColumnNames="ROLE_ID"
-                                 referencedTableName="SECURITY_ROLE" referencedColumnNames="ID"
-                                 constraintName="FK_SECURITY_USER_ROLE_1"/>
-        <addForeignKeyConstraint baseTableName="SECURITY_USER_ROLE" baseColumnNames="USER_ID"
-                                 referencedTableName="SECURITY_USER" referencedColumnNames="ID"
-                                 constraintName="FK_SECURITY_USER_ROLE_2"
+        <addForeignKeyConstraint baseTableName="security_user_role" baseColumnNames="ROLE_ID"
+                                 referencedTableName="security_role" referencedColumnNames="ID"
+                                 constraintName="FK_security_user_role_1"/>
+        <addForeignKeyConstraint baseTableName="security_user_role" baseColumnNames="USER_ID"
+                                 referencedTableName="security_user" referencedColumnNames="ID"
+                                 constraintName="FK_security_user_role_2"
                 />
-        <addForeignKeyConstraint baseTableName="SETTINGS_ENTRY" baseColumnNames="GROUP_ID"
-                                 referencedTableName="SETTINGS_GROUP" referencedColumnNames="ID"
+        <addForeignKeyConstraint baseTableName="settings_entry" baseColumnNames="GROUP_ID"
+                                 referencedTableName="settings_group" referencedColumnNames="ID"
                                  constraintName="FK_SETTINGS_ENTRY_1" onDelete="CASCADE"
                 />
-        <addForeignKeyConstraint baseTableName="SETTINGS_GROUP" baseColumnNames="ENVIRONMENT"
-                                 referencedTableName="ENVIRONMENT" referencedColumnNames="NAME"
+        <addForeignKeyConstraint baseTableName="settings_group" baseColumnNames="environment"
+                                 referencedTableName="environment" referencedColumnNames="NAME"
                                  constraintName="FK_SETTINGS_GROUP_1" onDelete="CASCADE"
                 />
-        <addForeignKeyConstraint baseTableName="SETTINGS_GROUP" baseColumnNames="KEY_NAME"
-                                 referencedTableName="ENCRYPTION_KEY" referencedColumnNames="NAME"
+        <addForeignKeyConstraint baseTableName="settings_group" baseColumnNames="KEY_NAME"
+                                 referencedTableName="encryption_key" referencedColumnNames="NAME"
                                  constraintName="FK_SETTINGS_GROUP_2"
                 />
     </changeSet>
 
     <changeSet author="mcantrell" id="zuul-1.0-create-indexes">
-        <createIndex indexName="UQX_SECURITY_ROLE_1" tableName="SECURITY_ROLE" unique="true">
+        <createIndex indexName="uqx_security_role_1" tableName="security_role" unique="true">
             <column name="NAME"/>
         </createIndex>
-        <createIndex indexName="UQX_SECURITY_USER_1" tableName="SECURITY_USER" unique="true">
+        <createIndex indexName="uqx_security_user_1" tableName="security_user" unique="true">
             <column name="USER_NAME"/>
         </createIndex>
-        <createIndex indexName="IDX_SETTINGS_GROUP_NAME" tableName="SETTINGS_GROUP" unique="false">
+        <createIndex indexName="idx_settings_group_name" tableName="settings_group" unique="false">
             <column name="NAME"/>
         </createIndex>
-        <createIndex indexName="IDX_SETTINGS_GROUP_ENVIRONMENT" tableName="SETTINGS_GROUP" unique="false">
-            <column name="ENVIRONMENT"/>
+        <createIndex indexName="idx_settings_group_environment" tableName="settings_group" unique="false">
+            <column name="environment"/>
         </createIndex>
-        <createIndex indexName="IDX_SETTINGS_ENTRY_GROUP" tableName="SETTINGS_ENTRY" unique="false">
+        <createIndex indexName="idx_settings_entry_group" tableName="settings_entry" unique="false">
             <column name="GROUP_ID"/>
         </createIndex>
     </changeSet>

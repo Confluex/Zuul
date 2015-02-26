@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet author="mcantrell" id="zuul-1.5-create-settings-table">
-        <createTable tableName="SETTINGS">
+        <createTable tableName="settings">
             <column name="ID" type="INT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS"/>
             </column>
@@ -13,30 +13,30 @@
             </column>
             <column name="FOLDER" type="VARCHAR(32)"/>
         </createTable>
-        <createIndex tableName="SETTINGS" indexName="UQX_SETTINGS_NAME" unique="true">
+        <createIndex tableName="settings" indexName="uqx_settings_name" unique="true">
             <column name="NAME"/>
         </createIndex>
         <sql>
-            INSERT INTO SETTINGS (NAME) SELECT DISTINCT NAME FROM SETTINGS_GROUP
+            INSERT INTO settings (NAME) SELECT DISTINCT NAME FROM settings_group
         </sql>
     </changeSet>
     <changeSet author="mcantrell" id="zuul-1.5-settings-group-conversion">
-        <addColumn tableName="SETTINGS_GROUP">
+        <addColumn tableName="settings_group">
             <column name="SETTINGS_ID" type="INT"/>
         </addColumn>
-        <addForeignKeyConstraint baseTableName="SETTINGS_GROUP" baseColumnNames="SETTINGS_ID"
-                                 referencedTableName="SETTINGS" referencedColumnNames="ID"
+        <addForeignKeyConstraint baseTableName="settings_group" baseColumnNames="SETTINGS_ID"
+                                 referencedTableName="settings" referencedColumnNames="ID"
                                  constraintName="FK_SETTINGS_GROUP_SETTINGS_ID" deleteCascade="true"/>
         <sql>
-            UPDATE SETTINGS_GROUP
-            SET SETTINGS_ID = (select ID from SETTINGS s where s.NAME = SETTINGS_GROUP.NAME)
+            UPDATE settings_group
+            SET SETTINGS_ID = (select ID from settings s where s.NAME = settings_group.NAME)
         </sql>
-        <dropIndex tableName="SETTINGS_GROUP" indexName="UQX_SETTINGS_GROUP_1"/>
-        <dropIndex tableName="SETTINGS_GROUP" indexName="IDX_SETTINGS_GROUP_NAME"/>
-        <dropColumn tableName="SETTINGS_GROUP" columnName="NAME"/>
-        <createIndex indexName="UQX_SETTINGS_GROUP_1" tableName="SETTINGS_GROUP" unique="true">
+        <dropIndex tableName="settings_group" indexName="UQX_SETTINGS_GROUP_1"/>
+        <dropIndex tableName="settings_group" indexName="idx_settings_group_name"/>
+        <dropColumn tableName="settings_group" columnName="NAME"/>
+        <createIndex indexName="UQX_SETTINGS_GROUP_1" tableName="settings_group" unique="true">
             <column name="SETTINGS_ID"/>
-            <column name="ENVIRONMENT"/>
+            <column name="environment"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>
