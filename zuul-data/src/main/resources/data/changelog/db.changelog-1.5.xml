@@ -6,7 +6,7 @@
     <changeSet author="mcantrell" id="zuul-1.5-create-settings-table">
         <createTable tableName="settings">
             <column name="ID" type="INT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SETTINGS"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_settings"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -26,7 +26,7 @@
         </addColumn>
         <addForeignKeyConstraint baseTableName="settings_group" baseColumnNames="SETTINGS_ID"
                                  referencedTableName="settings" referencedColumnNames="ID"
-                                 constraintName="FK_SETTINGS_GROUP_SETTINGS_ID" deleteCascade="true"/>
+                                 constraintName="fk_settings_group_settings_id" deleteCascade="true"/>
         <sql>
             UPDATE settings_group
             SET SETTINGS_ID = (select ID from settings s where s.NAME = settings_group.NAME)
@@ -34,9 +34,9 @@
         <dropIndex tableName="settings_group" indexName="UQX_SETTINGS_GROUP_1"/>
         <dropIndex tableName="settings_group" indexName="idx_settings_group_name"/>
         <dropColumn tableName="settings_group" columnName="NAME"/>
-        <createIndex indexName="UQX_SETTINGS_GROUP_1" tableName="settings_group" unique="true">
+        <createIndex indexName="uqx_settings_group_1" tableName="settings_group" unique="true">
             <column name="SETTINGS_ID"/>
-            <column name="environment"/>
+            <column name="ENVIRONMENT"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>

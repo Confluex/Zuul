@@ -6,7 +6,7 @@
     <changeSet author="mcantrell" id="zuul-1.1-create-audit-tables">
         <createTable tableName="settings_audit">
             <column name="ID" type="BIGINT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_settings_audit"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_settings_audit"/>
             </column>
             <column name="SETTINGS_KEY" type="VARCHAR(255)"/>
             <column name="SETTINGS_VALUE" type="VARCHAR(255)"/>
@@ -32,7 +32,7 @@
         <!-- missed this in 1.0... shouldn't have a settings group with the same name and environment -->
         <createIndex indexName="UQX_SETTINGS_GROUP_1" tableName="settings_group" unique="true">
             <column name="NAME"/>
-            <column name="environment"/>
+            <column name="ENVIRONMENT"/>
         </createIndex>
     </changeSet>
 
