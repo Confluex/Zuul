@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.devnull</groupId>
     <artifactId>zuul-parent</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Zuul: Parent POM</name>
     <url>https://github.com/psmith/Zuul</url>
