@@ -1,0 +1,26 @@
+{
+    "openIdProviders": [
+
+        {
+            "name": "Google",
+            "openIdUrl": "https://www.google.com/accounts/o8/id",
+            "iconLocation": "google.png"
+        },
+        {
+            "name": "Yahoo!",
+            "openIdUrl": "https://me.yahoo.com/",
+            "iconLocation": "yahoo.png"
+        },
+        {
+            "name": "Verisign",
+            "openIdUrl": "https://pip.verisignlabs.com/",
+            "iconLocation": "verisign.png"
+        },
+        {
+            "name": "Aol",
+            "openIdUrl": "https://openid.aol.com",
+            "iconLocation": "aol.png"
+        }
+
+    ]
+}
