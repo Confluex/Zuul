@@ -8,9 +8,9 @@
     <name>Zuul: Parent POM</name>
     <url>https://github.com/mcantrell/Zuul</url>
     <scm>
-        <connection>scm:git:git@github.com:mcantrell/Zuul.git</connection>
-        <url>scm:git:git@github.com:mcantrell/Zuul.git</url>
-        <developerConnection>scm:git:git@github.com:mcantrell/Zuul.git</developerConnection>
+        <connection>scm:git:git@github.com:Confluex/zuul.git</connection>
+        <url>scm:git:git@github.com:Confluex/zuul.git</url>
+        <developerConnection>scm:git:git@github.com:Confluex/zuul.git</developerConnection>
         <tag>1.6.x</tag>
     </scm>
     <distributionManagement>
@@ -36,9 +36,16 @@
             <name>Mike Cantrell</name>
             <email>mike.humansonly@devnull.org</email>
         </developer>
+        <developer>
+            <id>psmith</id>
+            <name>Paul.Smith</name>
+            <email>psmith.humansonly@confluex.com</email>
+        </developer>
     </developers>
     <properties>
         <devnull.version>1.1</devnull.version>
+        <sonar.language>grvy</sonar.language>
+        <sonar.sources>src/main/groovy</sonar.sources>
     </properties>
     <parent>
         <groupId>org.devnull</groupId>

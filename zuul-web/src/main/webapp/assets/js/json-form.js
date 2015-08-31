@@ -5,6 +5,7 @@
     var dialog = null;
     var onSave = null;
     var onDelete = null;
+    var onLoad = null;
     var onError = function(xhr, status, error) {
         try {
             var json = $.parseJSON(xhr.responseText);
@@ -34,6 +35,7 @@
             dialog = options.dialog;
             onSave = options.onSave;
             onDelete = options.onDelete;
+            onLoad = options.onLoad;
             if (dialog) {
                 registerButtonHandlers();
             }
@@ -48,6 +50,7 @@
                 success:function (data, status, xhr) {
                     var binder = Binder.FormBinder.bind(form.get(0), data);
                     binder.deserialize();
+                    if (onLoad) onLoad(data);
                 },
                 error: onError
             });
