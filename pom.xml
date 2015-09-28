@@ -8,12 +8,12 @@
     <name>Zuul: Parent POM</name>
     <url>https://github.com/psmith/Zuul</url>
     <scm>
-        <connection>scm:git:git@github.com:psmith/zuul.git</connection>
-        <url>scm:git:git@github.com:psmith/zuul.git</url>
-        <developerConnection>scm:git:git@github.com:psmith/zuul.git</developerConnection>
+        <connection>scm:git:git@github.com:Confluex/zuul.git</connection>
+        <url>scm:git:git@github.com:Confluex/zuul.git</url>
+        <developerConnection>scm:git:git@github.com:Confluex/zuul.git</developerConnection>
         <tag>1.6.x</tag>
     </scm>
-    <!-- <distributionManagement>
+    <distributionManagement>
         <repository>
             <id>confluex-public-releases</id>
             <url>http://dev.confluex.com/nexus/content/repositories/public-releases</url>
@@ -22,7 +22,7 @@
             <id>confluex-public-snapshots</id>
             <url>http://dev.confluex.com/nexus/content/repositories/public-snapshots</url>
         </snapshotRepository>
-    </distributionManagement> -->
+    </distributionManagement>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
