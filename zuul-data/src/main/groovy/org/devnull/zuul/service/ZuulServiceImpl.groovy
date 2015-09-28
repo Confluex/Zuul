@@ -204,25 +204,25 @@ class ZuulServiceImpl implements ZuulService {
     }
 
     @Transactional(readOnly = false)
-    SettingsEntry encryptSettingsEntryValue(final SettingsEntry entry) {
-        def result = entry.copy()
-        if (result.encrypted) {
-            throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + result.id)
+    SettingsEntry encryptSettingsEntryValue(Integer entryId) {
+        def entry = settingsEntryDao.findOne(entryId)
+        if (entry.encrypted) {
+            throw new ConflictingOperationException("Cannot encrypt value that are already encrypted. Entry ID: " + entryId)
         }
-        result.value = encryptionStrategy.encrypt(result.value, result.group.key)
-        result.encrypted = true
-        return result
+        entry.value = encryptionStrategy.encrypt(entry.value, entry.group.key)
+        entry.encrypted = true
+        return entry
     }
 
     @Transactional(readOnly = false)
-    SettingsEntry decryptSettingsEntryValue(final SettingsEntry entry) {
-        def result = entry.copy()
-        if (!result.encrypted) {
-            throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + result.id)
+    SettingsEntry decryptSettingsEntryValue(Integer entryId) {
+        def entry = settingsEntryDao.findOne(entryId)
+        if (!entry.encrypted) {
+            throw new ConflictingOperationException("Cannot decrypt value that are already decrypted. Entry ID: " + entryId)
         }
-        result.value = encryptionStrategy.decrypt(result.value, result.group.key)
-        result.encrypted = false
-        return result
+        entry.value = encryptionStrategy.decrypt(entry.value, entry.group.key)
+        entry.encrypted = false
+        return entry
     }
 
     SettingsEntry findSettingsEntry(Integer id) {

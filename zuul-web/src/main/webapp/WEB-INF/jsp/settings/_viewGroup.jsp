@@ -95,7 +95,7 @@
             <td>
                 <c:if test="${isAdmin}">
                     <div class="btn-group">
-                        <button class="btn edit-link" data-id="${e.id}" data-encrypted="${e.encrypted}">
+                        <button class="btn edit-link" data-id="${e.id}">
                             <i class="icon-edit"></i>
                             Edit
                         </button>
@@ -103,6 +103,14 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="settings-entry dropdown-menu">
+                            <li>
+                                <a href="javascript:void(0);" class="encrypt-link" data-id="${e.id}"
+                                   data-encrypted="${e.encrypted}">
+                                    <i class="icon-lock"></i>
+                                        ${e.encrypted ? 'Decrypt' : 'Encrypt'}
+                                </a>
+                            </li>
+                            <li class="divider"></li>
                             <li>
                                 <a href="#" class="delete-link" data-id="${e.id}">
                                     <i class="icon-trash"></i>

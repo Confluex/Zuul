@@ -131,20 +131,22 @@ class SettingsServicesControllerTest {
     @Test
     void shouldEncryptEntry() {
         def expected = new SettingsEntry(id: 1, key: "a.b.c", value: "foo", encrypted: false)
-        when(controller.zuulService.findSettingsEntry(expected.id)).thenReturn(expected)
-        when(controller.zuulService.encryptSettingsEntryValue(expected)).thenReturn(expected)
+        when(controller.zuulService.encryptSettingsEntryValue(expected.id)).thenReturn(expected)
+        when(controller.zuulService.save(expected, SettingsAudit.AuditType.ENCRYPT)).thenReturn(expected)
         def result = controller.encrypt(expected.id)
-        verify(controller.zuulService).encryptSettingsEntryValue(expected)
+        verify(controller.zuulService).encryptSettingsEntryValue(expected.id)
+        verify(controller.zuulService).save(expected, SettingsAudit.AuditType.ENCRYPT)
         assert result.is(expected)
     }
 
     @Test
     void shouldDecryptEntry() {
         def expected = new SettingsEntry(id: 1, key: "a.b.c", value: "foo", encrypted: true)
-        when(controller.zuulService.findSettingsEntry(expected.id)).thenReturn(expected)
-        when(controller.zuulService.decryptSettingsEntryValue(expected)).thenReturn(expected)
+        when(controller.zuulService.decryptSettingsEntryValue(expected.id)).thenReturn(expected)
+        when(controller.zuulService.save(expected, SettingsAudit.AuditType.DECRYPT)).thenReturn(expected)
         def result = controller.decrypt(expected.id)
-        verify(controller.zuulService).decryptSettingsEntryValue(expected)
+        verify(controller.zuulService).decryptSettingsEntryValue(expected.id)
+        verify(controller.zuulService).save(expected, SettingsAudit.AuditType.DECRYPT)
         assert result.is(expected)
     }
 

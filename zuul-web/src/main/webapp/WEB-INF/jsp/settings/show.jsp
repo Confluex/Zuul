@@ -87,15 +87,17 @@
                     <label class="control-label" for="value">Value</label>
 
                     <div class="controls">
-                        <div class="input-append">
-                            <input id="value" name="value" class="span3" type="text">
-                            <span id="encryptToggle" class="add-on" title="Toggle Encryption">
-                                <i class="icon-lock"></i>
-                            </span>
-                        </div>
+                        <input id="value" name="value" class="span3" type="text">
                     </div>
                 </div>
-                <input id="encrypted" name="encrypted" type="hidden" value="true"/>
+                <div class="control-group">
+                    <label class="control-label" for="encrypted">Encrypted</label>
+
+                    <div class="controls">
+                        <input id="encrypted" name="encrypted" type="checkbox" value="true" title="Encrypted Flag"
+                               data-content="Use only to manually encrypted state. Can be useful for resetting values, etc.">
+                    </div>
+                </div>
             </fieldset>
         </form>
     </div>

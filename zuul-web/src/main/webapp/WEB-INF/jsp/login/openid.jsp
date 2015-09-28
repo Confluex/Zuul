@@ -16,13 +16,15 @@
             <h1>Select a Login Provider</h1>
         </div>
         <ul class="thumbnails">
-            <c:forEach var="provider" items="${providers}">
-                <li class="span2">
-                    <z:openIdProvider url="${provider.openIdUrl}"
-                                      icon="${provider.iconLocation}"
-                                      name="${provider.name}" />
-                </li>
-            </c:forEach>
+            <li class="span2">
+                <z:openIdProvider url="https://www.google.com/accounts/o8/id" icon="google.png" name="Google"/>
+            </li>
+            <li class="span2">
+                <z:openIdProvider url="https://me.yahoo.com/" icon="yahoo.png" name="Yahoo!"/>
+            </li>
+            <li class="span2">
+                <z:openIdProvider url="https://myopenid.com/" icon="myopenid.png" name="My OpenID!"/>
+            </li>
         </ul>
     </div>
     <div class="span-6">

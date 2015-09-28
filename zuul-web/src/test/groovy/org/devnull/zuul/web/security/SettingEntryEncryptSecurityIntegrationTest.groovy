@@ -23,15 +23,14 @@ class SettingEntryEncryptSecurityIntegrationTest extends SecurityWebIntegrationT
         loginAsUser(LOGIN_ROLE_ADMIN)
         def entry = findUnRestrictedGroup().entries.first()
         def unencrypted = entry.value
-        assert settingsServicesController.encrypt(entry.id).value != unencrypted
-        assert settingsEntryDao.findOne(entry.id).value == unencrypted
+        settingsServicesController.encrypt(entry.id)
+        assert settingsEntryDao.findOne(entry.id).value != unencrypted
     }
 
     @Test(expected = AccessDeniedException)
     void shouldNotAllowRoleAdminToEncryptEntryBelongingToRestrictedGroup() {
         loginAsUser(LOGIN_ROLE_ADMIN)
         def entry = findRestrictedGroup().entries.first()
-        assert entry.group
         settingsServicesController.encrypt(entry.id)
     }
 
@@ -40,8 +39,8 @@ class SettingEntryEncryptSecurityIntegrationTest extends SecurityWebIntegrationT
         loginAsUser(LOGIN_ROLE_SYSTEM_ADMIN)
         def entry = findRestrictedGroup().entries.first()
         def unencrypted = entry.value
-        assert settingsServicesController.encrypt(entry.id).value != unencrypted
-        assert settingsEntryDao.findOne(entry.id).value == unencrypted
+        settingsServicesController.encrypt(entry.id)
+        assert settingsEntryDao.findOne(entry.id).value != unencrypted
     }
 
 }

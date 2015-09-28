@@ -8,21 +8,10 @@
     <name>Zuul: Parent POM</name>
     <url>https://github.com/psmith/Zuul</url>
     <scm>
-        <connection>scm:git:git@github.com:Confluex/zuul.git</connection>
-        <url>scm:git:git@github.com:Confluex/zuul.git</url>
-        <developerConnection>scm:git:git@github.com:Confluex/zuul.git</developerConnection>
-        <tag>1.6.x</tag>
+        <connection>scm:git:git@github.com:mcantrell/Zuul.git</connection>
+        <url>scm:git:git@github.com:mcantrell/Zuul.git</url>
+        <developerConnection>scm:git:git@github.com:mcantrell/Zuul.git</developerConnection>
     </scm>
-    <distributionManagement>
-        <repository>
-            <id>confluex-public-releases</id>
-            <url>http://dev.confluex.com/nexus/content/repositories/public-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>confluex-public-snapshots</id>
-            <url>http://dev.confluex.com/nexus/content/repositories/public-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -36,16 +25,9 @@
             <name>Mike Cantrell</name>
             <email>mike.humansonly@devnull.org</email>
         </developer>
-        <developer>
-            <id>psmith</id>
-            <name>Paul.Smith</name>
-            <email>psmith.humansonly@confluex.com</email>
-        </developer>
     </developers>
     <properties>
         <devnull.version>1.1</devnull.version>
-        <sonar.language>grvy</sonar.language>
-        <sonar.sources>src/main/groovy</sonar.sources>
     </properties>
     <parent>
         <groupId>org.devnull</groupId>

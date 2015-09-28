@@ -74,11 +74,11 @@ public interface ZuulService {
 
     SettingsEntry findSettingsEntry(Integer id)
 
-    @PreAuthorize("hasPermission(#entry.group.environment, 'admin')")
-    SettingsEntry encryptSettingsEntryValue(SettingsEntry entry)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    SettingsEntry encryptSettingsEntryValue(Integer entryId)
 
-    @PreAuthorize("hasPermission(#entry.group.environment, 'admin')")
-    SettingsEntry decryptSettingsEntryValue(SettingsEntry entry)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    SettingsEntry decryptSettingsEntryValue(Integer entryId)
 
     @PreAuthorize("hasPermission(#entry.group.environment, 'admin')")
     void deleteSettingsEntry(SettingsEntry entry)

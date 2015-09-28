@@ -562,14 +562,14 @@ public class ZuulServiceImplTest {
     void shouldErrorWhenTryingToEncryptValuesWhichAreAlreadyEncrypted() {
         def entry = new SettingsEntry(id: 1, encrypted: true)
         when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
-        service.encryptSettingsEntryValue(entry)
+        service.encryptSettingsEntryValue(entry.id)
     }
 
     @Test(expected = ConflictingOperationException)
     void shouldErrorWhenTryingToDecryptValuesWhichAreAlreadyDecrypted() {
         def entry = new SettingsEntry(id: 1, encrypted: false)
         when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
-        service.decryptSettingsEntryValue(entry)
+        service.decryptSettingsEntryValue(entry.id)
     }
 
     @Test
@@ -581,30 +581,10 @@ public class ZuulServiceImplTest {
         when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
         when(service.settingsEntryDao.save(entry)).thenReturn(entry)
         when(service.encryptionStrategy.encrypt(entry.value, group.key)).thenReturn("encryptedValue")
-        def encryptedEntry = service.encryptSettingsEntryValue(entry)
+        def encryptedEntry = service.encryptSettingsEntryValue(entry.id)
         verify(service.encryptionStrategy).encrypt("foo", group.key)
         assert encryptedEntry.encrypted
         assert encryptedEntry.value == "encryptedValue"
-    }
-
-    @Test
-    void shouldEncryptSettingsEntryWithoutModifyingTheOriginalObject() {
-        def group = new SettingsGroup(key: new EncryptionKey(password: "abc123"))
-        def entry = new SettingsEntry(id: 1, key: "a", value: "foo")
-        group.addToEntries(entry)
-
-        def result = service.encryptSettingsEntryValue(entry)
-        assert !result.is(entry)
-
-        assert result.id == entry.id
-        assert result.group == entry.group
-        assert entry.key == entry.key
-
-        assert result.value != entry.value
-        assert entry.value == "foo"
-        assert result.encrypted != entry.encrypted
-        assert result.encrypted
-        assert !entry.encrypted
     }
 
     @Test
@@ -616,29 +596,10 @@ public class ZuulServiceImplTest {
         when(service.settingsEntryDao.findOne(entry.id)).thenReturn(entry)
         when(service.settingsEntryDao.save(entry)).thenReturn(entry)
         when(service.encryptionStrategy.decrypt(entry.value, group.key)).thenReturn("decrypted")
-        def decrypted = service.decryptSettingsEntryValue(entry)
+        def decrypted = service.decryptSettingsEntryValue(entry.id)
         verify(service.encryptionStrategy).decrypt("encrypted", group.key)
         assert !decrypted.encrypted
         assert decrypted.value == "decrypted"
-    }
-
-    @Test
-    void shouldDecryptSettingsEntryWithoutModifyingTheOriginalObject() {
-        def group = new SettingsGroup(key: new EncryptionKey(password: "abc123"))
-        def entry = new SettingsEntry(id: 1, key: "a", value: "foo", encrypted: true)
-        group.addToEntries(entry)
-
-        def result = service.decryptSettingsEntryValue(entry)
-        assert !result.is(entry)
-
-        assert result.id == entry.id
-        assert result.group == entry.group
-        assert entry.key == entry.key
-
-        assert result.value != entry.value
-        assert entry.value == "foo"
-        assert !result.encrypted
-        assert entry.encrypted
     }
 
     @Test
