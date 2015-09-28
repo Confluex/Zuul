@@ -6,7 +6,7 @@
     <version>1.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Zuul: Parent POM</name>
-    <url>https://github.com/psmith/Zuul</url>
+    <url>https://github.com/mcantrell/Zuul</url>
     <scm>
         <connection>scm:git:git@github.com:mcantrell/Zuul.git</connection>
         <url>scm:git:git@github.com:mcantrell/Zuul.git</url>
