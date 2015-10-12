@@ -101,7 +101,7 @@
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
-                                <phase/>
+                                <phase />
                             </execution>
                         </executions>
                     </plugin>
