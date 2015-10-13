@@ -1,4 +1,4 @@
-<%--@elvariable id="environment" type="org.devnull.zuul.data.model.Environment"--%>
+<%--@elvariable id="environment" type="com.confluex.zuul.data.model.Environment"--%>
 <%--@elvariable id="name" type="java.lang.String"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>

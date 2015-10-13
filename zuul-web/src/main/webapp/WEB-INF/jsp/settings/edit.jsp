@@ -1,4 +1,4 @@
-<%--@elvariable id="settings" type="org.devnull.zuul.data.model.Settings"--%>
+<%--@elvariable id="settings" type="com.confluex.zuul.data.model.Settings"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>

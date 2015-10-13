@@ -6,35 +6,35 @@
     <short-name>zfn</short-name>
     <function>
         <name>applicationVersion</name>
-        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-class>com.confluex.zuul.web.config.JstlFunctions</function-class>
         <function-signature>
             java.lang.String getApplicationVersion(javax.servlet.ServletContext)
         </function-signature>
     </function>
     <function>
         <name>errorsByField</name>
-        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-class>com.confluex.zuul.web.config.JstlFunctions</function-class>
         <function-signature>
             java.util.Map groupErrorsByField(org.springframework.validation.Errors)
         </function-signature>
     </function>
     <function>
         <name>join</name>
-        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-class>com.confluex.zuul.web.config.JstlFunctions</function-class>
         <function-signature>
             java.lang.String join(java.util.List)
         </function-signature>
     </function>
     <function>
         <name>joinWithToken</name>
-        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-class>com.confluex.zuul.web.config.JstlFunctions</function-class>
         <function-signature>
             java.lang.String join(java.util.List,java.lang.String)
         </function-signature>
     </function>
     <function>
         <name>findInCollection</name>
-        <function-class>org.devnull.zuul.web.config.JstlFunctions</function-class>
+        <function-class>com.confluex.zuul.web.config.JstlFunctions</function-class>
         <function-signature>
             T find(java.util.Collection,java.lang.String,java.lang.Object)
         </function-signature>

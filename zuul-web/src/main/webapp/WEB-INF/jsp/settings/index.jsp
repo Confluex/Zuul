@@ -1,4 +1,4 @@
-<%--@elvariable id="settings" type="java.util.List<org.devnull.zuul.data.model.Settings>"--%>
+<%--@elvariable id="settings" type="java.util.List<com.confluex.zuul.data.model.Settings>"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

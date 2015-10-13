@@ -16,9 +16,9 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
         <s:expression-handler ref="methodExpressionHandler"/>
     </s:global-method-security>
 
-    <jpa:repositories base-package="org.devnull.security.dao"/>
+    <jpa:repositories base-package="com.confluex.security.dao"/>
 
-    <context:component-scan base-package="org.devnull.security"/>
+    <context:component-scan base-package="com.confluex.security"/>
 
     <bean id="roleHierarchy"
           class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
@@ -32,7 +32,7 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
         </property>
     </bean>
     <bean id="permissionsEvaluator"
-          class="org.devnull.zuul.service.security.EnvironmentPermissionsEvaluator">
+          class="com.confluex.zuul.service.security.EnvironmentPermissionsEvaluator">
         <property name="environmentDao" ref="environmentDao"/>
         <property name="roleHierarchy" ref="roleHierarchy"/>
     </bean>

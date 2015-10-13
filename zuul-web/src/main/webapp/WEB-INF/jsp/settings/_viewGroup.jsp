@@ -1,6 +1,6 @@
-<%--@elvariable id="group" type="org.devnull.zuul.data.model.SettingsGroup"--%>
-<%--@elvariable id="environment" type="org.devnull.zuul.data.model.Environment"--%>
-<%--@elvariable id="keys" type="java.util.List<org.devnull.zuul.data.model.EncryptionKey>"--%>
+<%--@elvariable id="group" type="com.confluex.zuul.data.model.SettingsGroup"--%>
+<%--@elvariable id="environment" type="com.confluex.zuul.data.model.Environment"--%>
+<%--@elvariable id="keys" type="java.util.List<com.confluex.zuul.data.model.EncryptionKey>"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>

@@ -1,6 +1,6 @@
 <%--@elvariable id="name" type="java.lang.String"--%>
-<%--@elvariable id="environments" type="java.util.List<org.devnull.zuul.data.model.Environment>"--%>
-<%--@elvariable id="settings" type="org.devnull.zuul.data.model.Settings"--%>
+<%--@elvariable id="environments" type="java.util.List<com.confluex.zuul.data.model.Environment>"--%>
+<%--@elvariable id="settings" type="com.confluex.zuul.data.model.Settings"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>

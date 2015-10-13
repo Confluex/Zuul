@@ -6,12 +6,12 @@
     <tlib-version>1.0</tlib-version>
     <jsp-version>2.0</jsp-version>
     <short-name>zuul</short-name>
-    <uri>http://devnull.org/tags/zuul</uri>
+    <uri>http://confluex.org/tags/zuul</uri>
     <description>Zuul JSP Tags</description>
 
     <tag>
         <name>gravatar</name>
-        <tag-class>org.devnull.zuul.web.tags.GravatarTag</tag-class>
+        <tag-class>com.confluex.zuul.web.tags.GravatarTag</tag-class>
         <body-content>empty</body-content>
         <description>
             Displays gravatar icon. Defaults to current user (if logged in) if user attribute is not provided.

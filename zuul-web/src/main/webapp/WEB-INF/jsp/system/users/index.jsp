@@ -1,5 +1,5 @@
-<%--@elvariable id="users" type="java.util.List<org.devnull.security.model.User>"--%>
-<%--@elvariable id="roles" type="java.util.List<org.devnull.security.model.Role>"--%>
+<%--@elvariable id="users" type="java.util.List<com.confluex.security.model.User>"--%>
+<%--@elvariable id="roles" type="java.util.List<com.confluex.security.model.Role>"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

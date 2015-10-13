@@ -1,20 +1,22 @@
-[![Build Status](https://secure.travis-ci.org/mcantrell/Zuul.png?branch=master)](http://travis-ci.org/mcantrell/Zuul)
-
 # Zuul the Gatekeeper of Gozer
 
 Web application for securely managing and accessing configuration for webapps.
 
 # More Information
 
- - [Official Wiki Documentation](https://github.com/mcantrell/Zuul/wiki)
+ - [Official Wiki Documentation](https://github.com/Confluex/Zuul/wiki)
  - [Mulesoft Blog - Integration with Mule](http://blogs.mulesoft.org/mule-meets-zuul-centralized-properties-management-part-1/)
  - [Eddú Meléndez Blog - Zuul installation with LDAP](http://eddumelendez.github.io/blog/2014/08/11/zuul-application-configuration-management/)
 
 # Props
 
+**Mike Cantrell**
+
+Thanks to [Mike Cantrell](http://devnull.org/) for developing Zuul
+
 **Jetbrains**
 
- Thanks to [Jetbrains](http://jetbrains.com/) for graciously donating Intellij IDEA licenses.
+Thanks to [Jetbrains](http://jetbrains.com/) for graciously donating Intellij IDEA licenses.
 
 **YourKit**
 
@@ -30,7 +32,7 @@ Thanks to YourKit for donating Java profiler licenses.
 
 # License
 
-   Copyright 2012 Mike Cantrell
+   Copyright 2015 Confluex
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
