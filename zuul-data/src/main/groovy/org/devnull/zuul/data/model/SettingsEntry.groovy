@@ -12,6 +12,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.TableGenerator
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
@@ -22,7 +23,14 @@ class SettingsEntry implements Serializable {
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableGenerator(name = "SETTINGS_ENTRY_GEN",
+            table = "SEQUENCES",
+            pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_NUMBER",
+            pkColumnValue = "SETTINGS_ENTRY_SEQ",
+            allocationSize=1,
+            initialValue = 10)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "SETTINGS_ENTRY_GEN")
     Integer id
 
     @ManyToOne

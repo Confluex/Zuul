@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.OrderBy
+import javax.persistence.TableGenerator
 import javax.validation.constraints.NotNull
 
 @Entity
@@ -29,7 +30,14 @@ class SettingsGroup implements Serializable {
     static final long serialVersionUID = ZuulDataConstants.API_VERSION
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableGenerator(name = "SETTINGS_GROUP_GEN",
+            table = "SEQUENCES",
+            pkColumnName = "SEQ_NAME",
+            valueColumnName = "SEQ_NUMBER",
+            pkColumnValue = "SETTINGS_GROUP_SEQ",
+            allocationSize=1,
+            initialValue = 10)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "SETTINGS_GROUP_GEN")
     Integer id
 
     @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL])
