@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 
-<Context swallowOutput="true">
+<Context swallowOutput="true" path="zuul">
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
 </Context>
