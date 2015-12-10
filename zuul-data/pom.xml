@@ -1,31 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.devnull</groupId>
+    <groupId>com.confluex</groupId>
     <artifactId>zuul-data</artifactId>
     <packaging>jar</packaging>
     <name>Zuul: Data Layer</name>
     <parent>
-        <groupId>org.devnull</groupId>
+        <groupId>com.confluex</groupId>
         <artifactId>zuul-parent</artifactId>
         <version>1.7-SNAPSHOT</version>
     </parent>
     <dependencies>
         <!-- DevNull -->
         <dependency>
-            <groupId>org.devnull</groupId>
-            <artifactId>devnull-util</artifactId>
+            <groupId>com.confluex</groupId>
+            <artifactId>zuul-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.devnull</groupId>
-            <artifactId>devnull-orm</artifactId>
+            <groupId>com.confluex</groupId>
+            <artifactId>zuul-orm</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.devnull</groupId>
-            <artifactId>devnull-security</artifactId>
+            <groupId>com.confluex</groupId>
+            <artifactId>zuul-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.devnull</groupId>
-            <artifactId>devnull-error</artifactId>
+            <groupId>com.confluex</groupId>
+            <artifactId>zuul-error</artifactId>
         </dependency>
 
         <!-- Spring Framework -->

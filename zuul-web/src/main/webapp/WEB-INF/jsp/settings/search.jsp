@@ -1,4 +1,4 @@
-<%--@elvariable id="results" type="java.util.Map<org.devnull.zuul.data.model.SettingsGroup, java.util.List<org.devnull.zuul.data.model.SettingsEntry>>"--%>
+<%--@elvariable id="results" type="java.util.Map<com.confluex.zuul.data.model.SettingsGroup, java.util.List<com.confluex.zuul.data.model.SettingsEntry>>"--%>
 <%--@elvariable id="query" type="java.lang.String"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>

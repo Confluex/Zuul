@@ -13,7 +13,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <!--suppress SpringModelInspection -->
     <context:property-placeholder location="classpath:/ldap.properties" order="2" ignore-unresolvable="true"/>
 
-    <bean id="ldapUserContextMapper" class="org.devnull.security.spring.LdapUserContextMapper">
+    <bean id="ldapUserContextMapper" class="com.confluex.security.spring.LdapUserContextMapper">
         <constructor-arg>
             <map>
                 <entry key="${ldap.dn.ROLE_SYSTEM_ADMIN}">

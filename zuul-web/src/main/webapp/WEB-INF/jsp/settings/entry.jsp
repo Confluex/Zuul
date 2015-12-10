@@ -1,4 +1,4 @@
-<%--@elvariable id="group" type="org.devnull.zuul.data.model.SettingsGroup"--%>
+<%--@elvariable id="group" type="com.confluex.zuul.data.model.SettingsGroup"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>

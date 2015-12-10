@@ -1,4 +1,4 @@
-<%--@elvariable id="roles" type="java.util.List<org.devnull.security.model.Role>"--%>
+<%--@elvariable id="roles" type="java.util.List<com.confluex.security.model.Role>"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>

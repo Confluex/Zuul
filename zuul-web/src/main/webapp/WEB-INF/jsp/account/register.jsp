@@ -1,4 +1,4 @@
-<%--@elvariable id="user" type="org.devnull.security.model.User"--%>
+<%--@elvariable id="user" type="com.confluex.security.model.User"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>

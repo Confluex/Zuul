@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.devnull</groupId>
+    <groupId>com.confluex</groupId>
     <artifactId>zuul-parent</artifactId>
     <version>1.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Zuul: Parent POM</name>
-    <url>https://github.com/mcantrell/Zuul</url>
+    <url>https://github.com/Confluex/Zuul</url>
     <scm>
-        <connection>scm:git:git@github.com:mcantrell/Zuul.git</connection>
-        <url>scm:git:git@github.com:mcantrell/Zuul.git</url>
-        <developerConnection>scm:git:git@github.com:mcantrell/Zuul.git</developerConnection>
+        <connection>scm:git:git@github.com:Confluex/Zuul.git</connection>
+        <url>scm:git:git@github.com:Confluex/Zuul.git</url>
+        <developerConnection>scm:git:git@github.com:Confluex/Zuul.git</developerConnection>
     </scm>
     <licenses>
         <license>
@@ -25,14 +25,19 @@
             <name>Mike Cantrell</name>
             <email>mike.humansonly@devnull.org</email>
         </developer>
+        <developer>
+            <id>psmith</id>
+            <name>Paul Smith</name>
+            <email>psmith.humansonly@confluex.com</email>
+        </developer>
     </developers>
     <properties>
-        <devnull.version>1.1</devnull.version>
+        <base-zuul.version>1.2</base-zuul.version>
     </properties>
     <parent>
-        <groupId>org.devnull</groupId>
-        <artifactId>devnull-parent</artifactId>
-        <version>1.1</version>
+        <groupId>com.confluex</groupId>
+        <artifactId>base-zuul</artifactId>
+        <version>1.2</version>
         <relativePath />
     </parent>
     <modules>
@@ -42,24 +47,24 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.devnull</groupId>
-                <artifactId>devnull-util</artifactId>
-                <version>${devnull.version}</version>
+                <groupId>com.confluex</groupId>
+                <artifactId>zuul-util</artifactId>
+                <version>${base-zuul.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.devnull</groupId>
-                <artifactId>devnull-orm</artifactId>
-                <version>${devnull.version}</version>
+                <groupId>com.confluex</groupId>
+                <artifactId>zuul-orm</artifactId>
+                <version>${base-zuul.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.devnull</groupId>
-                <artifactId>devnull-security</artifactId>
-                <version>${devnull.version}</version>
+                <groupId>com.confluex</groupId>
+                <artifactId>zuul-security</artifactId>
+                <version>${base-zuul.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.devnull</groupId>
-                <artifactId>devnull-error</artifactId>
-                <version>${devnull.version}</version>
+                <groupId>com.confluex</groupId>
+                <artifactId>zuul-error</artifactId>
+                <version>${base-zuul.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.icegreen</groupId>

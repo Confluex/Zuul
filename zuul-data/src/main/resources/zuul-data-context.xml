@@ -16,10 +16,10 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 
     <beans>
         <context:property-placeholder location="classpath:/zuul-data-config.properties" order="1" ignore-unresolvable="true"/>
-        <jpa:repositories base-package="org.devnull.zuul.data.dao"/>
+        <jpa:repositories base-package="com.confluex.zuul.data.dao"/>
         <context:annotation-config/>
-        <context:component-scan base-package="org.devnull.zuul.data"/>
-        <context:component-scan base-package="org.devnull.zuul.service"/>
+        <context:component-scan base-package="com.confluex.zuul.data"/>
+        <context:component-scan base-package="com.confluex.zuul.service"/>
         <tx:annotation-driven transaction-manager="transactionManager"/>
 
         <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
@@ -74,7 +74,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
             <property name="persistenceUnitPostProcessors">
                 <list>
                     <bean class="org.springframework.data.jpa.support.ClasspathScanningPersistenceUnitPostProcessor">
-                        <constructor-arg value="org.devnull"/>
+                        <constructor-arg value="com.confluex"/>
                     </bean>
                 </list>
             </property>
@@ -99,7 +99,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <task:executor id="auditExecutor" pool-size="10" queue-capacity="1000" rejection-policy="DISCARD"/>
 
         <!-- Security Configurations -->
-        <bean class="org.devnull.zuul.service.security.SecurityProvidersRegistrar">
+        <bean class="com.confluex.zuul.service.security.SecurityProvidersRegistrar">
             <property name="providers">
                 <util:list>
                     <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
@@ -107,41 +107,41 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
             </property>
         </bean>
         <util:map id="keyMetaData" map-class="java.util.LinkedHashMap"
-                  key-type="java.lang.String" value-type="org.devnull.zuul.service.security.KeyConfiguration">
-            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}">
-                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}"/>
+                  key-type="java.lang.String" value-type="com.confluex.zuul.service.security.KeyConfiguration">
+            <entry key="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}">
+                <bean class="com.confluex.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_PGP}"/>
                     <property name="description" value="PGP Public Key"/>
                     <property name="provider" value="BC"/>
                     <property name="secret" value="false"/>
                 </bean>
             </entry>
-            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}">
-                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}"/>
+            <entry key="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}">
+                <bean class="com.confluex.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_AES}"/>
                     <property name="description" value="AES (Bouncy Castle)"/>
                     <property name="provider" value="BC"/>
                     <property name="hashIterations" value="1000"/>
                 </bean>
             </entry>
-            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}">
-                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}"/>
+            <entry key="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}">
+                <bean class="com.confluex.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_BC}"/>
                     <property name="description" value="Triple DES (Bouncy Castle)"/>
                     <property name="provider" value="BC"/>
                     <property name="hashIterations" value="1000"/>
                 </bean>
             </entry>
-            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}">
-                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}"/>
+            <entry key="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}">
+                <bean class="com.confluex.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_3DES_JCE}"/>
                     <property name="description" value="Triple DES (JCE)"/>
                     <property name="hashIterations" value="1000"/>
                 </bean>
             </entry>
-            <entry key="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}">
-                <bean class="org.devnull.zuul.service.security.KeyConfiguration">
-                    <property name="algorithm" value="#{T(org.devnull.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}"/>
+            <entry key="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}">
+                <bean class="com.confluex.zuul.service.security.KeyConfiguration">
+                    <property name="algorithm" value="#{T(com.confluex.zuul.data.config.ZuulDataConstants).KEY_ALGORITHM_DES}"/>
                     <property name="description" value="DES (JCE)"/>
                     <property name="hashIterations" value="1000"/>
                 </bean>

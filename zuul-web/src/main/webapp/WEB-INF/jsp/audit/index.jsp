@@ -1,7 +1,7 @@
-<%--@elvariable id="audits" type="java.util.List<org.devnull.zuul.data.model.SettingsAudit>"--%>
-<%--@elvariable id="users" type="java.util.Map<java.lang.String, org.devnull.security.model.User>"--%>
+<%--@elvariable id="audits" type="java.util.List<com.confluex.zuul.data.model.SettingsAudit>"--%>
+<%--@elvariable id="users" type="java.util.Map<java.lang.String, com.confluex.security.model.User>"--%>
 <%--@elvariable id="filters" type="java.util.Map"--%>
-<%--@elvariable id="user" type="org.devnull.security.model.User"--%>
+<%--@elvariable id="user" type="com.confluex.security.model.User"--%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>

@@ -10,7 +10,7 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
 
-    <context:component-scan base-package="org.devnull.zuul.web"/>
+    <context:component-scan base-package="com.confluex.zuul.web"/>
     <mvc:annotation-driven/>
     <mvc:resources mapping="/assets/**" location="/assets/"/>
 
@@ -20,29 +20,29 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <bean id="httpErrorConverter" class="org.devnull.error.web.message.impl.DelegatingConverter">
+    <bean id="httpErrorConverter" class="com.confluex.error.web.message.impl.DelegatingConverter">
         <property name="converters">
             <util:list>
-                <bean class="org.devnull.error.web.message.impl.ConflictingOperationConverter"/>
-                <bean class="org.devnull.error.web.message.impl.ConstraintViolationConverter"/>
-                <bean class="org.devnull.error.web.message.impl.ValidationConverter"/>
-                <bean class="org.devnull.error.web.message.impl.CatchAllConverter"/>
+                <bean class="com.confluex.error.web.message.impl.ConflictingOperationConverter"/>
+                <bean class="com.confluex.error.web.message.impl.ConstraintViolationConverter"/>
+                <bean class="com.confluex.error.web.message.impl.ValidationConverter"/>
+                <bean class="com.confluex.error.web.message.impl.CatchAllConverter"/>
             </util:list>
         </property>
     </bean>
 
-    <bean class="org.devnull.error.web.resolver.MediaTypeErrorResolver">
+    <bean class="com.confluex.error.web.resolver.MediaTypeErrorResolver">
         <property name="mappings">
             <map>
                 <entry key="json">
-                    <bean class="org.devnull.error.web.resolver.JsonErrorResolver">
+                    <bean class="com.confluex.error.web.resolver.JsonErrorResolver">
                         <property name="httpErrorMessageConverter" ref="httpErrorConverter"/>
                     </bean>
                 </entry>
             </map>
         </property>
         <property name="defaultResolver">
-            <bean class="org.devnull.error.web.resolver.DefaultErrorResolver">
+            <bean class="com.confluex.error.web.resolver.DefaultErrorResolver">
                 <property name="httpErrorMessageConverter" ref="httpErrorConverter"/>
             </bean>
         </property>
