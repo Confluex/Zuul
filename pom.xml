@@ -36,8 +36,8 @@
     </properties>
     <parent>
         <groupId>com.confluex</groupId>
-        <artifactId>base-zuul-parent</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <artifactId>base-zuul</artifactId>
+        <version>1.2</version>
         <relativePath />
     </parent>
     <modules>
