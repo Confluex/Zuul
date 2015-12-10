@@ -32,7 +32,7 @@
         </developer>
     </developers>
     <properties>
-        <base-zuul.version>1.2-SNAPSHOT</base-zuul.version>
+        <base-zuul.version>1.2</base-zuul.version>
     </properties>
     <parent>
         <groupId>com.confluex</groupId>
