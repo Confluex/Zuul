@@ -51,7 +51,7 @@ Thanks to YourKit for donating Java profiler licenses.
    See the License for the specific language governing permissions and
    limitations under the License. 
    
- ** Legal **
+# Legal
  
  ZUUL is a registered trademark of Confluex, Inc.
  Copyright 2016, Confluex Inc.
