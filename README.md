@@ -14,7 +14,8 @@ Zuul is a secure application for Web Application Configuration Management.
 
 Thanks to [Mike Cantrell](http://devnull.org/) for developing and maintaining Zuul, initially.
 
-Thanks to [Paul Smith] at Confluex, Inc. for maintaining it.
+**Paul Smith**
+Thanks to [Paul Smith](https://github.com/psmith) at Confluex, Inc. for maintaining it.
 
 
 **Jetbrains**
@@ -50,7 +51,8 @@ Thanks to YourKit for donating Java profiler licenses.
    See the License for the specific language governing permissions and
    limitations under the License. 
    
- # Trademarks
+ ** Legal **
+ 
  ZUUL is a registered trademark of Confluex, Inc.
  Copyright 2016, Confluex Inc.
  http://confluex.com
