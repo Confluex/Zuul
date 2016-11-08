@@ -1,6 +1,6 @@
-# Zuul the Gatekeeper of Gozer
-
-Web application for securely managing and accessing configuration for webapps.
+# Zuul
+"The Gatekeeper of Gozer"
+Zuul is a secure application for Web Application Configuration Management. 
 
 # More Information
 
@@ -12,7 +12,10 @@ Web application for securely managing and accessing configuration for webapps.
 
 **Mike Cantrell**
 
-Thanks to [Mike Cantrell](http://devnull.org/) for developing Zuul
+Thanks to [Mike Cantrell](http://devnull.org/) for developing and maintaining Zuul, initially.
+
+Thanks to [Paul Smith] at Confluex, Inc. for maintaining it.
+
 
 **Jetbrains**
 
@@ -32,9 +35,10 @@ Thanks to YourKit for donating Java profiler licenses.
 
 # License
 
-   Copyright 2015 Confluex
+   Copyright 2014-2016 Confluex
+   
 
-   Licensed under the Apache License, Version 2.0 (the "License");
+   Parts of Zuul are licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
@@ -46,4 +50,7 @@ Thanks to YourKit for donating Java profiler licenses.
    See the License for the specific language governing permissions and
    limitations under the License. 
    
-   
+ # Trademarks
+ ZUUL is a registered trademark of Confluex, Inc.
+ Copyright 2016, Confluex Inc.
+ http://confluex.com
