@@ -5,7 +5,7 @@
 
     <changeSet author="mcantrell" id="zuul-1.2-add-environment-restrictions">
         <validCheckSum>3:ef4ba02b7bf3dffff05d11de424f1b6e</validCheckSum>
-        <addColumn tableName="ENVIRONMENT">
+        <addColumn tableName="environment">
             <column name="RESTRICTED" type="BOOLEAN" defaultValueBoolean="false" valueBoolean="false" >
                 <constraints nullable="false"/>
             </column>
@@ -13,7 +13,7 @@
     </changeSet>
 
     <changeSet author="mcantrell" id="zuul-1.2-environment-ordinals">
-        <addColumn tableName="ENVIRONMENT">
+        <addColumn tableName="environment">
             <column name="ORDINAL" type="INT" defaultValue="0" value="0" >
                 <constraints nullable="false"/>
             </column>
