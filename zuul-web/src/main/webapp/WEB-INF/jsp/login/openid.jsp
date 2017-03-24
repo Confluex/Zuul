@@ -23,7 +23,7 @@
                 <z:openIdProvider url="https://me.yahoo.com/" icon="yahoo.png" name="Yahoo!"/>
             </li>
             <li class="span2">
-                <z:openIdProvider url="https://myopenid.com/" icon="myopenid.png" name="My OpenID!"/>
+                <z:openIdProvider url="http://swindapp01.ind.domain.steelwedge.com:7080/OpenAM/UI/Login/" icon="myopenid.png" name="My OpenID!"/>
             </li>
         </ul>
     </div>
