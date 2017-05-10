@@ -3,8 +3,8 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="bootstrap" tagdir="/WEB-INF/tags/bootstrap" %>
-<%@ taglib prefix="zuul" uri="/WEB-INF/tags/zuul/zuul.tld" %>
-<%@ taglib prefix="zfn" uri="/WEB-INF/tags/functions.tld" %>
+<%@ taglib prefix="zuul" uri="zuulTagLib" %>
+<%@ taglib prefix="zfn" uri="funTagLib" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
