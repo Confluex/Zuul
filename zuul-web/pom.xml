@@ -32,7 +32,6 @@
         <dependency>
             <groupId>displaytag</groupId>
             <artifactId>displaytag</artifactId>
-            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -96,14 +95,10 @@
 
     <build>
         <plugins>
-            <!-- no need to deploy this module to central repo -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                <version>2.8.2</version>
             </plugin>
         </plugins>
     </build>
