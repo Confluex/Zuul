@@ -16,7 +16,7 @@
 
     <context-param>
         <param-name>spring.profiles.default</param-name>
-        <param-value>security-openid</param-value>
+        <param-value>security-ldap</param-value>
     </context-param>
 
     <listener>
