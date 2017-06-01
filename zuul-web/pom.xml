@@ -58,7 +58,6 @@
             <artifactId>commons-lang</artifactId>
         </dependency>
 
-
         <!-- Data -->
         <dependency>
             <groupId>com.confluex</groupId>
@@ -83,7 +82,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
-
 
         <!-- Test -->
         <dependency>
