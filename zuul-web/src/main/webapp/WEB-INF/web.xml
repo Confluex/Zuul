@@ -95,11 +95,11 @@
     <jsp-config>
         <taglib>
             <taglib-uri>zuulTagLib</taglib-uri>
-            <taglib-location>/WEB-INF/tags/zuul/zuul.tld</taglib-location>
+            <taglib-location>/WEB-INF/tld/zuul.tld</taglib-location>
         </taglib>
         <taglib>
             <taglib-uri>funTagLib</taglib-uri>
-            <taglib-location>/WEB-INF/tags/functions.tld</taglib-location>
+            <taglib-location>/WEB-INF/tld/functions.tld</taglib-location>
         </taglib>
     </jsp-config> 
 

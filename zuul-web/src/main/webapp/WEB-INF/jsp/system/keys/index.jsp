@@ -3,7 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="zfn" uri="/WEB-INF/tags/functions.tld" %>
+<%@ taglib prefix="zfn" uri="/WEB-INF/tld/functions.tld" %>
 <!DOCTYPE html>
 <html>
 <head>
