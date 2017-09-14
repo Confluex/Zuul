@@ -16,6 +16,7 @@
         <loadData tableName="security_role" file="/data/profile/all/SecurityRole.csv"/>
         <loadData tableName="environment" file="/data/profile/all/Environment.csv">
             <column name="restricted" type="boolean" />
+            <column name="ordinal" type="numeric" />
         </loadData>
     </changeSet>
 

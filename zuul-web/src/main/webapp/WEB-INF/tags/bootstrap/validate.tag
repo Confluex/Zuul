@@ -1,5 +1,5 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="zfn" uri="/WEB-INF/tags/functions.tld" %>
+<%@ taglib prefix="zfn" uri="/WEB-INF/tld/functions.tld" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ attribute name="modelName" required="true" type="java.lang.String" %>
 <%@ attribute name="formId" required="true" type="java.lang.String" %>

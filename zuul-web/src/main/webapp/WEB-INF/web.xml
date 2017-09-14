@@ -16,7 +16,7 @@
 
     <context-param>
         <param-name>spring.profiles.default</param-name>
-        <param-value>security-openid</param-value>
+        <param-value>security-ldap</param-value>
     </context-param>
 
     <listener>
@@ -91,6 +91,17 @@
         <servlet-name>dispatch</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    
+    <jsp-config>
+        <taglib>
+            <taglib-uri>zuulTagLib</taglib-uri>
+            <taglib-location>/WEB-INF/tld/zuul.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>funTagLib</taglib-uri>
+            <taglib-location>/WEB-INF/tld/functions.tld</taglib-location>
+        </taglib>
+    </jsp-config> 
 
     <error-page>
         <error-code>403</error-code>

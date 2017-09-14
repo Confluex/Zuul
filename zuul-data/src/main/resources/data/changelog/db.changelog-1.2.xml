@@ -13,8 +13,9 @@
     </changeSet>
 
     <changeSet author="mcantrell" id="zuul-1.2-environment-ordinals">
+    	<validCheckSum>3:f6714a8fc356949f76e23ca4e725f888</validCheckSum>
         <addColumn tableName="ENVIRONMENT">
-            <column name="ORDINAL" type="INT" defaultValue="0" value="0" >
+            <column name="ORDINAL" type="INT" defaultValueNumeric="0" valueNumeric="0" >
                 <constraints nullable="false"/>
             </column>
         </addColumn>
